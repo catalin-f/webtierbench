@@ -28,7 +28,11 @@ masterLogger = _Logger("results.log", fullMode=False).log
 # Application base class
 ###############################################################################
 class _Application:
-    def __init__(self):
+    def __init__(self, apptype, dbtype, memcached, measuremeth ):
+        self.apptype = apptype #Django, wordpress ...
+        self.dbtype = dbtype # mariadb, cassandra ..
+        self.memcached = memcached # identify if memcached is going to be used
+        self.measuremeth  = measuremeth #perf,emon .. this can be a list if more then one is nedeed
         pass
 
     def deploy(self):

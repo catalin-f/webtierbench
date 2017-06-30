@@ -1,0 +1,14 @@
+from base import debugLogger
+from base import _Applications
+
+class DB(_Applications):
+
+    def deploy(self):
+        debugLogger("will deploy DB")
+
+    def undepoy(self):
+        debugLogger("will undeploy DB")
+
+    def start(self):
+        debugLogger("will start DB")
+
