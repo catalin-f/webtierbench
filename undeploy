@@ -5,6 +5,7 @@ import os
 def main():
     #TODO add a cleanup method in _base.Deployment
     os.system('rm -f .host.setup.done')
+    os.system('rm -f /tmp/.host.reboot.required')
     os.system('rm -f .deployment.pickle')
     os.system('rm -f *.log')
     os.system('rm -rf measurements')

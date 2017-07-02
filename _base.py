@@ -90,9 +90,8 @@ masterLogger = _Logger("results.log", fullMode=False).log
 ###############################################################################
 
 ALLOWED_APPLICATIONS = ["apache2", "ab", "perf"]
-
-#TODO: add code for common-XXX-setup.sh to not block in a reboot loop forever
 HOST_SETUP_MARK = '.host.setup.done'
+HOST_REBOOT_REQUIRED = '/tmp/.host.reboot.required'
 
 OUT_SEPARATOR = ' '
 
@@ -141,10 +140,16 @@ class Deployment:
         self._all_apps = []
 
     def common_host_setup(self):
-        out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % (self.distribution))
-        with open(HOST_SETUP_MARK, "w") as f:
-            f.write('ok')
-        return out, err
+        if not os.path.isfile(HOST_SETUP_MARK):
+            print("Applying benchmark settings")
+            out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % (self.distribution))
+            with open(HOST_SETUP_MARK, "w") as f:
+                f.write('ok')
+            return out, err
+        return '',''
+
+    def reboot_required(self):
+        return os.path.isfile(HOST_REBOOT_REQUIRED)
 
     def deploy(self):
         outs = []
