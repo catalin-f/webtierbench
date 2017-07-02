@@ -13,14 +13,22 @@ def main():
     debugLogger("Started applications stdout: %s" % out)
     debugLogger("Started applications stderr: %s" % err)
 
-    out, err = deployment.start_benchmark()
+    out, err = deployment.start_performance_measurements()
+    debugLogger("Started performance measurements: %s" % out)
+    debugLogger("Started performance measurements: %s" % err)
+
+    out, err = deployment.start_benchmark_client()
     debugLogger("Benchmark results stdout: %s" % out)
     debugLogger("Benchmark results stderr: %s" % err)
     masterLogger("Benchmark results: %s %s" % (out, err))
 
-    out, err = deployment.stop_benchmark()
+    out, err = deployment.stop_benchmark_client()
     debugLogger("Stopped benchmark stdout: %s" % out)
     debugLogger("Stopped benchmark stderr: %s" % err)
+
+    out, err = deployment.stop_performance_measurements()
+    debugLogger("Stopped performance measurements: %s" % out)
+    debugLogger("Stopped performance measurements: %s" % err)
 
     out, err = deployment.stop_applications()
     debugLogger("Stopped applications stdout: %s" % out)

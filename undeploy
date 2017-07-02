@@ -8,7 +8,6 @@ def main():
     os.system('rm -f .deployment.pickle')
     os.system('rm -f *.log')
     os.system('rm -rf measurements')
-    os.system('rm -rf myperf.data')
 
 
 if __name__ == '__main__':
