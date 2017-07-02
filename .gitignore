@@ -2,3 +2,7 @@
 .idea/*
 *.log
 *.pyo
+*.pickle
+*.done
+measurements/*
+*.data

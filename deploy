@@ -1,14 +1,43 @@
 #!/usr/bin/env python
+from _base import WEBTIER_VERSION
 from _base import debugLogger
 from _base import masterLogger
-from _django import Django
+from _base import detect_os
+from _base import Deployment
+from _base import pickle_deployment
 
 
 def main():
-    debugLogger("test debug")
-    masterLogger("test master")
-    d = Django()
-    d.deploy()
+    debugLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
+    masterLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
+
+    #TODO: read command line params
+    #TODO: parse JSON and save it to .deployment.json
+    distribution, version = detect_os()
+    debugLogger("Host OS distribution: %s" % distribution)
+    debugLogger("Host OS version: %s" % version)
+
+    deployment = Deployment('mydeployment', distribution, version)
+
+    out, err = deployment.common_host_setup()
+    debugLogger("Common host setup stdout: %s" % out)
+    debugLogger("Common host setup stderr: %s" % err)
+
+    deployment.add_application("apache2",{})
+    debugLogger("Added application: apache2")
+
+    deployment.add_perf("perf", {})
+    debugLogger("Added performance measurement: perf")
+
+    deployment.set_client("ab",{})
+    debugLogger("Benchmark client: ab")
+
+    out, err = deployment.deploy()
+    debugLogger("Deployment stdout: %s " % out)
+    debugLogger("Deployment stderr: %s " % err)
+
+    pickle_deployment(deployment)
+    debugLogger("Pickled deployment data")
 
 
 if __name__ == '__main__':
