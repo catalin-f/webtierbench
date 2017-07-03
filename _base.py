@@ -95,9 +95,9 @@ HOST_REBOOT_REQUIRED = '/tmp/.host.reboot.required'
 
 OUT_SEPARATOR = ' '
 
-class Application:
+class Application(object):
     def __init__(self, name, config, distribution, version):
-        if not name in ALLOWED_APPLICATIONS:
+        if name not in ALLOWED_APPLICATIONS:
             raise NotImplementedError("Unknown application: %s" % (name))
         self.name = name
         self.config = config
@@ -105,22 +105,18 @@ class Application:
         self.version = version
 
     def deploy(self, async=False):
-        #TODO use config
         out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "deploy.sh", async)
         return out, err
 
     def undeploy(self, async=False):
-        # TODO use config
         out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "undeploy.sh", async)
         return out, err
 
     def start(self, async=False):
-        # TODO use config
         out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "start.sh", async)
         return out, err
 
     def stop(self, async=False):
-        # TODO use config
         out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "stop.sh", async)
         return out, err
 
@@ -129,7 +125,7 @@ class Deployment:
     def __init__(self, name, distribution, version):
         self.distribution = distribution
         self.version = version
-        if distribution == 'mac':
+        if distribution == 'mac' or distribution == 'win':
             raise NotImplementedError("This operating system is not yet supported")
         self.name = name
         self.applications = []

@@ -1,0 +1,1 @@
+This directory contains all applications that can be deployed with WebTierBench.
