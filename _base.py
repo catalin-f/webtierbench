@@ -29,10 +29,10 @@ def RUN_APP_SCRIPT(name, distribution, version, script, async=False):
 
 
 def detect_os():
-    type = os.name
+    ostype = os.name
     distribution = None
     version = None
-    if type == 'posix':
+    if ostype == 'posix':
         system = platform.system()
         if system == 'Linux':
             details = platform.linux_distribution()
@@ -142,7 +142,7 @@ class Deployment:
             with open(HOST_SETUP_MARK, "w") as f:
                 f.write('ok')
             return out, err
-        return '',''
+        return '', ''
 
     def reboot_required(self):
         return os.path.isfile(HOST_REBOOT_REQUIRED)
@@ -172,16 +172,11 @@ class Deployment:
         return OUT_SEPARATOR.join(outs), OUT_SEPARATOR.join(errs)
 
     def start_performance_measurements(self):
-        #TODO add more env data
-        os.environ['PERF_FILENAME'] = '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime())
         for app in self.perfs:
             app.start(async=True)
         return '', ''
 
     def start_benchmark_client(self):
-        # TODO: add _all_ data needed for benchmark
-        os.environ['WEBTIER_IP'] = 'localhost'
-        os.environ['WEBTIER_PORT'] = '80'
         out, err = self.client.start()
         return out, err
 
@@ -192,7 +187,6 @@ class Deployment:
             out, err = app.stop()
             outs.append(out)
             errs.append(err)
-        # TODO del environ data, if it is the case
         return OUT_SEPARATOR.join(outs), OUT_SEPARATOR.join(errs)
 
     def stop_performance_measurements(self):
@@ -202,12 +196,10 @@ class Deployment:
 
     def stop_benchmark_client(self):
         out, err = self.client.stop()
-        os.environ['WEBTIER_IP'] = ''
-        os.environ['WEBTIER_PORT'] = ''
         return out, err
 
     def collect_performance_data(self):
-        #create results directory tree
+        # Create results directory tree
         measurement_dirs = 'measurements/%s' % self.name
         try:
             os.makedirs(measurement_dirs)
@@ -216,32 +208,29 @@ class Deployment:
                 pass
             else:
                 raise
-        #move files
+
+        # Move files
+        # TODO take into consideration the perfs content
         perf_data = os.environ['PERF_FILENAME']
         if os.path.isfile(perf_data):
             os.rename(perf_data, '%s/%s' % (measurement_dirs, perf_data))
 
     #####
-    def add_application(self, name, config):
-        app = Application(name, config, self.distribution, self.version)
+    def add_application(self, app):
         self.applications.append(app)
         self._all_apps.append(app)
 
-    def add_db(self, name, config):
-        app = Application(name, config, self.distribution, self.version)
+    def add_db(self, app):
         self.dbs.append(app)
         self._all_apps.append(app)
 
-    def add_cache(self, name, config):
-        app = Application(name, config, self.distribution, self.version)
+    def add_cache(self, app):
         self.cache.append(app)
         self._all_apps.append(app)
 
-    def add_perf(self, name, config):
-        app = Application(name, config, self.distribution, self.version)
+    def add_perf(self, app):
         self.perfs.append(app)
 
-    def set_client(self, name, config):
-        app = Application(name, config, self.distribution, self.version)
+    def set_client(self, app):
         self.client = app
         self._all_apps.append(app)

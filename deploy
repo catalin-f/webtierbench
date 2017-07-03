@@ -5,6 +5,9 @@ from _base import masterLogger
 from _base import detect_os
 from _base import Deployment
 from _base import pickle_deployment
+from _apps import Apache2
+from _apps import Perf
+from _apps import ApacheBenchmark
 
 
 def main():
@@ -28,13 +31,27 @@ def main():
         print("These settings need a reboot! Please reboot the machine and run the deploy command again!")
         return 0
 
-    deployment.add_application("apache2",{})
+    apacheConfig = {
+        "ip": "localhost",
+        "port": "80"
+    }
+    abConfig = {
+        "workers": 4,
+        "requests": "1000",
+        "endpoint": "http://localhost:80/index.html"
+    }
+    apache = Apache2(apacheConfig, distribution, version)
+    perf = Perf({}, distribution, version)
+    ab = ApacheBenchmark(abConfig, distribution, version)
+
+
+    deployment.add_application(apache)
     debugLogger("Added application: apache2")
 
-    deployment.add_perf("perf", {})
+    deployment.add_perf(perf)
     debugLogger("Added performance measurement: perf")
 
-    deployment.set_client("ab",{})
+    deployment.set_client(ab)
     debugLogger("Benchmark client: ab")
 
     out, err = deployment.deploy()
