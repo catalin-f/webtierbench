@@ -3,9 +3,9 @@
 #######################################
 # Checks if this script is run as root
 # Arguments:
-#   None
-#	Additional information:
-#		This method contains the exit call
+#	None
+# Additional information:
+#	This method contains the exit call
 #######################################
 function check_root_privilege {
 	if [ "$(id -u)" != "0" ]; then
@@ -17,9 +17,9 @@ function check_root_privilege {
 #######################################
 # Stops the cassandra service
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function stop_cassandra {
 	sudo service cassandra stop
@@ -28,9 +28,9 @@ function stop_cassandra {
 #######################################
 # Checks the status of the cassandra service
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function check_cassandra_status {
 	sudo service cassandra status > /dev/null
@@ -45,9 +45,9 @@ function check_cassandra_status {
 #######################################
 # Stops the memcached service
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function stop_memcached {
 	sudo service memcached stop
@@ -56,9 +56,9 @@ function stop_memcached {
 #######################################
 # Checks the status of the memcached service
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function check_memcached_status {
 	sudo service memcached status > /dev/null
@@ -73,9 +73,9 @@ function check_memcached_status {
 #######################################
 # Stops all uwsgi processes
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function stop_uwsgi {
 	sudo killall uwsgi
@@ -84,9 +84,9 @@ function stop_uwsgi {
 #######################################
 # Stops all siege processes
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function stop_siege {
 	sudo killall run-siege.sh
@@ -96,9 +96,9 @@ function stop_siege {
 #######################################
 # This calls all methods described above
 # Arguments:
-#		None
-#	Additional information:
-#		None
+#	None
+# Additional information:
+#	None
 #######################################
 function main {
 	check_root_privilege
