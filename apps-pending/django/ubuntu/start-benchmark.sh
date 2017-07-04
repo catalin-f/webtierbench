@@ -168,8 +168,6 @@ function start_uwsgi {
 	python3 -m virtualenv -p python3 venv > /dev/null
 	source venv/bin/activate > /dev/null
 
-	pip install -r requirements.txt > /dev/null
-
 	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
 	uwsgi uwsgi.ini &
