@@ -1,74 +1,7 @@
 #!/bin/bash
 
-#######################################
-# Checks if this script is run as root
-# Arguments:
-#	None
-# Additional information:
-#	This method contains the exit call
-#######################################
-function check_root_privilege {
-	if [ "$(id -u)" != "0" ]; then
-	   echo "This script must be run as root"
-	   exit 1
-	fi
-}
-
-#######################################
-# Stops the cassandra service
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function stop_cassandra {
-	service cassandra stop
-}
-
-#######################################
-# Checks the status of the cassandra service
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function check_cassandra_status {
-	service cassandra status > /dev/null
-
-	if [ $? -eq 0 ];
-	then
-		echo "Cassandra couldn't be stopped."
-		exit 1
-	fi
-}
-
-#######################################
-# Stops the memcached service
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function stop_memcached {
-	service memcached stop
-}
-
-#######################################
-# Checks the status of the memcached service
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function check_memcached_status {
-	service memcached status > /dev/null
-
-	if [ $? -eq 0 ];
-	then
-		echo "Memcached couldn't be stopped."
-		exit 1
-	fi
-}
+### Invoke the utils script ###
+source utils.sh
 
 #######################################
 # Stops all uwsgi processes
@@ -77,7 +10,7 @@ function check_memcached_status {
 # Additional information:
 #	None
 #######################################
-function stop_uwsgi {
+stop_uwsgi() {
 	killall uwsgi
 }
 
@@ -88,7 +21,7 @@ function stop_uwsgi {
 # Additional information:
 #	None
 #######################################
-function stop_siege {
+stop_siege() {
 	killall run-siege.sh
 	killall siege
 }
@@ -100,13 +33,13 @@ function stop_siege {
 # Additional information:
 #	None
 #######################################
-function main {
+main() {
 	check_root_privilege
-	stop_cassandra
-	check_cassandra_status
+	stop_service "cassandra"
+	check_service_stopped "cassandra"
 
-	stop_memcached
-	check_memcached_status
+	stop_service "memcached"
+	check_service_status "memcached"
 
 	stop_uwsgi
 	stop_siege
