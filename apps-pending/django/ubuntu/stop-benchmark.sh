@@ -39,7 +39,7 @@ main() {
 	check_service_stopped "cassandra"
 
 	stop_service "memcached"
-	check_service_status "memcached"
+	check_service_stopped "memcached"
 
 	stop_uwsgi
 	stop_siege
