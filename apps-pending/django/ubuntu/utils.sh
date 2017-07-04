@@ -40,6 +40,21 @@ check_service_started() {
 }
 
 #######################################
+# Checks if the service was stopped succesfully
+# Arguments:
+#	  $1 = The name of the service to be checked
+# Additional information:
+#	  This method contains the exit call
+#######################################
+check_service_stopped() {
+	if service $1 status > /dev/null;
+	then 
+		echo "$1 couldn't be stopped. Benchmark run aborted"
+		exit 1
+	fi
+}
+
+#######################################
 # Checks if this script is run as root
 # Arguments:
 #	  None
