@@ -13,6 +13,7 @@ add-apt-repository -r "deb [arch=amd64]      \
 apt-key del 0EBFCD88
 apt-key del EEA14886
 
+docker stop graphite
 docker rm graphite
 docker rmi hopsoft/graphite-statsd
 
