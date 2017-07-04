@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Django workload setup
-if [ "$(id -u)" -ne "0" ]; then
-    echo "You have to be root!"
-    exit 1
-fi
+. utils.sh
+
+check_root_privilege
 
 # Add repositories
 add-apt-repository ppa:webupd8team/java
