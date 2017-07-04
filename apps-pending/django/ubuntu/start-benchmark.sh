@@ -1,5 +1,8 @@
 #!/bin/bash
 
+### Invoke the utils script ###
+.utils.sh
+
 #######################################
 # Checks the type of the supplied parameter and also it's value
 # Arguments:
@@ -7,30 +10,11 @@
 # Additional information:
 #	This method contains the exit call
 #######################################
-function check_parameter_validity {
-	re='^[0-9]+$'
+check_parameter_validity() {
+	re='^[1-9]+$'
 
 	if ! [[ $1 =~ $re ]] ; then
-	   echo "The first parameter must be a number"
-	   exit 1
-	fi
-
-	if (("$1" == 0)); then
-	   echo "The first parameter cannot be 0"
-	   exit 1
-	fi
-}
-
-#######################################
-# Checks if this script is run as root
-# Arguments:
-#	None
-# Additional information:
-#	This method contains the exit call
-#######################################
-function check_root_privilege {
-	if [ "$(id -u)" != "0" ]; then
-	   echo "This script must be run as root"
+	   echo "The first parameter must be a non zero number"
 	   exit 1
 	fi
 }
@@ -42,7 +26,7 @@ function check_root_privilege {
 # Additional information:
 #	This method contains the exit call
 #######################################
-function check_script_usage {
+check_script_usage() {
 	if [ "$1" -ne 1 ]; then
 	    echo "Usage: ./run-benchmark <number_of_attempts>"
 	    exit 1
@@ -56,102 +40,12 @@ function check_script_usage {
 # Additional information:
 #	None
 #######################################
-function set_cpu_performance {
+set_cpu_performance() {
 	for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 	do
 	    [ -f $CPUFREQ ] || continue
 	    echo -n performance > $CPUFREQ
 	done
-}
-
-#######################################
-# Starts the associated Cassandra service
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function start_cassandra {
-	 service cassandra start
-}
-
-#######################################
-# Checks if the Cassandra service is up and running
-# Arguments:
-#  	None
-# Additional information:
-#	This method contains the exit call
-#######################################
-function check_cassandra_status {
-	service cassandra status > /dev/null
-
-	if [ $? -eq 0 ];
-	then
-		echo "Cassandra is up and running"
-	else
-		echo "Cassandra couldn't be started. Benchmark run aborted"
-		exit 1
-	fi
-}
-
-#######################################
-# Starts the associated memcached service
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function start_memcached {
-	service memcached start
-}
-
-#######################################
-# Checks if the memcached service is up and running
-# Arguments:
-# 	None
-# Additional information:
-#	This method contains the exit call
-#######################################
-function check_memcached_status {
-	service memcached status > /dev/null
-
-	if [ $? -eq 0 ];
-	then
-		echo "Memcached is up and running"
-	else
-		echo "Memcached couldn't be started. Benchmark run aborted"
-		exit 1
-	fi
-}
-
-#######################################
-# Starts graphite container (docker needs to be up and running)
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-function start_graphite {
-	docker start graphite > /dev/null
-}
-
-#######################################
-# Checks if graphite is up and running
-# Arguments:
-#	None
-# Additional information:
-#	This method contains the exit call
-#######################################
-function check_graphite_status {
-	docker ps --filter "name=graphite" | grep Up > /dev/null
-
-	if [ $? -eq 0 ];
-	then
-		echo "Graphite is up and running"
-	else
-		echo "Graphite couldn't be started. Benchmark run aborted"
-		exit 1
-	fi
 }
 
 #######################################
@@ -161,11 +55,9 @@ function check_graphite_status {
 # Additional information:
 #	This method uses the virtual environment to start the uwsgi
 #######################################
-function start_uwsgi {
-	cd django-workload
-	rm -rf vend
+start_uwsgi() {
+	cd django-workload || exit 1
 
-	python3 -m virtualenv -p python3 venv > /dev/null
 	source venv/bin/activate > /dev/null
 
 	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
@@ -176,18 +68,31 @@ function start_uwsgi {
 }
 
 #######################################
+# Checks if graphite has started succesfully
+# Arguments:
+#		None
+# Additional information:
+#		None
+#######################################
+check_graphite_status() {
+	 if docker inspect -f {{.State.Running}} graphite > /dev/null; then
+	 		echo "Graphite is up and running"
+	 fi
+}
+
+#######################################
 # Runs siege <no_attempts> times
 # Arguments:
 #	$1 = The number of attempts
 # Additional information:
-#	None
+#	This method contains the exit call
 #######################################
-function run_siege {
-	cd ../client
+run_siege() {
+	cd ../client || exit 1
 
 	for (( i=1; i<=$1; i++ ))
 	do
-	   printf "\n### SIEGE RUN COUNT = %d ###\n\n" "$i"
+	   printf "\n### SIEGE RUN %d OUT OF %d ###\n\n" "$i" "$1"
 
 		 ./run-siege.sh
 	done
@@ -202,7 +107,7 @@ function run_siege {
 #	 None
 #######################################
 
-function main {
+main() {
 
 	### CHECKS ###
 	check_root_privilege
@@ -212,15 +117,16 @@ function main {
 	### SET ENVIRONMENT ###
 	set_cpu_performance
 
-	start_cassandra
-	check_cassandra_status
+	start_service "cassandra"
+	check_service_started "cassandra"
 
 	sleep 3 # THIS WAITS FOR CASSANDRA TO LOAD COMPLETELY [CHANGE IT ACCORDING TO THE CPU]
 
-	start_memcached
-	check_memcached_status
+	start_service "memcached"
+	check_service_started "memcached"
 
-	start_graphite
+	start_service "docker"
+	check_service_started "docker"
 	check_graphite_status
 
 	start_uwsgi
