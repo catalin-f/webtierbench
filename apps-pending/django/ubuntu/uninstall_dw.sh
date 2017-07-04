@@ -5,12 +5,6 @@
 
 check_root_privilege
 
-# Remove packages and config files
-apt-get remove --purge -y software-properties-common oracle-java8-installer \
-    cassandra memcached apt-transport-https ca-certificates docker-ce       \
-    build-essential git libmemcached-dev python3-virtualenv python3-dev     \
-    zlib1g-dev siege curl
-
 # Remove repositories
 add-apt-repository -r ppa:webupd8team/java
 add-apt-repository -r "deb [arch=amd64]      \
@@ -18,6 +12,14 @@ add-apt-repository -r "deb [arch=amd64]      \
     $(lsb_release -cs) stable"
 apt-key del 0EBFCD88
 apt-key del EEA14886
+
+# Remove packages and config files
+apt-get remove --purge -y software-properties-common oracle-java8-installer \
+    cassandra memcached apt-transport-https ca-certificates docker-ce       \
+    build-essential git libmemcached-dev python3-virtualenv python3-dev     \
+    zlib1g-dev siege curl
+
+apt-get -y autoremove
 
 apt-get update
 
