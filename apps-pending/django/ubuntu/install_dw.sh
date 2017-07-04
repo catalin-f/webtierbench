@@ -24,11 +24,8 @@ apt-get install -y software-properties-common oracle-java8-installer    \
     zlib1g-dev siege curl
 
 # Stop and disable services
-systemctl stop memcached.service
 systemctl disable memcached.service
-systemctl stop cassandra.service
 systemctl disable cassandra.service
-systemctl stop docker.service
 systemctl disable docker.service
 
 # Sets up a memcached server with 5 GB memory
@@ -100,6 +97,10 @@ cat >> /etc/security/limits.conf <<- EOF
 	* soft nofile 1000000
 	* hard nofile 1000000
 EOF
+
+# Add webtier username
+useradd -m -s /bin/bash -c "WebTier Benchmark User" webtier
+echo "failures = 1000000" > /home/webtier/.siegerc
 
 # Modifying limits.conf requires system reboot
 reboot
