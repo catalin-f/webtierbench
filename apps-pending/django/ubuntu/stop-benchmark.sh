@@ -22,7 +22,7 @@ function check_root_privilege {
 #	None
 #######################################
 function stop_cassandra {
-	sudo service cassandra stop
+	service cassandra stop
 }
 
 #######################################
@@ -33,7 +33,7 @@ function stop_cassandra {
 #	None
 #######################################
 function check_cassandra_status {
-	sudo service cassandra status > /dev/null
+	service cassandra status > /dev/null
 
 	if [ $? -eq 0 ];
 	then
@@ -50,7 +50,7 @@ function check_cassandra_status {
 #	None
 #######################################
 function stop_memcached {
-	sudo service memcached stop
+	service memcached stop
 }
 
 #######################################
@@ -61,7 +61,7 @@ function stop_memcached {
 #	None
 #######################################
 function check_memcached_status {
-	sudo service memcached status > /dev/null
+	service memcached status > /dev/null
 
 	if [ $? -eq 0 ];
 	then
@@ -78,7 +78,7 @@ function check_memcached_status {
 #	None
 #######################################
 function stop_uwsgi {
-	sudo killall uwsgi
+	killall uwsgi
 }
 
 #######################################
@@ -89,8 +89,8 @@ function stop_uwsgi {
 #	None
 #######################################
 function stop_siege {
-	sudo killall run-siege.sh
-	sudo killall siege
+	killall run-siege.sh
+	killall siege
 }
 
 #######################################
