@@ -72,7 +72,7 @@ function set_cpu_performance {
 #	None
 #######################################
 function start_cassandra {
-	sudo service cassandra start
+	 service cassandra start
 }
 
 #######################################
@@ -83,7 +83,7 @@ function start_cassandra {
 #	This method contains the exit call
 #######################################
 function check_cassandra_status {
-	sudo service cassandra status > /dev/null
+	service cassandra status > /dev/null
 
 	if [ $? -eq 0 ];
 	then
@@ -102,7 +102,7 @@ function check_cassandra_status {
 #	None
 #######################################
 function start_memcached {
-	sudo service memcached start
+	service memcached start
 }
 
 #######################################
@@ -113,7 +113,7 @@ function start_memcached {
 #	This method contains the exit call
 #######################################
 function check_memcached_status {
-	sudo service memcached status > /dev/null
+	service memcached status > /dev/null
 
 	if [ $? -eq 0 ];
 	then
@@ -132,7 +132,7 @@ function check_memcached_status {
 #	None
 #######################################
 function start_graphite {
-	sudo docker start graphite > /dev/null
+	docker start graphite > /dev/null
 }
 
 #######################################
@@ -168,7 +168,7 @@ function start_uwsgi {
 	python3 -m virtualenv -p python3 venv > /dev/null
 	source venv/bin/activate > /dev/null
 
-	sudo pip -H install -r requirements.txt > /dev/null
+	pip install -r requirements.txt > /dev/null
 
 	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
