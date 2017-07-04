@@ -8,7 +8,7 @@ source utils.sh
 # Arguments:
 # 	$1 = the parameter to be checked
 # Additional information:
-#		This method contains the exit call
+#	This method contains the exit call
 #######################################
 check_parameter_validity() {
 	re='^[1-9]+$'
@@ -22,9 +22,9 @@ check_parameter_validity() {
 #######################################
 # Checks the number of parameters supplied to the script
 # Arguments:
-#		$1 = the number of supplied parameters
+#	$1 = the number of supplied parameters
 # Additional information:
-#		This method contains the exit call
+#	This method contains the exit call
 #######################################
 check_script_usage() {
 	if [ "$1" -ne 1 ]; then
@@ -36,9 +36,9 @@ check_script_usage() {
 #######################################
 # Sets the CPU FREQUENCY to no scaling in order to obtain accurate measurements
 # Arguments:
-#		None
+#	None
 # Additional information:
-#		None
+#	None
 #######################################
 set_cpu_performance() {
 	for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
@@ -51,9 +51,9 @@ set_cpu_performance() {
 #######################################
 # Starts uwsgi in background
 # Arguments:
-#		None
+#	None
 # Additional information:
-#		This method uses the virtual environment to start the uwsgi
+#	This method uses the virtual environment to start the uwsgi
 #######################################
 start_uwsgi() {
 	cd django-workload || exit 1
@@ -70,9 +70,9 @@ start_uwsgi() {
 #######################################
 # Checks if graphite has started succesfully
 # Arguments:
-#		None
+#	None
 # Additional information:
-#		None
+#	None
 #######################################
 check_graphite_status() {
 	 if docker inspect -f {{.State.Running}} graphite > /dev/null; then
@@ -83,9 +83,9 @@ check_graphite_status() {
 #######################################
 # Runs siege <no_attempts> times
 # Arguments:
-#		$1 = The number of attempts
+#	$1 = The number of attempts
 # Additional information:
-#		This method contains the exit call
+#	This method contains the exit call
 #######################################
 run_siege() {
 	cd ../client || exit 1
@@ -101,7 +101,7 @@ run_siege() {
 #######################################
 # Executes all the methods described above
 # Arguments:
-#		$1 = the number of paramters supplied to the script
+#	$1 = the number of paramters supplied to the script
 #  	$2 = the first parameter
 # Additional information:
 #	 None
@@ -120,7 +120,7 @@ main() {
 	start_service "cassandra"
 	check_service_started "cassandra"
 
-	sleep 3 # THIS WAITS FOR CASSANDRA TO LOAD COMPLETELY [CHANGE IT ACCORDING TO THE CPU]
+	sleep 5 # THIS WAITS FOR CASSANDRA TO LOAD COMPLETELY [CHANGE IT ACCORDING TO THE CPU]
 
 	start_service "memcached"
 	check_service_started "memcached"
