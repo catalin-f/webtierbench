@@ -23,6 +23,8 @@ apt-get install -y software-properties-common oracle-java8-installer    \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
     zlib1g-dev siege curl
 
+docker pull hopsoft/graphite-statsd
+
 # Stop and disable services
 systemctl disable memcached.service
 systemctl disable cassandra.service
