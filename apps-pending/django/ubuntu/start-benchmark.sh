@@ -56,7 +56,7 @@ set_cpu_performance() {
 #	This method uses the virtual environment to start the uwsgi
 #######################################
 start_uwsgi() {
-	cd django-workload || exit 1
+	cd django-workload/django-workload || exit 1
 
 	source venv/bin/activate > /dev/null
 
