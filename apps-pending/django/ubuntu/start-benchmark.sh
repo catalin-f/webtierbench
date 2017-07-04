@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Invoke the utils script ###
-.utils.sh
+source utils.sh
 
 #######################################
 # Checks the type of the supplied parameter and also it's value
