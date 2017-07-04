@@ -13,20 +13,21 @@ add-apt-repository -r "deb [arch=amd64]      \
 apt-key del 0EBFCD88
 apt-key del EEA14886
 
+docker rm graphite
+docker rmi hopsoft/graphite-statsd
+
 # Remove packages and config files
-apt-get remove --purge -y software-properties-common oracle-java8-installer \
-    cassandra memcached apt-transport-https ca-certificates docker-ce       \
-    build-essential git libmemcached-dev python3-virtualenv python3-dev     \
+apt-get remove -y software-properties-common oracle-java8-installer     \
+    cassandra memcached apt-transport-https ca-certificates docker-ce   \
+    build-essential git libmemcached-dev python3-virtualenv python3-dev \
     zlib1g-dev siege curl
 
 apt-get -y autoremove
 
 apt-get update
 
-docker rm graphite
-docker rmi hopsoft/graphite-statsd
-
-rm -rf django-workload /etc/memcached.conf.old
+rm -rf django-workload
+mv -f /etc/memcached.conf.old /etc/memcached.conf
 
 # Remove sysctl settings
 sed -e '/net.ipv4.tcp_tw_reuse=1/d'                 \
