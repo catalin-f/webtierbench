@@ -88,7 +88,7 @@ check_graphite_status() {
 #	This method contains the exit call
 #######################################
 run_siege() {
-	cd ../client || exit 1
+	cd django-workload/client || exit 1
 
 	for (( i=1; i<=$1; i++ ))
 	do
@@ -129,10 +129,10 @@ main() {
 	check_service_started "docker"
 	check_graphite_status
 
-	start_uwsgi
+	(start_uwsgi)
 
 	### RUN THE BENCHMARK ###
-	run_siege $2
+	(run_siege $2)
 
 	./stop-benchmark.sh
 }
