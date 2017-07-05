@@ -127,6 +127,7 @@ EOF
 echo -e "\n\nCreate webtier username ..."
 useradd -m -s /bin/bash -c "WebTier Benchmark User" webtier
 echo "failures = 1000000" > /home/webtier/.siegerc
+chown webtier.webtier /home/webtier/.siegerc
 
 echo
 # Modifying limits.conf requires system reboot
