@@ -6,6 +6,7 @@
 check_root_privilege
 
 # Add repositories
+echo -e "\n\nAdd apt repositories ..."
 add-apt-repository ppa:webupd8team/java
 echo "deb http://www.apache.org/dist/cassandra/debian 310x main" | \
      tee -a /etc/apt/sources.list.d/cassandra.sources.list
@@ -17,17 +18,17 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
 apt-get update
 
 # Install packages
-echo "Install packages ..."
+echo -e "\n\nInstall packages ..."
 apt-get install -y software-properties-common oracle-java8-installer    \
     cassandra memcached apt-transport-https ca-certificates docker-ce   \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
     zlib1g-dev siege curl
 
-echo "Docker pull graphite image ..."
+echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
 
 #Initialize docker container
-echo "Initialize container ..."
+echo -e "\n\nInitialize container ..."
 docker run -d               \
     --name graphite         \
     --restart=always        \
@@ -39,14 +40,14 @@ docker run -d               \
     hopsoft/graphite-statsd
 
 # Disable services
-echo "Disable services ..."
+echo -e "\n\nDisable services ..."
 systemctl disable memcached.service
 systemctl disable cassandra.service
 systemctl disable docker.service
 
 # Sets up a memcached server with 5 GB memory
 # Check if system it's having 5 GB memory
-echo "Check system memory ..."
+echo -e "\n\nCheck system memory ..."
 mem_total_MB=$(free -m | grep Mem | awk '{print $2}')
 mem_av_MB=$(free -m | grep Mem | awk '{print $NF}')
 
@@ -62,19 +63,19 @@ else
     exit 3
 fi
 
-echo "Clone django-workload repository ..."
+echo -e "\n\nClone django-workload repository ..."
 git clone https://github.com/Instagram/django-workload
 
 # Config memcached
 # Backup old memcached config file
 if [ -f /etc/memcached.conf ]; then
     mv /etc/memcached.conf /etc/memcached.conf.old
-    echo "Backup /etc/memcached.conf to /etc/memcached.conf.old"
+    echo -e "\n\nBackup /etc/memcached.conf to /etc/memcached.conf.old"
 fi
 
 . memcached.cfg
 
-echo "Write memcached config file ..."
+echo -e "\n\nWrite memcached config file ..."
 cat > /etc/memcached.conf <<- EOF
 	# Daemon mode
 	-d
@@ -85,7 +86,7 @@ cat > /etc/memcached.conf <<- EOF
 	-l "$LISTEN"
 EOF
 
-echo "Create python virtual environment ..."
+echo -e "\n\nCreate python virtual environment ..."
 (
 cd django-workload/django-workload || exit 4
 python3 -m virtualenv -p python3 venv
@@ -95,14 +96,14 @@ deactivate
 cp cluster_settings_template.py cluster_settings.py
 )
 
-echo "Generate siege urls file ..."
+echo -e "\n\nGenerate siege urls file ..."
 (
 cd django-workload/client || exit 5
 ./gen-urls-file
 )
 
 # Append client settings to /etc/sysctl.conf
-echo "Write sysctl settings ..."
+echo -e "\n\nWrite sysctl settings ..."
 cat >> /etc/sysctl.conf <<- EOF
 	net.ipv4.tcp_tw_reuse=1
 	net.ipv4.ip_local_port_range=1024 64000
@@ -113,7 +114,7 @@ cat >> /etc/sysctl.conf <<- EOF
 	net.netfilter.nf_conntrack_max=256000
 EOF
 
-echo "Add nf_conntrack to modules ..."
+echo -e "\n\nAdd nf_conntrack to modules ..."
 echo "nf_conntrack" >> /etc/modules
 
 cat >> /etc/security/limits.conf <<- EOF
@@ -122,10 +123,12 @@ cat >> /etc/security/limits.conf <<- EOF
 EOF
 
 # Add webtier username
-echo "Create webtier username ..."
+echo -e "\n\nCreate webtier username ..."
 useradd -m -s /bin/bash -c "WebTier Benchmark User" webtier
 echo "failures = 1000000" > /home/webtier/.siegerc
 
+echo -e "\n\n"
 # Modifying limits.conf requires system reboot
-read -rp "Press [ENTER] to reboot"
+read -rsn1 -p "Press any key to reboot"
+echo "Reboot ..."
 reboot
