@@ -1,29 +1,31 @@
 #!/usr/bin/env python
-from _base import WEBTIER_VERSION
+from _base import _WEBTIER_VERSION
 from _base import debugLogger
 from _base import masterLogger
 from _base import detect_os
 from _base import Deployment
 from _base import pickle_deployment
 from _base import parse_deploy_args
+from _base import load_deploy_configuration
+from _base import save_deploy_configuration
 from _apps import Apache2
 from _apps import Perf
 from _apps import ApacheBenchmark
 
 
 def main():
-    debugLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
-    masterLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
+    debugLogger("WebTier Benchmark version: %s" % _WEBTIER_VERSION)
+    masterLogger("WebTier Benchmark version: %s" % _WEBTIER_VERSION)
 
-    #TODO: read command line params
-    setupJson = parse_deploy_args()
+    setup_json_filename = parse_deploy_args()
 
-
-    #TODO: parse JSON and save it to .deployment.json
-    #TODO: check "setup" to be valid
-    #if setup is not None:
-    #    data = json_parse_setup(setup)
-    #    pprint(data)
+    # Parse JSON and save it locally
+    try:
+        config_json = load_deploy_configuration(setup_json_filename)
+    except Exception as ex:
+        #TODO should something else be done before crashing?
+        raise ex
+    save_deploy_configuration(config_json)
 
     distribution, version = detect_os()
     debugLogger("Host OS distribution: %s" % distribution)

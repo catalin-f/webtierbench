@@ -1,23 +1,34 @@
 {
-	"workload": "django",
-	"master": "192.168.1.1",
-	"slave": ["192.168.1.2", "192.168.1.3"],
-	"client": {
-		"type": "siege",
-		"ip": "192.168.1.1"
-	},
-	"cache": [
-		{
-			"type": "memcached",
-			"ip": "192.168.1.2",
-			"port": "1234"
-		}
-	],
-	"db": [
-		{
-			"type": "cassandra/mysql/mariadb",
-			"ip": "192.168.1.3",
-			"port": "3306"
-		}
-	]
+  "workload": "django",
+  "master": "192.168.1.1",
+  "slave": [
+    "192.168.1.2",
+    "192.168.1.3"
+  ],
+  "client": {
+    "name": "siege",
+    "ip": "192.168.1.1"
+  },
+  "cache": [
+    {
+      "name": "memcached",
+      "ip": "192.168.1.2",
+      "port": "1234"
+    }
+  ],
+  "db": [
+    {
+      "name": "cassandra",
+      "ip": "192.168.1.3",
+      "port": "3306"
+    }
+  ],
+  "perf": [
+    {
+      "name": "perf"
+    },
+    {
+      "name": "statsd"
+    }
+  ]
 }

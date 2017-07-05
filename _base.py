@@ -7,10 +7,18 @@ import errno
 import time
 import argparse
 import json
+from jsonschema import validate
 
-WEBTIER_VERSION = "1.0"
-WEBTIER_NAME = "WebTier Benchmark"
+_WEBTIER_VERSION = "1.0"
+_WEBTIER_NAME = "WebTier Benchmark"
+_WEBTIER_DEPLOYMENT_JSON = ".deployment.json"
+_WEBTIER_RUN_JSON = ".running.json"
 
+_ALLOWED_WORKLOADS = ['django', 'wordpress', 'apache2']
+_ALLOWED_CLIENTS = ['siege', 'ab']
+_ALLOWED_CACHES = ['memcached']
+_ALLOWED_DBS = ['cassandra']
+_ALLOWED_PERFS = ['perf', 'statsd']
 
 ###############################################################################
 # Common functions and classes
@@ -77,7 +85,7 @@ def _file_exists(input):
 
 def parse_deploy_args():
     parser = argparse.ArgumentParser(
-        description="%s v%s deployment application" % (WEBTIER_NAME, WEBTIER_VERSION)
+        description="%s v%s deployment application" % (_WEBTIER_NAME, _WEBTIER_VERSION)
     )
     parser.add_argument(
         '-s', '--setup',
@@ -91,7 +99,7 @@ def parse_deploy_args():
 
 def parse_run_args():
     parser = argparse.ArgumentParser(
-        description="%s v%s benchmark run application" % (WEBTIER_NAME, WEBTIER_VERSION)
+        description="%s v%s benchmark run application" % (_WEBTIER_NAME, _WEBTIER_VERSION)
     )
     parser.add_argument(
         '-b', '--benchmark',
@@ -105,24 +113,92 @@ def parse_run_args():
 
 def parse_undeploy_args():
     parser = argparse.ArgumentParser(
-        description="%s v%s undeployment application" % (WEBTIER_NAME, WEBTIER_VERSION)
+        description="%s v%s undeployment application" % (_WEBTIER_NAME, _WEBTIER_VERSION)
     )
     parser.parse_args()
     pass
 
 
-def json_parse_setup(jsonfile):
-    '''This function parses a json file and returns a dictionary'''
-    # doc: https://stackoverflow.com/questions/2835559/parsing-values-from-a-json-file-using-python
-	
-    with open(jsonfile) as data_file:
-        data = json.load(data_file)
-        if data["workload"] == "django" or data["workload"] == "wordpress":
-            return data
-        else:
-            raise Exception ('\"workload\" not present in json file')
-            return None
+###############################################################################
+# JSON input file parse and validate
+###############################################################################
+_deploySchema = {
+    'type': 'object',
+    'properties': {
+        'workload': {'type': 'string', 'enum': _ALLOWED_WORKLOADS},
+        'master': {'type': 'string'},
+        'slave': {
+            'type': 'array',
+            'items': {
+                'type': 'string'
+            }
+        },
+        'client': {
+            'type': 'object',
+            'properties': {
+                'name': {'type': 'string', 'enum': _ALLOWED_CLIENTS},
+                'ip': {'type': 'string'}
+            },
+            'required': ['name']
+        },
+        'cache': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'name': {'type': 'string', 'enum': _ALLOWED_CACHES},
+                    'ip': {'type': 'string'},
+                    'port': {'type': 'string'}
+                },
+                'required': ['name']
+            },
+            "minItems": 0
+        },
+        'db': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'name': {'type': 'string', 'enum': _ALLOWED_DBS},
+                    'ip': {'type': 'string'},
+                    'port': {'type': 'string'}
+                },
+                'required': ['name']
+            },
+            "minItems": 0
+        },
+        'perf': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'name': {'type': 'string', 'enum': _ALLOWED_PERFS},
+                },
+                'required': ['name']
+            },
+            "minItems": 0
+        }
 
+    },
+    'required': ['workload', 'client', 'cache','db']
+}
+
+_runSchema = {}
+
+
+def load_deploy_configuration(config_filename):
+    with open(config_filename) as data:
+        config_json = json.load(data)
+    try:
+        validate(config_json, _deploySchema)
+    except Exception as ex:
+        raise Exception("Input JSON file is not well formed: %s" % ex.message)
+    return config_json
+
+
+def save_deploy_configuration(config_json):
+    with open(_WEBTIER_DEPLOYMENT_JSON, 'w') as outfile:
+        json.dump(config_json, outfile)
 
 
 ###############################################################################

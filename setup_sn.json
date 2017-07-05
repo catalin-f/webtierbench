@@ -1,16 +1,24 @@
 {
-	"workload": "django",
-	"client": {
-		"type": "siege"
-	},
-	"cache": [
-		{
-			"type": "memcached"
-		}
-	],
-	"db": [
-		{
-			"type":"cassandra/mysql/mariadb"
-		}
-	]
+  "workload": "django",
+  "client": {
+    "name": "siege"
+  },
+  "cache": [
+    {
+      "name": "memcached"
+    }
+  ],
+  "db": [
+    {
+      "name": "cassandra"
+    }
+  ],
+  "perf": [
+    {
+      "name": "perf"
+    },
+    {
+      "name": "statsd"
+    }
+  ]
 }

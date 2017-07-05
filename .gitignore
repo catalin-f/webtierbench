@@ -6,3 +6,5 @@
 *.done
 measurements/*
 *.data
+.deployment.json
+.running.json
