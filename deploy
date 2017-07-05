@@ -44,6 +44,7 @@ def main():
         print("These settings need a reboot! Please reboot the machine and run the deploy command again!")
         return 0
 
+    #TODO get the configuration for each app from config_json and pass it in the constructor
     apacheConfig = {
         "ip": "localhost",
         "port": "80"
