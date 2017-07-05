@@ -1,0 +1,19 @@
+{
+    "scenario": "endpoint",
+    "workers": 144,
+    "duration": 120,
+    "log": "benchclient.log",
+    "endpoint": [
+        {
+            "address": "http://localhost/enpoint1",
+            "type": "GET",
+            "delay": 0.1
+        },
+        {
+            "address": "http://localhost/enpoint2",
+            "type": "GET",
+            "delay": 0.2
+        }
+
+    ]
+}
