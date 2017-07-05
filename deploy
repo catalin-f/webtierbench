@@ -20,17 +20,21 @@ def main():
     masterLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
 
     #DEBUG IONEL start
-    print "\nIOnel test start"
+    #
+    print "\n** IOnel test start \n**"
     #TODO: read command line params
     setup, benchmark = get_args()
 
+    print setup
+
     
     #TODO: parse JSON and save it to .deployment.json
-    #data = json_parse_setup('setup_mn.json')
-    data = json_parse_setup(str(setup))
-    pprint(data)    
+    #TODO: check "setup" to be valid
+    if setup is not None:
+        data = json_parse_setup(setup)
+        pprint(data)
 
-    print "\nIOnel test ENDED"
+    print "\n** IOnel test ENDED **\n"
     #DEBUG IONEL start
 
     distribution, version = detect_os()

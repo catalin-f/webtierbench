@@ -65,9 +65,6 @@ def unpickle_deployment():
 
 
 
-# use: python cmdline.py --setup=setup.json --benchmark=benchmark.json
-# use: python cmdline.py --setup=setup.json
-# use: python cmdline.py --benchmark=benchmark.json
 def get_args():
     '''example from https://gist.github.com/redja/9276216'''
 
@@ -90,13 +87,21 @@ def get_args():
     return setup, benchmark
 
 
+
 def json_parse_setup(jsonfile):
     '''This function parses a json file and returns a dictionary'''
     # doc: https://stackoverflow.com/questions/2835559/parsing-values-from-a-json-file-using-python
 	
     with open(jsonfile) as data_file:
         data = json.load(data_file)
-        return data
+        print data["workload"]
+        if data["workload"] == "django":
+            return data
+        elif data["workload"] == "wordpress":
+            return data
+        else:
+            raise Exception ('\"workload\" not present in json file')
+            return None
 
 
 
