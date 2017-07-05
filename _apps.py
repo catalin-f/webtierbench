@@ -38,6 +38,6 @@ class ApacheBenchmark(Application):
 
     def start(self, async=False):
         set_env('WEBTIER_AB_WORKERS', self.benchmark_config['workers'])
-        set_env('WEBTIER_AB_REQUESTS', self.benchmark_config['requests'])
-        set_env('WEBTIER_AB_ENDPOINT', self.benchmark_config['endpoint'])
+        set_env('WEBTIER_AB_REQUESTS', 1000)
+        set_env('WEBTIER_AB_ENDPOINT', "http://localhost:80/index.html")
         return super(ApacheBenchmark, self).start(async)

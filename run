@@ -29,6 +29,10 @@ def main():
     deployment = unpickle_deployment()
     debugLogger("Unpickled deployment data")
 
+    deployment.set_benchmark_config(config_json)
+    debugLogger("Benchmark configuration set: %s" % json.dumps(config_json))
+    masterLogger("Benchmark configuration set: %s" % json.dumps(config_json))
+
     out, err = deployment.start_applications()
     debugLogger("Started applications stdout: %s" % out)
     debugLogger("Started applications stderr: %s" % err)
@@ -36,10 +40,6 @@ def main():
     out, err = deployment.start_performance_measurements()
     debugLogger("Started performance measurements: %s" % out)
     debugLogger("Started performance measurements: %s" % err)
-
-    deployment.set_benchmark_config(config_json)
-    debugLogger("Benchmark configuration set: %s" % json.dumps(config_json))
-    masterLogger("Benchmark configuration set: %s" % json.dumps(config_json))
 
     out, err = deployment.start_benchmark_client()
     debugLogger("Benchmark results stdout: %s" % out)

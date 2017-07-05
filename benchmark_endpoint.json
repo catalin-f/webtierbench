@@ -1,6 +1,6 @@
 {
     "scenario": "endpoint",
-    "workers": 144,
+    "workers": 4,
     "duration": 120,
     "log": "benchclient.log",
     "endpoint": [
