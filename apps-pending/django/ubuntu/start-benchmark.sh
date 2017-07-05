@@ -94,7 +94,7 @@ run_siege() {
 	do
 	   printf "\n### SIEGE RUN %d OUT OF %d ###\n\n" "$i" "$1"
 
-		 ./run-siege.sh
+		 su webtier -c "LOG=/home/webtier/siege.log ./run-siege.sh"
 	done
 }
 
@@ -125,9 +125,11 @@ main() {
 	start_service "memcached"
 	check_service_started "memcached"
 
-	start_service "docker"
-	check_service_started "docker"
-	check_graphite_status
+	# NEED TO INVESTIGATE WHY STATSD FILLS THE STORAGE VERY FAST #
+
+	#start_service "docker"
+	#check_service_started "docker"
+	#check_graphite_status
 
 	(start_uwsgi)
 
