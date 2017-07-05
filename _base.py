@@ -7,9 +7,9 @@ import errno
 import time
 import argparse
 import json
-from pprint import pprint
 
-WEBTIER_VERSION = "1.1"
+WEBTIER_VERSION = "1.0"
+WEBTIER_NAME = "WebTier Benchmark"
 
 
 ###############################################################################
@@ -64,45 +64,51 @@ def unpickle_deployment():
     return deployment
 
 
+###############################################################################
+# Command line parsers
+###############################################################################
+def _file_exists(input):
+    if input.strip() == '':
+        raise argparse.ArgumentTypeError("Please specify an input filename")
+    if os.path.exists(input):
+        return input
+    raise argparse.ArgumentTypeError("Please use a valid filename")
 
-def get_args_setup():
-    '''example from https://gist.github.com/redja/9276216'''
 
-    '''This function parses and return arguments passed in'''
-    # Assign description to the help doc
+def parse_deploy_args():
     parser = argparse.ArgumentParser(
-        description='Script retrieves schedules from a given server')
-    # Add arguments
+        description="%s v%s deployment application" % (WEBTIER_NAME, WEBTIER_VERSION)
+    )
     parser.add_argument(
-        '-s', '--setup', type=str, help='Json file for single-node configuration', required=True)
-
-
-    # Array for all arguments passed to script
+        '-s', '--setup',
+        help='JSON file containing the benchmark deployment information',
+        type=_file_exists,
+        required=True
+    )
     args = parser.parse_args()
-    # Assign args to variables
-    setup = args.setup
-    # Return all variable values
-    return setup
+    return args.setup
 
 
-def get_args_benchmark():
-    '''example from https://gist.github.com/redja/9276216'''
-
-    '''This function parses and return arguments passed in'''
-    # Assign description to the help doc
+def parse_run_args():
     parser = argparse.ArgumentParser(
-        description='Script retrieves schedules from a given server')
-    # Add arguments
+        description="%s v%s benchmark run application" % (WEBTIER_NAME, WEBTIER_VERSION)
+    )
     parser.add_argument(
-        '-b', '--benchmark', type=str, help='Json file for multi-node configuration', required=True)
-
-    # Array for all arguments passed to script
+        '-b', '--benchmark',
+        help='JSON file containing the benchmark parameters',
+        type=_file_exists,
+        required=True
+    )
     args = parser.parse_args()
-    # Assign args to variables
-    benchmark = args.benchmark
-    # Return all variable values
-    return benchmark
+    return args.setup
 
+
+def parse_undeploy_args():
+    parser = argparse.ArgumentParser(
+        description="%s v%s undeployment application" % (WEBTIER_NAME, WEBTIER_VERSION)
+    )
+    parser.parse_args()
+    pass
 
 
 def json_parse_setup(jsonfile):
@@ -233,7 +239,7 @@ class Deployment:
             app.start(async=True)
         return '', ''
 
-    def start_benchmark_client(self):
+    def start_benchmark_client(self, benchmarkConfig):
         out, err = self.client.start()
         return out, err
 
