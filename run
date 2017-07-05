@@ -3,9 +3,12 @@ from _base import debugLogger
 from _base import masterLogger
 from _base import Deployment  # do not remove
 from _base import unpickle_deployment
-
+from _base import parse_deploy_args
 
 def main():
+    # TODO: read command line params
+    benchmarkJson = parse_deploy_args()
+
     deployment = unpickle_deployment()
     debugLogger("Unpickled deployment data")
 
@@ -17,7 +20,7 @@ def main():
     debugLogger("Started performance measurements: %s" % out)
     debugLogger("Started performance measurements: %s" % err)
 
-    out, err = deployment.start_benchmark_client()
+    out, err = deployment.start_benchmark_client({})
     debugLogger("Benchmark results stdout: %s" % out)
     debugLogger("Benchmark results stderr: %s" % err)
     masterLogger("Benchmark results: %s %s" % (out, err))
