@@ -18,6 +18,7 @@ def main():
     debugLogger("%s version: %s (deploy)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
     masterLogger("%s version: %s (deploy)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
 
+    # Read command line params
     setup_json_filename = parse_deploy_args()
 
     # Parse JSON and save it locally
@@ -32,6 +33,7 @@ def main():
     debugLogger("Host OS distribution: %s" % distribution)
     debugLogger("Host OS version: %s" % version)
 
+    # Create deployment environment
     deployment = Deployment('mydeployment', distribution, version)
 
     out, err = deployment.common_host_setup()
@@ -70,6 +72,7 @@ def main():
     debugLogger("Deployment stdout: %s " % out)
     debugLogger("Deployment stderr: %s " % err)
 
+    # Save deployment environment
     pickle_deployment(deployment)
     debugLogger("Pickled deployment data")
 
