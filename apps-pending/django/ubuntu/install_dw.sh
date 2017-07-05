@@ -103,7 +103,7 @@ cd django-workload/client || exit 5
 )
 
 # Append client settings to /etc/sysctl.conf
-echo -e "\n\nWrite sysctl settings ..."
+echo -e "\nWrite sysctl settings ..."
 cat >> /etc/sysctl.conf <<- EOF
 	net.ipv4.tcp_tw_reuse=1
 	net.ipv4.ip_local_port_range=1024 64000
@@ -127,8 +127,7 @@ echo -e "\n\nCreate webtier username ..."
 useradd -m -s /bin/bash -c "WebTier Benchmark User" webtier
 echo "failures = 1000000" > /home/webtier/.siegerc
 
-echo -e "\n\n"
+echo
 # Modifying limits.conf requires system reboot
 read -rsn1 -p "Press any key to reboot"
-echo "Reboot ..."
 reboot
