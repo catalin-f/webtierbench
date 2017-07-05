@@ -1,8 +1,11 @@
 #!/usr/bin/env python
+from _base import parse_undeploy_args
 import os
 
 
 def main():
+    parse_undeploy_args()
+
     #TODO add a cleanup method in _base.Deployment
     os.system('rm -f .host.setup.done')
     os.system('rm -f /tmp/.host.reboot.required')
