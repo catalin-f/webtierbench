@@ -7,6 +7,7 @@ from _base import unpickle_deployment
 from _base import parse_run_args
 from _base import load_run_configuration
 from _base import save_run_configuration
+import json
 
 
 def main():
@@ -36,7 +37,11 @@ def main():
     debugLogger("Started performance measurements: %s" % out)
     debugLogger("Started performance measurements: %s" % err)
 
-    out, err = deployment.start_benchmark_client(config_json)
+    deployment.set_benchmark_config(config_json)
+    debugLogger("Benchmark configuration set: %s" % json.dumps(config_json))
+    masterLogger("Benchmark configuration set: %s" % json.dumps(config_json))
+
+    out, err = deployment.start_benchmark_client()
     debugLogger("Benchmark results stdout: %s" % out)
     debugLogger("Benchmark results stderr: %s" % err)
     masterLogger("Benchmark results: %s %s" % (out, err))

@@ -299,11 +299,11 @@ _OUT_SEPARATOR = ' '
 
 
 class Application(object):
-    def __init__(self, name, config, distribution, version):
+    def __init__(self, name, deploy_config, distribution, version):
         if name not in _ALLOWED_APPLICATIONS:
             raise NotImplementedError("Unknown application: %s" % (name))
         self.name = name
-        self.config = config
+        self.deploy_config = deploy_config
         self.distribution = distribution
         self.version = version
 
@@ -379,7 +379,10 @@ class Deployment:
             app.start(async=True)
         return '', ''
 
-    def start_benchmark_client(self, benchmark_config):
+    def set_benchmark_config(self, benchmark_config):
+        self.client.set_benchmark_config(benchmark_config)
+
+    def start_benchmark_client(self):
         out, err = self.client.start()
         return out, err
 
