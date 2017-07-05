@@ -1,5 +1,5 @@
 {
-	"workload": "django1",
+	"workload": "django",
 	"client": {
 		"type": "siege"
 	},

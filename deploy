@@ -5,7 +5,8 @@ from _base import masterLogger
 from _base import detect_os
 from _base import Deployment
 from _base import pickle_deployment
-from _base import get_args
+from _base import get_args_setup
+from _base import get_args_benchmark
 from _base import json_parse_setup
 from _apps import Apache2
 from _apps import Perf
@@ -19,23 +20,17 @@ def main():
     debugLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
     masterLogger("WebTier Benchmark version: %s" % WEBTIER_VERSION)
 
-    #DEBUG IONEL start
-    #
-    print "\n** IOnel test start \n**"
     #TODO: read command line params
-    setup, benchmark = get_args()
+    setup = get_args_setup()
+    #benchmark = get_args_benchmark()
 
-    print setup
-
-    
     #TODO: parse JSON and save it to .deployment.json
     #TODO: check "setup" to be valid
     if setup is not None:
         data = json_parse_setup(setup)
         pprint(data)
 
-    print "\n** IOnel test ENDED **\n"
-    #DEBUG IONEL start
+
 
     distribution, version = detect_os()
     debugLogger("Host OS distribution: %s" % distribution)

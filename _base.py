@@ -65,7 +65,7 @@ def unpickle_deployment():
 
 
 
-def get_args():
+def get_args_setup():
     '''example from https://gist.github.com/redja/9276216'''
 
     '''This function parses and return arguments passed in'''
@@ -74,17 +74,34 @@ def get_args():
         description='Script retrieves schedules from a given server')
     # Add arguments
     parser.add_argument(
-        '-s', '--setup', type=str, help='Json file for single-node configuration', required=False)
-    parser.add_argument(
-        '-b', '--benchmark', type=str, help='Json file for multi-node configuration', required=False)
+        '-s', '--setup', type=str, help='Json file for single-node configuration', required=True)
+
 
     # Array for all arguments passed to script
     args = parser.parse_args()
     # Assign args to variables
     setup = args.setup
+    # Return all variable values
+    return setup
+
+
+def get_args_benchmark():
+    '''example from https://gist.github.com/redja/9276216'''
+
+    '''This function parses and return arguments passed in'''
+    # Assign description to the help doc
+    parser = argparse.ArgumentParser(
+        description='Script retrieves schedules from a given server')
+    # Add arguments
+    parser.add_argument(
+        '-b', '--benchmark', type=str, help='Json file for multi-node configuration', required=True)
+
+    # Array for all arguments passed to script
+    args = parser.parse_args()
+    # Assign args to variables
     benchmark = args.benchmark
     # Return all variable values
-    return setup, benchmark
+    return benchmark
 
 
 
@@ -94,10 +111,7 @@ def json_parse_setup(jsonfile):
 	
     with open(jsonfile) as data_file:
         data = json.load(data_file)
-        print data["workload"]
-        if data["workload"] == "django":
-            return data
-        elif data["workload"] == "wordpress":
+        if data["workload"] == "django" or data["workload"] == "wordpress":
             return data
         else:
             raise Exception ('\"workload\" not present in json file')
