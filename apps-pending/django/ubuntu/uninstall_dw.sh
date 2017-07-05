@@ -22,10 +22,10 @@ docker rmi hopsoft/graphite-statsd
 
 # Remove packages
 echo -e "\n\nRemove packages ..."
-apt-get purge -y software-properties-common oracle-java8-installer      \
-    memcached cassandra apt-transport-https ca-certificates docker-ce   \
-    build-essential git libmemcached-dev python3-virtualenv python3-dev \
-    zlib1g-dev siege curl
+apt-get purge -y oracle-java8-installer \
+    memcached cassandra docker-ce       \
+    python3-virtualenv python3-dev      \
+    zlib1g-dev siege 
 
 # Do not remove ntp
 apt-mark manual ntp
