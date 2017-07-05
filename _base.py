@@ -108,7 +108,7 @@ def parse_run_args():
         required=True
     )
     args = parser.parse_args()
-    return args.setup
+    return args.benchmark
 
 
 def parse_undeploy_args():
@@ -176,14 +176,57 @@ _deploySchema = {
                 },
                 'required': ['name']
             },
-            "minItems": 0
+            'minItems': 0
         }
 
     },
     'required': ['workload', 'client', 'cache','db']
 }
 
-_runSchema = {}
+
+_runSchema_general = {
+    'type': 'object',
+    'properties': {
+        'scenario': {'type': 'string', 'enum': ['file', 'endpoint']},
+    },
+    'required': ['scenario']
+}
+
+
+_runSchema_file = {
+    'type': 'object',
+    'properties': {
+        'workers': {'type': 'integer', 'minimum': 1},
+        'duration': {'type': 'number', 'minimum': 1},
+        'log': {'type': 'string'},
+        'filename': {'type': 'string'}
+    },
+    'required': ['workers', 'duration', 'filename']
+}
+
+
+_runSchema_endpoint = {
+    'type': 'object',
+    'properties': {
+        'workers': {'type': 'integer', 'minimum': 1},
+        'duration': {'type': 'number', 'minimum': 1},
+        'log': {'type': 'string'},
+        'endpoint': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'address': {'type': 'string'},
+                    'type': {'type': 'string', 'enum': ['GET', 'POST', 'PUT', 'DELETE']},
+                    'delay': {'type': 'number'}
+                },
+                'required': ['address', 'type', 'delay']
+            },
+            'minItems': 1
+        }
+    },
+    'required': ['workers', 'duration', 'endpoint']
+}
 
 
 def load_deploy_configuration(config_filename):
@@ -197,6 +240,25 @@ def load_deploy_configuration(config_filename):
 
 
 def save_deploy_configuration(config_json):
+    with open(_WEBTIER_DEPLOYMENT_JSON, 'w') as outfile:
+        json.dump(config_json, outfile)
+
+
+def load_run_configuration(config_filename):
+    with open(config_filename) as data:
+        config_json = json.load(data)
+    try:
+        validate(config_json, _runSchema_general)
+        if config_json['scenario'] == 'file':
+            validate(config_json, _runSchema_file)
+        else:
+            validate(config_json, _runSchema_endpoint)
+    except Exception as ex:
+        raise Exception("Input JSON file is not well formed: %s" % ex.message)
+    return config_json
+
+
+def save_run_configuration(config_json):
     with open(_WEBTIER_DEPLOYMENT_JSON, 'w') as outfile:
         json.dump(config_json, outfile)
 
