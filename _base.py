@@ -20,6 +20,8 @@ _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra']
 _ALLOWED_PERFS = ['perf', 'statsd']
 
+WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
+
 ###############################################################################
 # Common functions and classes
 ###############################################################################
@@ -85,7 +87,7 @@ def _file_exists(input):
 
 def parse_deploy_args():
     parser = argparse.ArgumentParser(
-        description="%s v%s deployment application" % (_WEBTIER_NAME, _WEBTIER_VERSION)
+        description="%s - Deployment application" % WEBTIER_PUBLIC_INFO
     )
     parser.add_argument(
         '-s', '--setup',
@@ -99,7 +101,7 @@ def parse_deploy_args():
 
 def parse_run_args():
     parser = argparse.ArgumentParser(
-        description="%s v%s benchmark run application" % (_WEBTIER_NAME, _WEBTIER_VERSION)
+        description="%s - Benchmark run application" % WEBTIER_PUBLIC_INFO
     )
     parser.add_argument(
         '-b', '--benchmark',
@@ -113,7 +115,7 @@ def parse_run_args():
 
 def parse_undeploy_args():
     parser = argparse.ArgumentParser(
-        description="%s v%s undeployment application" % (_WEBTIER_NAME, _WEBTIER_VERSION)
+        description="%s - Undeployment application" % WEBTIER_PUBLIC_INFO
     )
     parser.parse_args()
     pass
@@ -183,7 +185,6 @@ _deploySchema = {
     'required': ['workload', 'client', 'cache','db']
 }
 
-
 _runSchema_general = {
     'type': 'object',
     'properties': {
@@ -191,7 +192,6 @@ _runSchema_general = {
     },
     'required': ['scenario']
 }
-
 
 _runSchema_file = {
     'type': 'object',
@@ -203,7 +203,6 @@ _runSchema_file = {
     },
     'required': ['workers', 'duration', 'filename']
 }
-
 
 _runSchema_endpoint = {
     'type': 'object',
@@ -234,6 +233,7 @@ def load_deploy_configuration(config_filename):
         config_json = json.load(data)
     try:
         validate(config_json, _deploySchema)
+        # TODO add other validations here
     except Exception as ex:
         raise Exception("Input JSON file is not well formed: %s" % ex.message)
     return config_json
@@ -251,15 +251,17 @@ def load_run_configuration(config_filename):
         validate(config_json, _runSchema_general)
         if config_json['scenario'] == 'file':
             validate(config_json, _runSchema_file)
+            # TODO add other validations here
         else:
             validate(config_json, _runSchema_endpoint)
+            # TODO add other validations here
     except Exception as ex:
         raise Exception("Input JSON file is not well formed: %s" % ex.message)
     return config_json
 
 
 def save_run_configuration(config_json):
-    with open(_WEBTIER_DEPLOYMENT_JSON, 'w') as outfile:
+    with open(_WEBTIER_RUN_JSON, 'w') as outfile:
         json.dump(config_json, outfile)
 
 
@@ -289,16 +291,16 @@ masterLogger = _Logger("results.log", fullMode=False).log
 ###############################################################################
 # Applications
 ###############################################################################
+_ALLOWED_APPLICATIONS = _ALLOWED_CACHES + _ALLOWED_CLIENTS + _ALLOWED_DBS + _ALLOWED_PERFS + _ALLOWED_WORKLOADS
+_HOST_SETUP_MARK = '.host.setup.done'
+_HOST_REBOOT_REQUIRED = '/tmp/.host.reboot.required'
 
-ALLOWED_APPLICATIONS = ["apache2", "ab", "perf"]
-HOST_SETUP_MARK = '.host.setup.done'
-HOST_REBOOT_REQUIRED = '/tmp/.host.reboot.required'
+_OUT_SEPARATOR = ' '
 
-OUT_SEPARATOR = ' '
 
 class Application(object):
     def __init__(self, name, config, distribution, version):
-        if name not in ALLOWED_APPLICATIONS:
+        if name not in _ALLOWED_APPLICATIONS:
             raise NotImplementedError("Unknown application: %s" % (name))
         self.name = name
         self.config = config
@@ -337,16 +339,16 @@ class Deployment:
         self._all_apps = []
 
     def common_host_setup(self):
-        if not os.path.isfile(HOST_SETUP_MARK):
+        if not os.path.isfile(_HOST_SETUP_MARK):
             print("Applying benchmark settings")
             out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % (self.distribution))
-            with open(HOST_SETUP_MARK, "w") as f:
+            with open(_HOST_SETUP_MARK, "w") as f:
                 f.write('ok')
             return out, err
         return '', ''
 
     def reboot_required(self):
-        return os.path.isfile(HOST_REBOOT_REQUIRED)
+        return os.path.isfile(_HOST_REBOOT_REQUIRED)
 
     def deploy(self):
         outs = []
@@ -361,7 +363,7 @@ class Deployment:
             out, err = app.deploy()
             outs.append(out)
             errs.append(err)
-        return OUT_SEPARATOR.join(outs), OUT_SEPARATOR.join(errs)
+        return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
 
     def start_applications(self):
         outs = []
@@ -370,14 +372,14 @@ class Deployment:
             out, err = app.start()
             outs.append(out)
             errs.append(err)
-        return OUT_SEPARATOR.join(outs), OUT_SEPARATOR.join(errs)
+        return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
 
     def start_performance_measurements(self):
         for app in self.perfs:
             app.start(async=True)
         return '', ''
 
-    def start_benchmark_client(self, benchmarkConfig):
+    def start_benchmark_client(self, benchmark_config):
         out, err = self.client.start()
         return out, err
 
@@ -388,7 +390,7 @@ class Deployment:
             out, err = app.stop()
             outs.append(out)
             errs.append(err)
-        return OUT_SEPARATOR.join(outs), OUT_SEPARATOR.join(errs)
+        return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
 
     def stop_performance_measurements(self):
         for app in self.perfs:
