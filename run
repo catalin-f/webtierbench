@@ -9,6 +9,7 @@ from _base import parse_run_args
 from _base import load_run_configuration
 from _base import save_run_configuration
 
+
 def main():
     debugLogger("%s version: %s (run)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
     masterLogger("%s version: %s (run)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
@@ -24,6 +25,7 @@ def main():
         raise ex
     save_run_configuration(config_json)
 
+    # Load deployment environment
     deployment = unpickle_deployment()
     debugLogger("Unpickled deployment data")
 
