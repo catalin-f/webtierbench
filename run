@@ -37,7 +37,7 @@ def main():
     debugLogger("Started performance measurements: %s" % out)
     debugLogger("Started performance measurements: %s" % err)
 
-    out, err = deployment.start_benchmark_client({})
+    out, err = deployment.start_benchmark_client(config_json)
     debugLogger("Benchmark results stdout: %s" % out)
     debugLogger("Benchmark results stderr: %s" % err)
     masterLogger("Benchmark results: %s %s" % (out, err))
