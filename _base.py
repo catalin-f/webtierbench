@@ -5,9 +5,11 @@ import pickle
 import subprocess
 import errno
 import time
+import argparse
+import json
+from pprint import pprint
 
-
-WEBTIER_VERSION = "1.0"
+WEBTIER_VERSION = "1.1"
 
 
 ###############################################################################
@@ -60,6 +62,42 @@ def unpickle_deployment():
     deployment = pickle.load(f)
     f.close
     return deployment
+
+
+
+# use: python cmdline.py --setup=setup.json --benchmark=benchmark.json
+# use: python cmdline.py --setup=setup.json
+# use: python cmdline.py --benchmark=benchmark.json
+def get_args():
+    '''example from https://gist.github.com/redja/9276216'''
+
+    '''This function parses and return arguments passed in'''
+    # Assign description to the help doc
+    parser = argparse.ArgumentParser(
+        description='Script retrieves schedules from a given server')
+    # Add arguments
+    parser.add_argument(
+        '-s', '--setup', type=str, help='Json file for single-node configuration', required=False)
+    parser.add_argument(
+        '-b', '--benchmark', type=str, help='Json file for multi-node configuration', required=False)
+
+    # Array for all arguments passed to script
+    args = parser.parse_args()
+    # Assign args to variables
+    setup = args.setup
+    benchmark = args.benchmark
+    # Return all variable values
+    return setup, benchmark
+
+
+def json_parse_setup(jsonfile):
+    '''This function parses a json file and returns a dictionary'''
+    # doc: https://stackoverflow.com/questions/2835559/parsing-values-from-a-json-file-using-python
+	
+    with open(jsonfile) as data_file:
+        data = json.load(data_file)
+        return data
+
 
 
 ###############################################################################
