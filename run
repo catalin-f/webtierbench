@@ -1,13 +1,28 @@
 #!/usr/bin/env python
+from _base import _WEBTIER_VERSION
+from _base import _WEBTIER_NAME
 from _base import debugLogger
 from _base import masterLogger
 from _base import Deployment  # do not remove
 from _base import unpickle_deployment
-from _base import parse_deploy_args
+from _base import parse_run_args
+from _base import load_run_configuration
+from _base import save_run_configuration
 
 def main():
-    # TODO: read command line params
-    benchmarkJson = parse_deploy_args()
+    debugLogger("%s version: %s (run)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
+    masterLogger("%s version: %s (run)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
+
+    # Read command line params
+    benchmark_json_filename = parse_run_args()
+
+    # Parse JSON and save it locally
+    try:
+        config_json = load_run_configuration(benchmark_json_filename)
+    except Exception as ex:
+        # TODO should something else be done before crashing?
+        raise ex
+    save_run_configuration(config_json)
 
     deployment = unpickle_deployment()
     debugLogger("Unpickled deployment data")
