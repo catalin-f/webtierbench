@@ -88,13 +88,13 @@ check_graphite_status() {
 #	This method contains the exit call
 #######################################
 run_siege() {
-	cd ../client || exit 1
+	cd django-workload/client || exit 1
 
 	for (( i=1; i<=$1; i++ ))
 	do
 	   printf "\n### SIEGE RUN %d OUT OF %d ###\n\n" "$i" "$1"
 
-		 ./run-siege.sh
+		 su webtier -c "LOG=/home/webtier/siege.log ./run-siege.sh"
 	done
 }
 
@@ -125,14 +125,16 @@ main() {
 	start_service "memcached"
 	check_service_started "memcached"
 
-	start_service "docker"
-	check_service_started "docker"
-	check_graphite_status
+	# NEED TO INVESTIGATE WHY STATSD FILLS THE STORAGE VERY FAST #
 
-	start_uwsgi
+	#start_service "docker"
+	#check_service_started "docker"
+	#check_graphite_status
+
+	(start_uwsgi)
 
 	### RUN THE BENCHMARK ###
-	run_siege $2
+	(run_siege $2)
 
 	./stop-benchmark.sh
 }
