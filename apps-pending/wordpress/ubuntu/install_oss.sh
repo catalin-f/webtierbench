@@ -15,11 +15,15 @@ sudo apt-get -y install php7.0-mysql php7.0-curl php7.0-gd php7.0-intl php-pear 
 sudo apt-get install siege
 
 cd ~
+echo '************************************************************'
+echo 'Checking if oss-performance is already installed:'
 if [ -d "$oss_dir" ]; then
 	rm -rf "$oss_dir"
-	echo 'oss-performance directory was found and removed'
+	echo ' - oss-performance was found and removed'
+	echo '************************************************************'
 else
-	echo 'oss-performance directory was not found'
+	echo ' - oss-performance was not found'
+	echo '************************************************************'
 fi
 git clone https://github.com/hhvm/oss-performance
 cd "$oss_dir"
