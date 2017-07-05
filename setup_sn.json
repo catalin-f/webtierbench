@@ -1,0 +1,16 @@
+{
+	"workload": "django",
+	"client": {
+		"type": "siege"
+	},
+	"cache": [
+		{
+			"type": "memcached"
+		}
+	],
+	"db": [
+		{
+			"type":"cassandra/mysql/mariadb"
+		}
+	]
+}
