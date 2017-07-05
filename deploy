@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-from _base import _WEBTIER_VERSION
-from _base import _WEBTIER_NAME
+from _base import WEBTIER_PUBLIC_INFO
 from _base import debugLogger
 from _base import masterLogger
 from _base import detect_os
@@ -15,8 +14,8 @@ from _apps import ApacheBenchmark
 
 
 def main():
-    debugLogger("%s version: %s (deploy)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
-    masterLogger("%s version: %s (deploy)" % (_WEBTIER_NAME, _WEBTIER_VERSION))
+    debugLogger("%s (deploy)" % WEBTIER_PUBLIC_INFO)
+    masterLogger("%s (deploy)" % WEBTIER_PUBLIC_INFO)
 
     # Read command line params
     setup_json_filename = parse_deploy_args()
