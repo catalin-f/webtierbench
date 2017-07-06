@@ -57,7 +57,7 @@ if [ "$mem_total_MB" -ge "5120" ]; then
     else
         echo "Not enough available memory on the system! [FAIL]"
         exit 2
-    fi 
+    fi
 else
     echo "Not enough memory in the system! [FAIL]"
     exit 3
@@ -100,6 +100,12 @@ echo -e "\n\nGenerate siege urls file ..."
 (
 cd django-workload/client || exit 5
 ./gen-urls-file
+)
+
+# Set cores count to uwsgi.ini
+(
+cd django-workload/django-workload || exit 4
+sed "s/processes = 4/processes = $(cat /proc/cpuinfo | grep processor | wc -l)/g" uwsgi.ini
 )
 
 # Append client settings to /etc/sysctl.conf
