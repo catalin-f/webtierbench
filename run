@@ -18,11 +18,7 @@ def main():
     benchmark_json_filename = parse_run_args()
 
     # Parse JSON and save it locally
-    try:
-        config_json = load_run_configuration(benchmark_json_filename)
-    except Exception as ex:
-        # TODO should something else be done before crashing?
-        raise ex
+    config_json = load_run_configuration(benchmark_json_filename)
     save_run_configuration(config_json)
 
     # Load deployment environment

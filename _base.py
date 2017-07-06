@@ -1,5 +1,6 @@
 import datetime
 import os
+import sys
 import platform
 import pickle
 import subprocess
@@ -243,7 +244,9 @@ def load_deploy_configuration(config_filename):
         validate(config_json, _deploySchema)
         # TODO add other validations here
     except Exception as ex:
-        raise Exception("Input JSON file is not well formed: %s" % ex.message)
+        debugLogger("Exception in load_deploy_configuration: %r" % ex)
+        consoleLogger("Input JSON file is not well formed: %s" % ex.message)
+        sys.exit(-1)
     return config_json
 
 
@@ -264,7 +267,9 @@ def load_run_configuration(config_filename):
             validate(config_json, _runSchema_endpoint)
             # TODO add other validations here
     except Exception as ex:
-        raise Exception("Input JSON file is not well formed: %s" % ex.message)
+        debugLogger("Exception in load_deploy_configuration: %r" % ex)
+        consoleLogger("Input JSON file is not well formed: %s" % ex.message)
+        sys.exit(-1)
     return config_json
 
 
@@ -279,7 +284,10 @@ def save_run_configuration(config_json):
 class _Logger:
     def __init__(self, filename, fullMode=True):
         self.filename = filename
-        self.fd = open(filename, "a")
+        if not self.filename:
+            self.fd = sys.stdout
+        else:
+            self.fd = open(filename, "a")
         self.fullMode = fullMode
 
     def _get_prefix(self):
@@ -294,6 +302,7 @@ class _Logger:
 
 debugLogger = _Logger("webtierbench.log").log
 masterLogger = _Logger("results.log", fullMode=False).log
+consoleLogger = _Logger("", fullMode=False).log
 
 
 ###############################################################################
@@ -346,7 +355,7 @@ class Deployment:
 
     def common_host_setup(self):
         if not os.path.isfile(_HOST_SETUP_MARK):
-            print("Configuring host(s) for benchmarking. You may be required to reboot the workstation(s) during this process")
+            consoleLogger("Configuring host(s) for benchmarking. You may be required to reboot the workstation(s) during this process")
             out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % self.deploy_platform.distribution)
             with open(_HOST_SETUP_MARK, "w") as f:
                 f.write('ok')
@@ -360,12 +369,12 @@ class Deployment:
         outs = []
         errs = []
         for app in self._all_apps:
-            print("Deploying %s" % app.name)
+            consoleLogger("Deploying %s" % app.name)
             out, err = app.deploy()
             outs.append(out)
             errs.append(err)
         for app in self.perfs:
-            print("Deploying %s" % app.name)
+            consoleLogger("Deploying %s" % app.name)
             out, err = app.deploy()
             outs.append(out)
             errs.append(err)

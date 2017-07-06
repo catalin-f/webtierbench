@@ -2,6 +2,7 @@
 from _base import WEBTIER_PUBLIC_INFO
 from _base import debugLogger
 from _base import masterLogger
+from _base import consoleLogger
 from _base import Platform
 from _base import Deployment
 from _base import pickle_deployment
@@ -21,11 +22,7 @@ def main():
     setup_json_filename = parse_deploy_args()
 
     # Parse JSON and save it locally
-    try:
-        config_json = load_deploy_configuration(setup_json_filename)
-    except Exception as ex:
-        #TODO should something else be done before crashing?
-        raise ex
+    config_json = load_deploy_configuration(setup_json_filename)
     save_deploy_configuration(config_json)
 
     myplatform = Platform()
@@ -42,7 +39,7 @@ def main():
 
     #TODO notify user to reboot station
     if deployment.reboot_required():
-        print("These settings need a reboot! Please reboot the machine(s) and run the deploy command again!")
+        consoleLogger("These settings need a reboot! Please reboot the machine(s) and run the deploy command again!")
         return 0
 
     #TODO get the configuration for each app from config_json and pass it in the constructor
