@@ -1,20 +1,28 @@
-#!/bin/sh
+#!/bin/bash
 
-oss_dir=~/oss-performance
+if [ "$(id -u)" != "0" ]; then
+	echo "This script must be run as root"
+	exit 1
+fi
 
-sudo apt-get -y install nginx unzip mysql-server util-linux coreutils
-sudo apt-get -y install autotools-dev
-sudo apt-get -y install autoconf
-sudo apt-get -y install software-properties-common build-essential
-sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
-sudo add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
-sudo apt-get update
-sudo apt-get -y install hhvm
-sudo apt-get -y install php7.0 php7.0-cgi php7.0-fpm
-sudo apt-get -y install php7.0-mysql php7.0-curl php7.0-gd php7.0-intl php-pear php-imagick php7.0-imap php7.0-mcrypt php-memcache  php7.0-pspell php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc php7.0-xsl php7.0-mbstring php-gettext
-sudo apt-get install siege
+oss_dir="$HOME/oss-performance"
 
-cd ~
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
+add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
+apt-get update
+
+apt-get -y install nginx unzip mysql-server util-linux coreutils autotools-dev autoconf \
+	software-properties-common build-essential hhvm
+
+cd $HOME
+wget http://download.joedog.org/siege/siege-2.78.tar.gz
+tar xzf siege-2.78.tar.gz
+cd siege-2.78/
+./configure
+make
+make install
+
+cd $HOME
 echo '************************************************************'
 echo 'Checking if oss-performance is already installed:'
 if [ -d "$oss_dir" ]; then
@@ -25,10 +33,17 @@ else
 	echo ' - oss-performance was not found'
 	echo '************************************************************'
 fi
-git clone https://github.com/hhvm/oss-performance
-cd "$oss_dir"
 
+cat /dev/null > $HOME/.my.cnf
+echo "[mysql]
+user=root
+password=root" >> $HOME/.my.cnf
+
+
+git clone https://github.com/hhvm/oss-performance
+
+cd "$oss_dir"
 wget https://getcomposer.org/installer -O composer-setup.php
-pwd
-php composer-setup.php
-php composer.phar install
+
+hhvm composer-setup.php
+hhvm composer.phar install --no-plugins --no-scripts
