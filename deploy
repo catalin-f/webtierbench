@@ -2,7 +2,7 @@
 from _base import WEBTIER_PUBLIC_INFO
 from _base import debugLogger
 from _base import masterLogger
-from _base import detect_os
+from _base import Platform
 from _base import Deployment
 from _base import pickle_deployment
 from _base import parse_deploy_args
@@ -28,12 +28,13 @@ def main():
         raise ex
     save_deploy_configuration(config_json)
 
-    distribution, version = detect_os()
-    debugLogger("Host OS distribution: %s" % distribution)
-    debugLogger("Host OS version: %s" % version)
+    myplatform = Platform()
+    myplatform.detect()
+    debugLogger("Host OS distribution: %s" % myplatform.distribution)
+    debugLogger("Host OS version: %s" % myplatform.version)
 
     # Create deployment environment
-    deployment = Deployment('mydeployment', distribution, version)
+    deployment = Deployment('mydeployment', myplatform)
 
     out, err = deployment.common_host_setup()
     debugLogger("Common host setup stdout: %s" % out)
@@ -41,7 +42,7 @@ def main():
 
     #TODO notify user to reboot station
     if deployment.reboot_required():
-        print("These settings need a reboot! Please reboot the machine and run the deploy command again!")
+        print("These settings need a reboot! Please reboot the machine(s) and run the deploy command again!")
         return 0
 
     #TODO get the configuration for each app from config_json and pass it in the constructor
@@ -54,9 +55,9 @@ def main():
         "requests": "1000",
         "endpoint": "http://localhost:80/index.html"
     }
-    apache = Apache2(apacheConfig, distribution, version)
-    perf = Perf({}, distribution, version)
-    ab = ApacheBenchmark(abConfig, distribution, version)
+    apache = Apache2(apacheConfig, myplatform)
+    perf = Perf({}, myplatform)
+    ab = ApacheBenchmark(abConfig, myplatform)
 
 
     deployment.add_application(apache)
