@@ -74,6 +74,37 @@ def unpickle_deployment():
     return deployment
 
 
+class Platform:
+    def __init__(self):
+        self.distribution = ''  # Ubuntu, etc
+        self.version = ''       # 16.04, etc
+        self.type = ''          # posix
+        self.system = ''        # linux, mac, win
+
+    def detect(self):
+        os_type = os.name
+        distribution = None
+        version = None
+        system = platform.system()
+        if os_type == 'posix':
+            if system == 'Linux':
+                details = platform.linux_distribution()
+                distribution = details[0].lower()
+                version = details[1]
+            if system == 'Darwin':
+                details = platform.mac_ver()
+                distribution = 'mac'
+                version = details[0]
+            if system == 'nt':
+                details = platform.win32_ver()
+                distribution = 'win'
+                version = details[0]
+        self.distribution = distribution
+        self.version = version
+        self.type = os_type
+        self.system = system.lower()
+
+
 ###############################################################################
 # Command line parsers
 ###############################################################################
