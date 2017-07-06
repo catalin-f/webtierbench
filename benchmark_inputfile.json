@@ -2,6 +2,5 @@
   "scenario": "file",
   "workers": 4,
   "duration": 120,
-  "log": "benchclient.log",
   "filename": "urls.txt"
 }

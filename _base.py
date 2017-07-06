@@ -208,7 +208,6 @@ _runSchema_file = {
     'properties': {
         'workers': {'type': 'integer', 'minimum': 1},
         'duration': {'type': 'number', 'minimum': 1},
-        'log': {'type': 'string'},
         'filename': {'type': 'string'}
     },
     'required': ['workers', 'duration', 'filename']
@@ -219,7 +218,6 @@ _runSchema_endpoint = {
     'properties': {
         'workers': {'type': 'integer', 'minimum': 1},
         'duration': {'type': 'number', 'minimum': 1},
-        'log': {'type': 'string'},
         'endpoint': {
             'type': 'array',
             'items': {
