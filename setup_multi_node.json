@@ -13,14 +13,14 @@
     {
       "name": "memcached",
       "ip": "192.168.1.2",
-      "port": "1234"
+      "port": 1234
     }
   ],
   "db": [
     {
       "name": "cassandra",
       "ip": "192.168.1.3",
-      "port": "3306"
+      "port": 3306
     }
   ],
   "perf": [

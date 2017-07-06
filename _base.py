@@ -1,4 +1,4 @@
-import datetime
+import socket
 import os
 import sys
 import platform
@@ -161,7 +161,7 @@ _deploySchema = {
                 'properties': {
                     'name': {'type': 'string', 'enum': _ALLOWED_CACHES},
                     'ip': {'type': 'string'},
-                    'port': {'type': 'string'}
+                    'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535}
                 },
                 'required': ['name']
             },
@@ -174,7 +174,7 @@ _deploySchema = {
                 'properties': {
                     'name': {'type': 'string', 'enum': _ALLOWED_DBS},
                     'ip': {'type': 'string'},
-                    'port': {'type': 'string'}
+                    'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535}
                 },
                 'required': ['name']
             },
@@ -193,7 +193,7 @@ _deploySchema = {
         }
 
     },
-    'required': ['workload', 'client', 'cache','db']
+    'required': ['workload', 'client']
 }
 
 _runSchema_general = {
@@ -237,12 +237,53 @@ _runSchema_endpoint = {
 }
 
 
+def _check_ipv4(address):
+    socket.inet_aton(address)
+
+
 def load_deploy_configuration(config_filename):
     with open(config_filename) as data:
         config_json = json.load(data)
     try:
         validate(config_json, _deploySchema)
-        # TODO add other validations here
+
+        # master
+        if 'master' in config_json:
+            _check_ipv4(config_json['master'])
+        else:
+            config_json['master'] = '127.0.0.1'
+
+        # slave
+        if 'slave' in config_json:
+            for ip in config_json['slave']:
+                _check_ipv4(ip)
+        else:
+            config_json['slave'] = ['127.0.0.1']
+
+        # client > ip
+        if 'ip' in config_json['client']:
+            _check_ipv4(config_json['client']['ip'])
+        else:
+            config_json['client']['ip'] = '127.0.0.1'
+
+        # cache > ip
+        if 'cache' in config_json:
+            for i in xrange(len(config_json['cache'])):
+                obj = config_json['cache'][i]
+                if 'ip' in obj:
+                    _check_ipv4(obj['ip'])
+                else:
+                    obj['ip'] = '127.0.0.1'
+
+        # db > ip
+        if 'db' in config_json:
+            for i in xrange(len(config_json['db'])):
+                obj = config_json['db'][i]
+                if 'ip' in obj:
+                    _check_ipv4(obj['ip'])
+                else:
+                    obj['ip'] = '127.0.0.1'
+
     except Exception as ex:
         debugLogger("Exception in load_deploy_configuration: %r" % ex)
         consoleLogger("Input JSON file is not well formed: %s" % ex.message)
