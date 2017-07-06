@@ -2,7 +2,6 @@
     "scenario": "endpoint",
     "workers": 4,
     "duration": 120,
-    "log": "benchclient.log",
     "endpoint": [
         {
             "address": "http://localhost/enpoint1",
