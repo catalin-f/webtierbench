@@ -105,7 +105,7 @@ cd django-workload/client || exit 5
 # Set cores count to uwsgi.ini
 (
 cd django-workload/django-workload || exit 4
-sed "s/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g" uwsgi.ini
+sed -i "s/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g" uwsgi.ini
 )
 
 # Append client settings to /etc/sysctl.conf
