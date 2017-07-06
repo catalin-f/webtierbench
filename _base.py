@@ -35,30 +35,9 @@ def _RUN_GENERIC_SCRIPT(name, async=False):
         return '', ''
 
 
-def RUN_APP_SCRIPT(name, distribution, version, script, async=False):
-    cmd = "apps/%s/%s/%s" % (name, distribution, script)
+def RUN_APP_SCRIPT(name, platform, script, async=False):
+    cmd = "apps/%s/%s/%s" % (name, platform.distribution, script)
     return _RUN_GENERIC_SCRIPT(cmd, async)
-
-
-def detect_os():
-    ostype = os.name
-    distribution = None
-    version = None
-    if ostype == 'posix':
-        system = platform.system()
-        if system == 'Linux':
-            details = platform.linux_distribution()
-            distribution = details[0].lower()
-            version = details[1]
-        if system == 'Darwin':
-            details = platform.mac_ver()
-            distribution = 'mac'
-            version = details[0]
-        if system == 'nt':
-            details = platform.win32_ver()
-            distribution = 'win'
-            version = details[0]
-    return distribution, version
 
 
 def pickle_deployment(deployment):
@@ -108,11 +87,11 @@ class Platform:
 ###############################################################################
 # Command line parsers
 ###############################################################################
-def _file_exists(input):
-    if input.strip() == '':
+def _file_exists(filename):
+    if filename.strip() == '':
         raise argparse.ArgumentTypeError("Please specify an input filename")
-    if os.path.exists(input):
-        return input
+    if os.path.exists(filename):
+        return filename
     raise argparse.ArgumentTypeError("Please use a valid filename")
 
 
@@ -330,36 +309,34 @@ _OUT_SEPARATOR = ' '
 
 
 class Application(object):
-    def __init__(self, name, deploy_config, distribution, version):
+    def __init__(self, name, deploy_config, deploy_platform):
         if name not in _ALLOWED_APPLICATIONS:
             raise NotImplementedError("Unknown application: %s" % (name))
         self.name = name
         self.deploy_config = deploy_config
-        self.distribution = distribution
-        self.version = version
+        self.deploy_platform = deploy_platform
 
     def deploy(self, async=False):
-        out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "deploy.sh", async)
+        out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "deploy.sh", async)
         return out, err
 
     def undeploy(self, async=False):
-        out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "undeploy.sh", async)
+        out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "undeploy.sh", async)
         return out, err
 
     def start(self, async=False):
-        out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "start.sh", async)
+        out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "start.sh", async)
         return out, err
 
     def stop(self, async=False):
-        out, err = RUN_APP_SCRIPT(self.name, self.distribution, self.version, "stop.sh", async)
+        out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "stop.sh", async)
         return out, err
 
 
 class Deployment:
-    def __init__(self, name, distribution, version):
-        self.distribution = distribution
-        self.version = version
-        if distribution == 'mac' or distribution == 'win':
+    def __init__(self, name, deploy_platform):
+        self.deploy_platform = deploy_platform
+        if self.deploy_platform.distribution == 'mac' or self.deploy_platform.distribution == 'win':
             raise NotImplementedError("This operating system is not yet supported")
         self.name = name
         self.applications = []
@@ -371,8 +348,8 @@ class Deployment:
 
     def common_host_setup(self):
         if not os.path.isfile(_HOST_SETUP_MARK):
-            print("Applying benchmark settings")
-            out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % (self.distribution))
+            print("Configuring host(s) for benchmarking. You may be required to reboot the workstation(s) during this process")
+            out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % self.deploy_platform.distribution)
             with open(_HOST_SETUP_MARK, "w") as f:
                 f.write('ok')
             return out, err
