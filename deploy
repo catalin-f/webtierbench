@@ -12,6 +12,7 @@ from _base import save_deploy_configuration
 from _apps import Apache2
 from _apps import Perf
 from _apps import ApacheBenchmark
+import sys
 
 
 def main():
@@ -37,10 +38,10 @@ def main():
     debugLogger("Common host setup stdout: %s" % out)
     debugLogger("Common host setup stderr: %s" % err)
 
-    #TODO notify user to reboot station
+    # Notify user to reboot station
     if deployment.reboot_required():
         consoleLogger("These settings need a reboot! Please reboot the machine(s) and run the deploy command again!")
-        return 0
+        sys.exit(0)
 
     #TODO get the configuration for each app from config_json and pass it in the constructor
     apacheConfig = {

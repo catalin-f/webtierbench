@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+from _base import Deployment  # do not remove!
 from _base import WEBTIER_PUBLIC_INFO
 from _base import debugLogger
 from _base import masterLogger
-from _base import Deployment  # do not remove
 from _base import unpickle_deployment
 from _base import parse_run_args
 from _base import load_run_configuration
