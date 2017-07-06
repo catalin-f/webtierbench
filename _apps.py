@@ -10,8 +10,8 @@ def set_env(key, value):
 
 
 class Apache2(Application):
-    def __init__(self, deploy_config, distribution, version):
-        super(Apache2, self).__init__("apache2", deploy_config, distribution, version)
+    def __init__(self, deploy_config, deploy_platform):
+        super(Apache2, self).__init__("apache2", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
         set_env('WEBTIER_APACHE_IP', self.deploy_config["ip"])
@@ -20,8 +20,8 @@ class Apache2(Application):
 
 
 class Perf(Application):
-    def __init__(self, deploy_config, distribution, version):
-        super(Perf, self).__init__("perf", deploy_config, distribution, version)
+    def __init__(self, deploy_config, deploy_platform):
+        super(Perf, self).__init__("perf", deploy_config, deploy_platform)
 
     def start(self, async=False):
         set_env('PERF_FILENAME', '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime()))
@@ -29,9 +29,9 @@ class Perf(Application):
 
 
 class ApacheBenchmark(Application):
-    def __init__(self, deploy_config, distribution, version):
+    def __init__(self, deploy_config, deploy_platform):
         self.benchmark_config = {}
-        super(ApacheBenchmark, self).__init__("ab", deploy_config, distribution, version)
+        super(ApacheBenchmark, self).__init__("ab", deploy_config, deploy_platform)
 
     def set_benchmark_config(self, benchmark_config):
         self.benchmark_config = benchmark_config
