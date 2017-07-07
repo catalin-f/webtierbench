@@ -101,7 +101,7 @@ run_siege() {
 #######################################
 # Executes all the methods described above
 # Arguments:
-#	$1 = the number of paramters supplied to the script
+#	$1 = the number of parameters supplied to the script
 #  	$2 = the first parameter
 # Additional information:
 #	 None
@@ -114,7 +114,7 @@ main() {
 	check_script_usage $1
 	check_parameter_validity $2
 
-	### SET ENVIRONMENT ###	
+	### SET ENVIRONMENT ###
 	set_cpu_performance
 
 	start_service "cassandra"
