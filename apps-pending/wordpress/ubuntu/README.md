@@ -12,4 +12,5 @@ sudo ./uninstall_oss.sh
 
 ## Run Benchmark
 
-sudo ./run_wordpress.sh
+sudo ./run_wordpress.sh <number_of_test_runs>
+For example: ./run_wordpress.sh 3

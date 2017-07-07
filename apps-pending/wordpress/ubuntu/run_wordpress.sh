@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 oss_dir="$HOME/oss-performance"
 
@@ -11,5 +11,11 @@ done
 echo 1 | sudo tee /proc/sys/net/ipv4/tcp_tw_reuse
 chmod -R 775 /var/log/nginx
 
-su $SUDO_USER -c "cd $oss_dir; 					\
-/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm"
+for (( i=1; i<=$1; i++ ))
+do
+	su $SUDO_USER -c "echo '****************************************************';	\
+	echo '*                  Test Run No $i                   *';			\
+	echo '****************************************************';			\
+	cd $oss_dir; 									\
+	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm"
+done
