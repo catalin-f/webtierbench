@@ -28,7 +28,7 @@ check_parameter_validity() {
 #######################################
 check_script_usage() {
 	if [ "$1" -ne 1 ]; then
-	    echo "Usage: ./run-benchmark <number_of_attempts>"
+	    echo "Usage: ./start-benchmark.sh <number_of_attempts>"
 	    exit 1
 	fi
 }
