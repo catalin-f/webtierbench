@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 if [ "$(id -u)" != "0" ]; then
 	echo "This script must be run as root"
@@ -34,16 +35,9 @@ else
 	echo '************************************************************'
 fi
 
-cat /dev/null > $HOME/.my.cnf
-echo "[mysql]
-user=root
-password=root" >> $HOME/.my.cnf
-
-
-git clone https://github.com/hhvm/oss-performance
-
-cd "$oss_dir"
-wget https://getcomposer.org/installer -O composer-setup.php
-
-hhvm composer-setup.php
-hhvm composer.phar install --no-plugins --no-scripts
+su $SUDO_USER -c "cd $HOME;					\
+git clone https://github.com/hhvm/oss-performance;		\
+cd $oss_dir;							\
+wget https://getcomposer.org/installer -O composer-setup.php;	\
+hhvm composer-setup.php;					\
+hhvm composer.phar install"

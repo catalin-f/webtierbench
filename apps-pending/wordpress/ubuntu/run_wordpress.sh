@@ -2,12 +2,14 @@
 
 oss_dir="$HOME/oss-performance"
 
-for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-	echo "performance" > "$file"
+for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+do
+	[ -f $CPUFREQ ] || continue
+	echo -n performance > $CPUFREQ
 done
 
 echo 1 | sudo tee /proc/sys/net/ipv4/tcp_tw_reuse
-sudo find /var/log/nginx -type f -exec chmod ug+rw {} \;
+chmod -R 775 /var/log/nginx
 
-cd "$oss_dir"
-/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm
+su $SUDO_USER -c "cd $oss_dir; 					\
+/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm"

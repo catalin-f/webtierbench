@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 
 oss_dir="$HOME/oss-performance"
 
@@ -8,6 +9,7 @@ cd $HOME
 
 rm -rf siege-2.78/
 rm -rf siege-2.78.tar.gz
+rm -rf $HOME/.composer
 
 if [ -d "$oss_dir" ]; then
 	rm -rf "$oss_dir"
@@ -20,5 +22,5 @@ else
 	echo '************************************************************'
 fi
 
-apt-get autoremove
+apt-get autoremove -y
 apt-get update
