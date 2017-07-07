@@ -139,6 +139,7 @@ _deploySchema = {
     'type': 'object',
     'properties': {
         'workload': {'type': 'string', 'enum': _ALLOWED_WORKLOADS},
+        'proxy': {'type': 'string'},
         'master': {'type': 'string'},
         'slave': {
             'type': 'array',

@@ -1,5 +1,6 @@
 {
   "workload": "django",
+  "proxy":"http://proxy.com:8000",
   "client": {
     "name": "siege"
   },

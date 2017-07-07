@@ -1,5 +1,6 @@
 {
   "workload": "django",
+  "proxy":"http://proxy.com:8000",
   "master": "192.168.1.1",
   "slave": [
     "192.168.1.2",
