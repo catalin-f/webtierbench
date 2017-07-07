@@ -94,7 +94,7 @@ run_siege() {
 	do
 	   printf "\n### SIEGE RUN %d OUT OF %d ###\n\n" "$i" "$1"
 
-		 su webtier -c "LOG=/home/webtier/siege.log ./run-siege.sh"
+	   su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege.sh"
 	done
 }
 
@@ -114,7 +114,7 @@ main() {
 	check_script_usage $1
 	check_parameter_validity $2
 
-	### SET ENVIRONMENT ###
+	### SET ENVIRONMENT ###	
 	set_cpu_performance
 
 	start_service "cassandra"
