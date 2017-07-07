@@ -6,7 +6,11 @@ from _base import Application
 
 
 def set_env(key, value):
-    os.environ[str(key)]=str(value)
+    os.environ[str(key)] = str(value)
+
+
+def gen_perf_filename():
+    return '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime())
 
 
 class Apache2(Application):
@@ -24,8 +28,17 @@ class Perf(Application):
         super(Perf, self).__init__("perf", deploy_config, deploy_platform)
 
     def start(self, async=False):
-        set_env('PERF_FILENAME', '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime()))
+        set_env('PERF_FILENAME', gen_perf_filename())
         return super(Perf, self).start(async)
+
+
+class Sar(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Sar, self).__init__("sar", deploy_config, deploy_platform)
+
+    def start(self, async=False):
+        set_env('SAR_FILENAME', gen_perf_filename())
+        return super(Sar, self).start(async)
 
 
 class ApacheBenchmark(Application):

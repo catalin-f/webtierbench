@@ -19,7 +19,7 @@ _ALLOWED_WORKLOADS = ['django', 'wordpress', 'apache2']
 _ALLOWED_CLIENTS = ['siege', 'ab']
 _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra']
-_ALLOWED_PERFS = ['perf', 'statsd']
+_ALLOWED_PERFS = ['perf', 'statsd', 'sar']
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
 
