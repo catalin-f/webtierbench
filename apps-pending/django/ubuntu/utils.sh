@@ -12,6 +12,41 @@ start_service() {
 }
 
 #######################################
+# Checks if the proxy parameter is correctly supplied
+# Arguments:
+#	  $1 = The proxy in the format of <ip_address>:<port>
+# Additional information:
+#	  None
+#######################################
+check_proxy_parameter() {
+	echo "Proxy check passed"
+}
+
+#######################################
+# Configures the proxy settings
+# Arguments:
+#	  $1 = The proxy in the format of <ip_address>:<port>
+# Additional information:
+#	  None
+#######################################
+set_proxy() {
+	# Set APT proxy
+	echo "Acquire::http::Proxy \"http://$1/\";" >> /etc/apt/apt.conf
+
+	# Set Docker proxy
+	mkdir -p /etc/systemd/system/docker.service.d
+	echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+	echo "Environment='HTTP_PROXY=http://$1'">> /etc/systemd/system/docker.service.d/http-proxy.conf
+
+	# Restart docker to take effec the changes
+	systemctl daemon-reload
+	systemctl restart docker
+
+  # Set git configuration to pull through proxy
+	git config --global http.proxy http://$1
+}
+
+#######################################
 # Starts a service
 # Arguments:
 #	  $1 = The service you want to stop
@@ -48,7 +83,7 @@ check_service_started() {
 #######################################
 check_service_stopped() {
 	if service $1 status > /dev/null;
-	then 
+	then
 		echo "$1 couldn't be stopped. Benchmark run aborted"
 		exit 1
 	fi
