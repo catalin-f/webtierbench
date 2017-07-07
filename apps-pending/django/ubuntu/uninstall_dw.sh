@@ -11,6 +11,7 @@ add-apt-repository -r ppa:webupd8team/java
 add-apt-repository -r "deb [arch=amd64]      \
     https://download.docker.com/linux/ubuntu \
     $(lsb_release -cs) stable"
+rm -f /etc/apt/sources.list.d/cassandra.sources.list
 apt-key del 0EBFCD88
 apt-key del EEA14886
 
@@ -20,8 +21,8 @@ docker stop graphite
 docker rm graphite
 docker rmi hopsoft/graphite-statsd
 
-# Remove packages
-echo -e "\n\nRemove packages ..."
+# Purge packages
+echo -e "\n\nPurge packages ..."
 apt-get purge -y oracle-java8-installer \
     memcached cassandra docker-ce       \
     python3-virtualenv python3-dev      \
@@ -38,8 +39,8 @@ apt-get update
 echo -e "\n\nRemove django-workload cloned repository ..."
 rm -rf django-workload
 
-echo -e "\n\nRestore memcached config file ..."
-mv -f /etc/memcached.conf.old /etc/memcached.conf
+echo -e "\n\nRemove memcached backup config file ..."
+rm -f /etc/memcached.conf.old
 
 # Remove sysctl settings
 echo -e "\n\nRemove sysctl settings ..."
@@ -52,7 +53,7 @@ sed -e '/net.ipv4.tcp_tw_reuse=1/d'                 \
     -e '/net.netfilter.nf_conntrack_max=256000/d'   \
     -i /etc/sysctl.conf
 
-# Remove conntrack module
+# Remove nf_conntrack module
 echo -e "\n\nRemove nf_conntrack module ..."
 sed '/nf_conntrack/d' -i /etc/modules
 
@@ -62,11 +63,7 @@ sed -e '/* soft nofile 1000000/d' \
     -e '/* hard nofile 1000000/d' \
     -i /etc/security/limits.conf
 
-# Remove webtier username and its home directory
-echo -e "\n\nRemove webtier username ..."
-userdel -r webtier
-
-echo
+echo -e "\n\n"
 # Modifying limits.conf requires system reboot
 read -rsn1 -p "Press any key to reboot"
 reboot

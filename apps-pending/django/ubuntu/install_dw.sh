@@ -64,7 +64,7 @@ else
 fi
 
 echo -e "\n\nClone django-workload repository ..."
-git clone https://github.com/Instagram/django-workload
+su "$SUDO_USER" -c "git clone https://github.com/Instagram/django-workload"
 
 # Config memcached
 # Backup old memcached config file
@@ -88,24 +88,27 @@ EOF
 
 echo -e "\n\nCreate python virtual environment ..."
 (
-cd django-workload/django-workload || exit 4
-python3 -m virtualenv -p python3 venv
-source venv/bin/activate
-pip install -r requirements.txt
-deactivate
-cp cluster_settings_template.py cluster_settings.py
+su "$SUDO_USER" -c                                    \
+"cd django-workload/django-workload || exit 4        ;\
+python3 -m virtualenv -p python3 venv                ;\
+source venv/bin/activate                             ;\
+pip install -r requirements.txt                      ;\
+deactivate                                           ;\
+cp cluster_settings_template.py cluster_settings.py"
 )
 
 echo -e "\n\nGenerate siege urls file ..."
 (
-cd django-workload/client || exit 5
-./gen-urls-file
+su "$SUDO_USER" -c                    \
+"cd django-workload/client || exit 5; \
+./gen-urls-file"
 )
 
 # Set cores count to uwsgi.ini
 (
-cd django-workload/django-workload || exit 4
-sed -i "s/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g" uwsgi.ini
+su "$SUDO_USER" -c                             \
+"cd django-workload/django-workload || exit 4; \
+sed -i 's/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
 )
 
 # Append client settings to /etc/sysctl.conf
@@ -129,13 +132,11 @@ cat >> /etc/security/limits.conf <<- EOF
 	* hard nofile 1000000
 EOF
 
-# Add webtier username
-echo -e "\n\nCreate webtier username ..."
-useradd -m -s /bin/bash -c "WebTier Benchmark User" webtier
-echo "failures = 1000000" > /home/webtier/.siegerc
-chown webtier.webtier /home/webtier/.siegerc
+# Create siegerc
+echo -e "\n\nCreate siegerc ..."
+su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc"
 
-echo
+echo -e "\n\n"
 # Modifying limits.conf requires system reboot
 read -rsn1 -p "Press any key to reboot"
 reboot
