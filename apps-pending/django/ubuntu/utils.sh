@@ -19,7 +19,11 @@ start_service() {
 #	  None
 #######################################
 check_proxy_parameter() {
-	echo "Proxy check passed"
+	if [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+$ ]]; then
+  	return 0
+	else
+  	return 1
+	fi
 }
 
 #######################################
@@ -30,6 +34,11 @@ check_proxy_parameter() {
 #	  None
 #######################################
 set_proxy() {
+
+	# Execute curl with proxy
+	curl --proxy $1 https://www.apache.org/dist/cassandra/KEYS | apt-key add -
+  curl --proxy $1 -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
 	# Set APT proxy
 	echo "Acquire::http::Proxy \"http://$1/\";" >> /etc/apt/apt.conf
 
