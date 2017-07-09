@@ -8,3 +8,5 @@ measurements/*
 *.data
 .deployment.json
 .running.json
+.cache
+test/.cache
