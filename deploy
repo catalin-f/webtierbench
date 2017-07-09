@@ -62,6 +62,9 @@ def main():
         deployment.add_application(apache)
         debugLogger("Added application: %s" % config_json['workload']['name'])
 
+    ###############################################################################
+    # Benchmark clients
+    ###############################################################################
     if config_json['client']['name'] == 'siege':
         siege = Siege(config_json['client'], myplatform)
         deployment.set_client(siege)
