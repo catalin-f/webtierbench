@@ -138,7 +138,13 @@ def parse_undeploy_args():
 _deploySchema = {
     'type': 'object',
     'properties': {
-        'workload': {'type': 'string', 'enum': _ALLOWED_WORKLOADS},
+        'workload': {
+            'type': 'object',
+            'properties': {
+                'name': {'type': 'string', 'enum': _ALLOWED_WORKLOADS},
+            },
+            'required': ['name']
+        },
         'proxy': {'type': 'string'},
         'master': {'type': 'string'},
         'slave': {

@@ -13,6 +13,9 @@ def gen_perf_filename():
     return '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime())
 
 
+###############################################################################
+# Applications
+###############################################################################
 class Apache2(Application):
     def __init__(self, deploy_config, deploy_platform):
         super(Apache2, self).__init__("apache2", deploy_config, deploy_platform)
@@ -23,6 +26,39 @@ class Apache2(Application):
         return super(Apache2, self).deploy(async)
 
 
+class Django(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Django, self).__init__("django", deploy_config, deploy_platform)
+
+    def deploy(self, async=False):
+        return super(Django, self).deploy(async)
+
+
+###############################################################################
+# Caching
+###############################################################################
+class Memcached(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Memcached, self).__init__("memcached", deploy_config, deploy_platform)
+
+    def start(self, async=False):
+        return super(Memcached, self).start(async)
+
+
+###############################################################################
+# Databases
+###############################################################################
+class Cassandra(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Cassandra, self).__init__("cassandra", deploy_config, deploy_platform)
+
+    def start(self, async=False):
+        return super(Cassandra, self).start(async)
+
+
+###############################################################################
+# Performance measurements
+###############################################################################
 class Perf(Application):
     def __init__(self, deploy_config, deploy_platform):
         super(Perf, self).__init__("perf", deploy_config, deploy_platform)
@@ -41,6 +77,18 @@ class Sar(Application):
         return super(Sar, self).start(async)
 
 
+class Statsd(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Statsd, self).__init__("statsd", deploy_config, deploy_platform)
+
+    def start(self, async=False):
+        set_env('SAR_FILENAME', gen_perf_filename())
+        return super(Statsd, self).start(async)
+
+
+###############################################################################
+# Benchmark clients
+###############################################################################
 class ApacheBenchmark(Application):
     def __init__(self, deploy_config, deploy_platform):
         self.benchmark_config = {}
@@ -54,3 +102,15 @@ class ApacheBenchmark(Application):
         set_env('WEBTIER_AB_REQUESTS', 1000)
         set_env('WEBTIER_AB_ENDPOINT', "http://localhost:80/index.html")
         return super(ApacheBenchmark, self).start(async)
+
+
+class Siege(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        self.benchmark_config = {}
+        super(Siege, self).__init__("siege", deploy_config, deploy_platform)
+
+    def set_benchmark_config(self, benchmark_config):
+        self.benchmark_config = benchmark_config
+
+    def start(self, async=False):
+        return super(Siege, self).start(async)
