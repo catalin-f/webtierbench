@@ -19,6 +19,8 @@ def main():
     os.system('rm -f .deployment.json')
     os.system('rm -f *.log')
     os.system('rm -rf measurements')
+    os.system('rm -rf .running.json')
+    os.system('rm -rf .cache')
 
 
 if __name__ == '__main__':
