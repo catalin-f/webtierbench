@@ -21,3 +21,10 @@ sudo ./run --benchmark=benchmark.json
 cd dir
 
 sudo ./deploy
+
+## Testing
+cd dir 
+
+pip install -r requirements-testing.txt
+
+py.test -v
