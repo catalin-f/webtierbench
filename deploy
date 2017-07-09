@@ -9,6 +9,9 @@ from _base import pickle_deployment
 from _base import parse_deploy_args
 from _base import load_deploy_configuration
 from _base import save_deploy_configuration
+from _apps import Apache2
+from _apps import Perf
+from _apps import ApacheBenchmark
 from _apps import Django
 from _apps import Siege
 from _apps import Memcached
@@ -47,29 +50,53 @@ def main():
         sys.exit(0)
 
     # Get the configuration for each app from config_json and pass it in the constructor
+    ###############################################################################
+    # Applications
+    ###############################################################################
     if config_json['workload']['name'] == 'django':
         django = Django(config_json['workload'], myplatform)
         deployment.add_application(django)
+        debugLogger("Added application: %s" % config_json['workload']['name'])
+    if config_json['workload']['name'] == 'apache2':
+        apache = Apache2(config_json['workload'], myplatform)
+        deployment.add_application(apache)
         debugLogger("Added application: %s" % config_json['workload']['name'])
 
     if config_json['client']['name'] == 'siege':
         siege = Siege(config_json['client'], myplatform)
         deployment.set_client(siege)
         debugLogger("Added benchmark client: %s" % config_json['client']['name'])
+    if config_json['client']['name'] == 'ab':
+        ab = ApacheBenchmark(config_json['client'], myplatform)
+        deployment.set_client(ab)
+        debugLogger("Added benchmark client: %s" % config_json['client']['name'])
 
+    ###############################################################################
+    # Caching
+    ###############################################################################
     for config in config_json['cache']:
         if config['name'] == 'memcached':
             memcached = Memcached(config, myplatform)
             deployment.add_cache(memcached)
             debugLogger("Added caching server: %s " % config['name'])
 
+    ###############################################################################
+    # Databases
+    ###############################################################################
     for config in config_json['db']:
         if config['name'] == 'cassandra':
             cassandra = Cassandra(config, myplatform)
             deployment.add_db(cassandra)
             debugLogger("Added db server: %s " % config['name'])
 
+    ###############################################################################
+    # Performance measurements
+    ###############################################################################
     for config in config_json['perf']:
+        if config['name'] == 'perf':
+            perf = Perf(config, myplatform)
+            deployment.add_perf(perf)
+            debugLogger("Added performance measurement: %s " % config['name'])
         if config['name'] == 'sar':
             sar = Sar(config, myplatform)
             deployment.add_perf(sar)
@@ -79,32 +106,7 @@ def main():
             deployment.add_perf(statsd)
             debugLogger("Added performance measurement: %s " % config['name'])
 
-    # from _apps import Apache2
-    # from _apps import Perf
-    # from _apps import ApacheBenchmark
-    # apacheConfig = {
-    #     "ip": "localhost",
-    #     "port": "80"
-    # }
-    # abConfig = {
-    #     "workers": 4,
-    #     "requests": "1000",
-    #     "endpoint": "http://localhost:80/index.html"
-    # }
-    # apache = Apache2(apacheConfig, myplatform)
-    # perf = Perf({}, myplatform)
-    # ab = ApacheBenchmark(abConfig, myplatform)
-    #
-    #
-    # deployment.add_application(apache)
-    # debugLogger("Added application: apache2")
-    #
-    # deployment.add_perf(perf)
-    # debugLogger("Added performance measurement: perf")
-    #
-    # deployment.set_client(ab)
-    # debugLogger("Benchmark client: ab")
-    
+    # Deploy everything
     out, err = deployment.deploy()
     debugLogger("Deployment stdout: %s " % out)
     debugLogger("Deployment stderr: %s " % err)

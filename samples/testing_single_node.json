@@ -1,0 +1,20 @@
+{
+  "workload": {
+    "name": "apache2",
+    "ip": "localhost",
+    "port": "80"
+  },
+  "client": {
+    "name": "ab",
+    "workers": 4,
+    "requests": "1000",
+    "endpoint": "http://localhost:80/index.html"
+  },
+  "cache": [],
+  "db": [],
+  "perf": [
+    {
+      "name": "perf"
+    }
+  ]
+}
