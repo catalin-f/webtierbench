@@ -38,7 +38,7 @@ def main():
     debugLogger("Host OS version: %s" % myplatform.version)
 
     # Create deployment environment
-    deployment = Deployment('mydeployment', myplatform)
+    deployment = Deployment('mydeployment', config_json, myplatform)
 
     out, err = deployment.common_host_setup()
     debugLogger("Common host setup stdout: %s" % out)

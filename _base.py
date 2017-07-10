@@ -389,10 +389,11 @@ class Application(object):
 
 
 class Deployment:
-    def __init__(self, name, deploy_platform):
+    def __init__(self, name, deploy_config, deploy_platform):
         self.deploy_platform = deploy_platform
         if self.deploy_platform.distribution == 'mac' or self.deploy_platform.distribution == 'win':
             raise NotImplementedError("This operating system is not yet supported")
+        self.deploy_config = deploy_config
         self.name = name
         self.applications = []
         self.dbs = []
