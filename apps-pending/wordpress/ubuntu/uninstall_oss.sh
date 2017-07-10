@@ -23,4 +23,4 @@ else
 fi
 
 apt-get autoremove -y
-apt-get update
+http_proxy=http://$1 apt-get update

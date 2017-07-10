@@ -2,6 +2,9 @@
 
 oss_dir="$HOME/oss-performance"
 
+systemctl restart mysql.service
+systemctl restart nginx.service
+
 for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 do
 	[ -f $CPUFREQ ] || continue
@@ -19,3 +22,6 @@ do
 	cd $oss_dir; 									\
 	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm"
 done
+
+systemctl stop mysql.service
+systemctl stop nginx.service

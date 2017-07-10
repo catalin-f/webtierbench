@@ -10,7 +10,7 @@ oss_dir="$HOME/oss-performance"
 
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
 add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
-apt-get update
+http_proxy=http://$1 apt-get update
 
 apt-get -y install nginx unzip mysql-server util-linux coreutils autotools-dev autoconf \
 	software-properties-common build-essential hhvm
@@ -41,3 +41,6 @@ cd $oss_dir;							\
 wget https://getcomposer.org/installer -O composer-setup.php;	\
 hhvm composer-setup.php;					\
 hhvm composer.phar install"
+
+systemctl stop mysql.service
+systemctl stop nginx.service
