@@ -3,6 +3,7 @@ from _base import _file_exists
 from _base import Platform
 from _base import set_env
 from _base import parse_deploy_args
+from _base import parse_run_args
 import os
 import stat
 import argparse
@@ -77,36 +78,74 @@ def test_file_exists():
 
 def test_parse_deploy_args(capsys):
     file = _create_empty_file()
+    cmd = './run'
 
-    sys.argv = ["./deploy", "-s", file]
+    sys.argv = [cmd, "-s", file]
     config = parse_deploy_args()
     assert config == file
 
-    sys.argv = ["./deploy", "--setup", file]
+    sys.argv = [cmd, "--setup", file]
     config = parse_deploy_args()
     assert config == file
 
     with pytest.raises(SystemExit) as excinfo:
-        sys.argv = ["./deploy", "-s"]
+        sys.argv = [cmd, "-s"]
         config = parse_deploy_args()
     out, err = capsys.readouterr()
     assert err.startswith("usage: ")
 
     with pytest.raises(SystemExit) as excinfo:
-        sys.argv = ["./deploy", "--setup"]
+        sys.argv = [cmd, "--setup"]
         config = parse_deploy_args()
     out, err = capsys.readouterr()
     assert err.startswith("usage: ")
 
     with pytest.raises(SystemExit) as excinfo:
-        sys.argv = ["./deploy", "-randomparameter"]
+        sys.argv = [cmd, "-randomparameter"]
         config = parse_deploy_args()
     out, err = capsys.readouterr()
     assert err.startswith("usage: ")
 
     with pytest.raises(SystemExit) as excinfo:
-        sys.argv = ["./deploy"]
+        sys.argv = [cmd]
         config = parse_deploy_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+
+def test_parse_run_args(capsys):
+    file = _create_empty_file()
+    cmd = './run'
+
+    sys.argv = [cmd, "-b", file]
+    config = parse_run_args()
+    assert config == file
+
+    sys.argv = [cmd, "--benchmark", file]
+    config = parse_run_args()
+    assert config == file
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = [cmd, "-b"]
+        config = parse_run_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = [cmd, "--benchmark"]
+        config = parse_run_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = [cmd, "-randomparameter"]
+        config = parse_run_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = [cmd]
+        config = parse_run_args()
     out, err = capsys.readouterr()
     assert err.startswith("usage: ")
 
