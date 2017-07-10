@@ -1,14 +1,9 @@
 import os
 import time
 from _base import Application
+from _base import set_env
 
 #TODO: add all apps here
-
-
-def set_env(key, value):
-    os.environ[str(key)] = str(value)
-
-
 def gen_perf_filename():
     return '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime())
 
@@ -31,6 +26,8 @@ class Django(Application):
         super(Django, self).__init__("django", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
+        set_env('WEBTIER_DJANGO_REVISION', '96b12d5e13a6ec2141fd7e8bd8b31f9c87630ea4')
+        set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workload']['workers'])
         return super(Django, self).deploy(async)
 
 
@@ -111,6 +108,10 @@ class Siege(Application):
 
     def set_benchmark_config(self, benchmark_config):
         self.benchmark_config = benchmark_config
+
+    def deploy(self, async=False):
+        set_env('WEBTIER_DJANGO_REVISION', '96b12d5e13a6ec2141fd7e8bd8b31f9c87630ea4')
+        return super(Siege, self).deploy(async)
 
     def start(self, async=False):
         return super(Siege, self).start(async)
