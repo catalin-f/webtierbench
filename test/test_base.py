@@ -4,12 +4,14 @@ from _base import Platform
 from _base import set_env
 from _base import parse_deploy_args
 from _base import parse_run_args
+from _base import _check_ipv4
 import os
 import stat
 import argparse
 import pytest
 import platform
 import sys
+import socket
 
 
 def _create_dummy_script():
@@ -148,5 +150,18 @@ def test_parse_run_args(capsys):
         config = parse_run_args()
     out, err = capsys.readouterr()
     assert err.startswith("usage: ")
+
+
+def test_check_ipv4():
+    msg = 'illegal IP address string passed to inet_aton'
+
+    with pytest.raises(socket.error) as excinfo:
+        _check_ipv4("127.0.0.a")
+    assert excinfo.match(msg)
+
+    with pytest.raises(socket.error) as excinfo:
+        _check_ipv4("localhost")
+    assert excinfo.match(msg)
+
 
 
