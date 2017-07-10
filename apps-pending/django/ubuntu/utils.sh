@@ -27,27 +27,20 @@ check_proxy_parameter() {
 }
 
 #######################################
-# Configures the proxy settings
+# Configures the general proxy settings
 # Arguments:
 #	  $1 = The proxy in the format of <ip_address>:<port>
 # Additional information:
 #	  None
 #######################################
-set_proxy() {
-
-	# Execute curl with proxy
-	curl --proxy $1 https://www.apache.org/dist/cassandra/KEYS | apt-key add -
-  curl --proxy $1 -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-
-	# Set APT proxy
-	echo "Acquire::http::Proxy \"http://$1/\";" >> /etc/apt/apt.conf
+set_general_proxy_configuration() {
 
 	# Set Docker proxy
 	mkdir -p /etc/systemd/system/docker.service.d
 	echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
 	echo "Environment='HTTP_PROXY=http://$1'">> /etc/systemd/system/docker.service.d/http-proxy.conf
 
-	# Restart docker to take effec the changes
+	# Restart docker to take effect the changes
 	systemctl daemon-reload
 	systemctl restart docker
 
