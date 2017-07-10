@@ -40,10 +40,6 @@ set_general_proxy_configuration() {
 	echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
 	echo "Environment='HTTP_PROXY=http://$1'">> /etc/systemd/system/docker.service.d/http-proxy.conf
 
-	# Restart docker to take effect the changes
-	systemctl daemon-reload
-	systemctl restart docker
-
   # Set git configuration to pull through proxy
 	git config --global http.proxy http://$1
 }
