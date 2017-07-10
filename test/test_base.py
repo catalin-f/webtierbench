@@ -1,9 +1,11 @@
 from _base import _RUN_GENERIC_SCRIPT
 from _base import _file_exists
+from _base import Platform
 import os
 import stat
 import argparse
 import pytest
+import platform
 
 
 def _create_dummy_script():
@@ -55,3 +57,10 @@ def test_file_exists():
     with pytest.raises(argparse.ArgumentTypeError) as excinfo:
         _file_exists("blabla")
     assert excinfo.match("Please use a valid filename")
+
+
+def test_platform():
+    myplatform = Platform()
+    myplatform.detect()
+    assert myplatform.system == platform.system().lower()
+    assert myplatform.type == os.name
