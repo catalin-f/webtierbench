@@ -5,18 +5,29 @@
 
 check_root_privilege
 
-# If we have a proxy, then we set it up
+# This is true if we have proxy data supplied [default is false]
+proxy_flag=false
+
+# If we have a proxy, then we set the appropriate state
 if [ "$#" -eq 1 ]  && check_proxy_parameter $1; then
   echo "Proxy information was supplied correctly. Continuing with proxy settings..."
-  set_proxy $1
+  set_general_proxy_configuration $1
+  proxy_flag=true
 
 # If we don't have a proxy, we continue normally
 else
   echo "Proxy information was supplied incorrectly (or not supplied at all). Continuing without proxy settings..."
+fi
 
+# Download neccessary packets
+if [ "$proxy_flag" == "true" ]; then
+  curl --proxy $1 https://www.apache.org/dist/cassandra/KEYS | apt-key add -
+  curl --proxy $1 -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+else
   curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 fi
+
 # Add repositories
 echo -e "\n\nAdd apt repositories ..."
 add-apt-repository ppa:webupd8team/java
@@ -26,14 +37,28 @@ echo "deb http://www.apache.org/dist/cassandra/debian 310x main" | \
 apt-key fingerprint 0EBFCD88
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
     $(lsb_release -cs) stable"
-apt-get update
+
+# We update our apt index
+if [ "$proxy_flag" == "true" ]; then
+  http_proxy=http://$1 apt-get update
+else
+  apt-get update
+fi
 
 # Install packages
 echo -e "\n\nInstall packages ..."
-apt-get install -y software-properties-common oracle-java8-installer    \
-    cassandra memcached apt-transport-https ca-certificates docker-ce   \
-    build-essential git libmemcached-dev python3-virtualenv python3-dev \
-    zlib1g-dev siege curl
+
+if [ "$proxy_flag" == "true" ]; then
+  http_proxy=http://$1 apt-get install -y software-properties-common oracle-java8-installer    \
+      cassandra memcached apt-transport-https ca-certificates docker-ce   \
+      build-essential git libmemcached-dev python3-virtualenv python3-dev \
+      zlib1g-dev siege curl
+else
+  apt-get install -y software-properties-common oracle-java8-installer    \
+      cassandra memcached apt-transport-https ca-certificates docker-ce   \
+      build-essential git libmemcached-dev python3-virtualenv python3-dev \
+      zlib1g-dev siege curl
+fi
 
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
@@ -100,11 +125,15 @@ EOF
 echo -e "\n\nCreate python virtual environment ..."
 (
 su "$SUDO_USER" -c                                    \
-"cd django-workload/django-workload || exit 4        ;\
-python3 -m virtualenv -p python3 venv                ;\
-source venv/bin/activate                             ;\
-pip install -r requirements.txt                      ;\
-deactivate                                           ;\
+"cd django-workload/django-workload || exit 4         ;\
+python3 -m virtualenv -p python3 venv                 ;\
+source venv/bin/activate                              ;\
+if [ "$proxy_flag" == "true" ]; then
+  pip install --proxy=http://$1 -r requirements.txt   ;\
+else
+  pip install -r requirements.txt                     ;\
+fi
+deactivate                                            ;\
 cp cluster_settings_template.py cluster_settings.py"
 )
 
