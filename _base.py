@@ -54,6 +54,15 @@ def unpickle_deployment():
     return deployment
 
 
+def set_env(key, value):
+    os.environ[str(key)] = str(value)
+
+
+def get_cpu_count():
+    import multiprocessing
+    return multiprocessing.cpu_count()
+
+
 class Platform:
     def __init__(self):
         self.distribution = ''  # Ubuntu, etc
@@ -142,6 +151,7 @@ _deploySchema = {
             'type': 'object',
             'properties': {
                 'name': {'type': 'string', 'enum': _ALLOWED_WORKLOADS},
+                'workers': {'type': 'integer', 'minimum': 1}
             },
             'required': ['name']
         },
@@ -253,6 +263,10 @@ def load_deploy_configuration(config_filename):
         config_json = json.load(data)
     try:
         validate(config_json, _deploySchema)
+
+        # workload > workers
+        if 'workers' not in config_json['workload']:
+            config_json['workload']['workers'] = get_cpu_count()
 
         # master
         if 'master' in config_json:
@@ -405,6 +419,11 @@ class Deployment:
     def common_host_setup(self):
         if not os.path.isfile(_HOST_SETUP_MARK):
             consoleLogger("Configuring host(s) for benchmarking. You may be required to reboot the workstation(s) during this process")
+            #check for proxy
+            if 'proxy' in self.deploy_config:
+                proxy = self.deploy_config['proxy'].trim()
+                if proxy != '':
+                    set_env("WEBTIER_HTTP_PROXY", proxy)
             out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % self.deploy_platform.distribution)
             with open(_HOST_SETUP_MARK, "w") as f:
                 f.write('ok')
