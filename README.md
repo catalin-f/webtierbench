@@ -27,4 +27,4 @@ cd dir
 
 pip install -r requirements-testing.txt
 
-py.test -v
+py.test --capture=sys -v

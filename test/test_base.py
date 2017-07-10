@@ -2,11 +2,13 @@ from _base import _RUN_GENERIC_SCRIPT
 from _base import _file_exists
 from _base import Platform
 from _base import set_env
+from _base import parse_deploy_args
 import os
 import stat
 import argparse
 import pytest
 import platform
+import sys
 
 
 def _create_dummy_script():
@@ -73,6 +75,39 @@ def test_file_exists():
     assert excinfo.match("Please use a valid filename")
 
 
+def test_parse_deploy_args(capsys):
+    file = _create_empty_file()
 
+    sys.argv = ["./deploy", "-s", file]
+    config = parse_deploy_args()
+    assert config == file
+
+    sys.argv = ["./deploy", "--setup", file]
+    config = parse_deploy_args()
+    assert config == file
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = ["./deploy", "-s"]
+        config = parse_deploy_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = ["./deploy", "--setup"]
+        config = parse_deploy_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = ["./deploy", "-randomparameter"]
+        config = parse_deploy_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
+
+    with pytest.raises(SystemExit) as excinfo:
+        sys.argv = ["./deploy"]
+        config = parse_deploy_args()
+    out, err = capsys.readouterr()
+    assert err.startswith("usage: ")
 
 
