@@ -1,6 +1,7 @@
 from _base import _RUN_GENERIC_SCRIPT
 from _base import _file_exists
 from _base import Platform
+from _base import set_env
 import os
 import stat
 import argparse
@@ -46,6 +47,19 @@ def test_run_generic_script():
     assert err == ""
 
 
+def test_set_env():
+    set_env("WEBTIER_TESTING", "123")
+    assert os.environ["WEBTIER_TESTING"] == "123"
+    os.environ["WEBTIER_TESTING"] == ""
+
+
+def test_platform():
+    myplatform = Platform()
+    myplatform.detect()
+    assert myplatform.system == platform.system().lower()
+    assert myplatform.type == os.name
+
+
 def test_file_exists():
     file = _create_empty_file()
     assert _file_exists(file) == file
@@ -59,8 +73,6 @@ def test_file_exists():
     assert excinfo.match("Please use a valid filename")
 
 
-def test_platform():
-    myplatform = Platform()
-    myplatform.detect()
-    assert myplatform.system == platform.system().lower()
-    assert myplatform.type == os.name
+
+
+
