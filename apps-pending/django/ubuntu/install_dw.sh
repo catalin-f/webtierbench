@@ -8,10 +8,12 @@ check_root_privilege
 # This is true if we have proxy data supplied [default is false]
 proxy_flag=false
 
+[ "$1" ] proxy_endpoint="$1"
+
 # If we have a proxy, then we set the appropriate state
-if [ "$#" -eq 1 ]  && check_proxy_parameter $1; then
+if [ "$#" -eq 1 ]  && check_proxy_parameter $proxy_endpoint; then
   echo "Proxy information was supplied correctly. Continuing with proxy settings..."
-  set_general_proxy_configuration $1
+  set_general_proxy_configuration $proxy_endpoint
   proxy_flag=true
 
 # If we don't have a proxy, we continue normally
@@ -21,8 +23,8 @@ fi
 
 # Download neccessary packets
 if [ "$proxy_flag" == "true" ]; then
-  curl --proxy http://$1 https://www.apache.org/dist/cassandra/KEYS | apt-key add -
-  curl --proxy http://$1 -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  curl --proxy http://$proxy_endpoint https://www.apache.org/dist/cassandra/KEYS | apt-key add -
+  curl --proxy http://$proxy_endpoint -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 else
   curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
@@ -31,7 +33,7 @@ fi
 # Add repositories
 echo -e "\n\nAdd apt repositories ..."
 
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$1" --recv 0xC2518248EEA14886
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$proxy_endpoint" --recv 0xC2518248EEA14886
 
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
 > /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
@@ -46,7 +48,7 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
 
 # We update our apt index
 if [ "$proxy_flag" == "true" ]; then
-  http_proxy=http://$1 apt-get update
+  http_proxy=http://$proxy_endpoint apt-get update
 else
   apt-get update
 fi
@@ -55,12 +57,12 @@ fi
 echo -e "\n\nInstall packages ..."
 
 if [ "$proxy_flag" == "true" ]; then
-  http_proxy=http://$1 apt-get install -y software-properties-common     \
+  http_proxy=http://$proxy_endpoint apt-get install -y software-properties-common     \
       cassandra memcached apt-transport-https ca-certificates docker-ce   \
       build-essential git libmemcached-dev python3-virtualenv python3-dev \
       zlib1g-dev siege curl
 
-  http_proxy=http://$1 https_proxy=https://$1 apt-get install -y oracle-java8-installer
+  http_proxy=http://$proxy_endpoint https_proxy=https://$proxy_endpoint apt-get install -y oracle-java8-installer
 
 else
   apt-get install -y software-properties-common oracle-java8-installer    \
@@ -138,11 +140,11 @@ echo -e "\n\nCreate python virtual environment ..."
 su "$SUDO_USER" -c                                    \
 "cd django-workload/django-workload || exit 4         ;\
 
-https_proxy=https://$1 http_proxy=http://$1 python3 -m virtualenv -p python3 venv  ;\
+https_proxy=https://$proxy_endpoint http_proxy=http://$proxy_endpoint python3 -m virtualenv -p python3 venv  ;\
 
 source venv/bin/activate                              ;\
 if [ $proxy_flag == true ]; then
-  https_proxy=https://$1 http_proxy=http://$1 pip install --proxy https://$1 -r requirements.txt   ;\
+  https_proxy=https://$proxy_endpoint http_proxy=http://$proxy_endpoint pip install --proxy https://$proxy_endpoint -r requirements.txt   ;\
 else
   pip install -r requirements.txt                     ;\
 fi
