@@ -8,7 +8,7 @@ check_root_privilege
 # This is true if we have proxy data supplied [default is false]
 proxy_flag=false
 
-[ "$1" ] proxy_endpoint="$1"
+[ "$1" ] && proxy_endpoint="$1"
 
 # If we have a proxy, then we set the appropriate state
 if [ "$#" -eq 1 ]  && check_proxy_parameter $proxy_endpoint; then
