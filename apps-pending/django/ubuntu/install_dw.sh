@@ -21,8 +21,8 @@ fi
 
 # Download neccessary packets
 if [ "$proxy_flag" == "true" ]; then
-  curl --proxy $1 https://www.apache.org/dist/cassandra/KEYS | apt-key add -
-  curl --proxy $1 -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  curl --proxy http://$1 https://www.apache.org/dist/cassandra/KEYS | apt-key add -
+  curl --proxy http://$1 -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 else
   curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
@@ -30,7 +30,10 @@ fi
 
 # Add repositories
 echo -e "\n\nAdd apt repositories ..."
-add-apt-repository ppa:webupd8team/java
+
+echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
+> /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
+
 echo "deb http://www.apache.org/dist/cassandra/debian 310x main" | \
      tee -a /etc/apt/sources.list.d/cassandra.sources.list
 
@@ -49,15 +52,19 @@ fi
 echo -e "\n\nInstall packages ..."
 
 if [ "$proxy_flag" == "true" ]; then
-  http_proxy=http://$1 apt-get install -y software-properties-common oracle-java8-installer    \
+  http_proxy=http://$1 apt-get install -y software-properties-common     \
       cassandra memcached apt-transport-https ca-certificates docker-ce   \
       build-essential git libmemcached-dev python3-virtualenv python3-dev \
       zlib1g-dev siege curl
+
+  http_proxy=http://$1 apt-get install -y oracle-java8-installer
 else
   apt-get install -y software-properties-common oracle-java8-installer    \
       cassandra memcached apt-transport-https ca-certificates docker-ce   \
       build-essential git libmemcached-dev python3-virtualenv python3-dev \
       zlib1g-dev siege curl
+
+  apt-get install -y oracle-java8-installer
 fi
 
 echo -e "\n\nDocker pull graphite image ..."
