@@ -21,12 +21,14 @@ docker stop graphite
 docker rm graphite
 docker rmi hopsoft/graphite-statsd
 
+rm -rf /etc/systemd/system/docker.service.d
+
 # Purge packages
 echo -e "\n\nPurge packages ..."
 apt-get purge -y oracle-java8-installer \
     memcached cassandra docker-ce       \
     python3-virtualenv python3-dev      \
-    zlib1g-dev siege 
+    zlib1g-dev siege
 
 # Do not remove ntp
 apt-mark manual ntp
