@@ -31,10 +31,11 @@ fi
 # Add repositories
 echo -e "\n\nAdd apt repositories ..."
 
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 http-proxy=http://$1 --recv-keys 5BB92C09DB82666C
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$1" --recv 0xC2518248EEA14886
 
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
 > /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
+
 
 echo "deb http://www.apache.org/dist/cassandra/debian 310x main" | \
      tee -a /etc/apt/sources.list.d/cassandra.sources.list
@@ -59,7 +60,8 @@ if [ "$proxy_flag" == "true" ]; then
       build-essential git libmemcached-dev python3-virtualenv python3-dev \
       zlib1g-dev siege curl
 
-  http_proxy=http://$1 apt-get install -y oracle-java8-installer
+  http_proxy=http://$1 https_proxy=https://$1 apt-get install -y oracle-java8-installer
+
 else
   apt-get install -y software-properties-common oracle-java8-installer    \
       cassandra memcached apt-transport-https ca-certificates docker-ce   \
@@ -69,7 +71,7 @@ else
   apt-get install -y oracle-java8-installer
 fi
 
-echo -e "\n\nDocker pull graphite image ..."
+#echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
 
 #Initialize docker container
@@ -135,13 +137,16 @@ echo -e "\n\nCreate python virtual environment ..."
 (
 su "$SUDO_USER" -c                                    \
 "cd django-workload/django-workload || exit 4         ;\
-python3 -m virtualenv -p python3 venv                 ;\
+
+https_proxy=https://$1 http_proxy=http://$1 python3 -m virtualenv -p python3 venv  ;\
+
 source venv/bin/activate                              ;\
-if [ "$proxy_flag" == "true" ]; then
-  pip install --proxy=http://$1 -r requirements.txt   ;\
+if [ $proxy_flag == true ]; then
+  https_proxy=https://$1 http_proxy=http://$1 pip install --proxy https://$1 -r requirements.txt   ;\
 else
   pip install -r requirements.txt                     ;\
 fi
+
 deactivate                                            ;\
 cp cluster_settings_template.py cluster_settings.py"
 )
