@@ -12,7 +12,7 @@ WEBTIER_DJANGO_REVISION=${WEBTIER_DJANGO_REVISION}
 ###############################################################################
 
 # Install packages
-http_proxy=${WEBTIER_HTTP_PROXY} https_proxy=${WEBTIER_HTTP_PROXY}  apt-get install -y \
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy=$"{WEBTIER_HTTP_PROXY}" apt-get install -y \
     siege
 
 

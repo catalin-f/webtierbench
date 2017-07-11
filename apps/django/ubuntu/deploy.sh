@@ -13,7 +13,7 @@ WEBTIER_DJANGO_WORKERS=${WEBTIER_DJANGO_WORKERS}
 ###############################################################################
 
 # Install packages
-http_proxy=${WEBTIER_HTTP_PROXY} https_proxy=${WEBTIER_HTTP_PROXY} apt-get install -y \
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get install -y \
     python3-dev \
     python3-virtualenv
 

@@ -11,7 +11,7 @@ WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
 ###############################################################################
 
 # Install packages
-http_proxy=${WEBTIER_HTTP_PROXY} https_proxy=${WEBTIER_HTTP_PROXY}  apt-get install -y \
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get install -y \
     libmemcached-dev \
     memcached
 
