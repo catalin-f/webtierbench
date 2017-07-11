@@ -44,7 +44,6 @@ def main():
     debugLogger("Common host setup stdout: %s" % out)
     debugLogger("Common host setup stderr: %s" % err)
 
-    sys.exit(0)
     # Notify user to reboot station
     if deployment.reboot_required():
         consoleLogger("These settings need a reboot! Please reboot the machine(s) and run the deploy command again!")

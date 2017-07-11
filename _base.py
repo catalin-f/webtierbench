@@ -421,7 +421,7 @@ class Deployment:
             consoleLogger("Configuring host(s) for benchmarking. You may be required to reboot the workstation(s) during this process")
             #check for proxy
             if 'proxy' in self.deploy_config:
-                proxy = self.deploy_config['proxy'].trim()
+                proxy = self.deploy_config['proxy'].strip()
                 if proxy != '':
                     set_env("WEBTIER_HTTP_PROXY", proxy)
             out, err = _RUN_GENERIC_SCRIPT("apps/common-%s-setup.sh" % self.deploy_platform.distribution)

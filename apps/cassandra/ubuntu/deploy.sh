@@ -12,7 +12,7 @@ WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
 CODENAME=`lsb_release -c -s`
 
 # Add keys
-curl --proxy "${WEBTIER_HTTP_PROXY}" https://www.apache.org/dist/cassandra/KEYS | apt-key add -
+curl --proxy "${WEBTIER_HTTP_PROXY}" -fsSL https://www.apache.org/dist/cassandra/KEYS | apt-key add -
 
 
 # Add repo

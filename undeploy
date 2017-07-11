@@ -21,6 +21,8 @@ def main():
     os.system('rm -rf measurements')
     os.system('rm -rf .running.json')
     os.system('rm -rf .cache')
+    os.system('rm -rf django-workload')
+    os.system('rm -rf venv')
 
 
 if __name__ == '__main__':
