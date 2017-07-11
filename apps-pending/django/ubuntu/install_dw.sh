@@ -31,6 +31,8 @@ fi
 # Add repositories
 echo -e "\n\nAdd apt repositories ..."
 
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 http-proxy=http://$1 --recv-keys 5BB92C09DB82666C
+
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
 > /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
 
