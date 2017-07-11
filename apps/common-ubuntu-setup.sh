@@ -50,12 +50,12 @@ echo "nf_conntrack" >> /etc/modules
 
 
 # Add limits settings
-#cat >> /etc/security/limits.conf <<- EOF
-#	* soft nofile 1000000
-#	* hard nofile 1000000
-#	root soft nofile 1000000
-#	root hard nofile 1000000
-#EOF
+cat >> /etc/security/limits.conf <<- EOF
+	* soft nofile 1000000
+	* hard nofile 1000000
+	root soft nofile 1000000
+	root hard nofile 1000000
+EOF
 
 # If reboot is required
 touch /tmp/.host.reboot.required
