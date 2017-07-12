@@ -1,7 +1,7 @@
 # Docker containers setup files
 
 This directory contains all docker files and all necessary dependencies to build a docker image
-with a particular service completely configured. Each application has it's dedicated directory.
+that contains a particular service completely configured. Each application has it's dedicated directory.
 
 ## Build a docker image
 
