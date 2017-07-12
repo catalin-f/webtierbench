@@ -23,14 +23,16 @@ def avg_compute():
                 csv_input = csv.reader(f_input)
                 header = next(csv_input)
                 averages = []
+                #lista1 = []
                 for col in zip(*csv_input):
                     if flag == 1:
                         del col
                         flag=0
                         continue
                     avg = list(col)
-                    del avg[0]
-                    del avg[-1]
+                    avg  = map(float, avg)
+                    avg.remove(min(avg))
+                    avg.remove(max(avg))
                     tuple(avg)
                     averages.append(sum(float(x)for x in  avg) / len(avg))
                     del avg[:]
