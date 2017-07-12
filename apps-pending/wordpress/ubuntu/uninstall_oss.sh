@@ -3,7 +3,7 @@ set -x
 
 oss_dir="$HOME/oss-performance"
 
-apt-get purge -y siege nginx mysql-server hhvm
+apt-get purge -y siege nginx mariadb-server hhvm
 
 cd $HOME
 
