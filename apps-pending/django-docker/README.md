@@ -33,5 +33,5 @@ In order to push a built image to our repository, run the following commands:
 When you use *docker login* command, you have to use the credentials associated with your docker
 cloud account.
 
-That account needs to be added to the rinftech organization in order to be able to push images to the
+That account needs to be added to the rinftech docker organization in order to be able to push images to the
 webtierbench repository.
