@@ -23,7 +23,6 @@ def avg_compute():
                 csv_input = csv.reader(f_input)
                 header = next(csv_input)
                 averages = []
-                #lista1 = []
                 for col in zip(*csv_input):
                     if flag == 1:
                         del col
