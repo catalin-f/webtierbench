@@ -1,5 +1,5 @@
 # Use the latest ubuntu image as a base OS
-FROM ubuntu:latest
+FROM ubuntu:16.04
 
 # Update our apt index
 RUN apt-get update
