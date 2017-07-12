@@ -8,6 +8,7 @@ import errno
 import time
 import argparse
 import json
+import psutil
 from jsonschema import validate
 
 _WEBTIER_VERSION = "1.0"
@@ -343,7 +344,7 @@ def save_run_configuration(config_json):
 ###############################################################################
 # Logging
 ###############################################################################
-class _Logger:
+class consoleLogger = _Logger("", fullMode=False).log
     def __init__(self, filename, fullMode=True):
         self.filename = filename
         if not self.filename:
@@ -386,6 +387,11 @@ class Application(object):
         self.deploy_platform = deploy_platform
 
     def deploy(self, async=False):
+        if self.name == "memcached":
+            usage = psutil.disk_usage('/')
+            if usage.free is not 5368709120:
+                consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
+                exit();
         out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "deploy.sh", async)
         return out, err
 
