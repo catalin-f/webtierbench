@@ -12,7 +12,7 @@ apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7
 add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
 http_proxy=http://$1 apt-get update
 
-apt-get -y install nginx unzip mysql-server util-linux coreutils autotools-dev autoconf \
+apt-get -y install nginx unzip mariadb-server util-linux coreutils autotools-dev autoconf \
 	software-properties-common build-essential hhvm
 
 cd $HOME
@@ -42,5 +42,6 @@ wget https://getcomposer.org/installer -O composer-setup.php;	\
 hhvm composer-setup.php;					\
 hhvm composer.phar install"
 
-systemctl stop mysql.service
+service mysql start
 systemctl stop nginx.service
+systemctl disable nginx.service

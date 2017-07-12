@@ -2,7 +2,7 @@
 
 oss_dir="$HOME/oss-performance"
 
-systemctl restart mysql.service
+service mysql start
 systemctl restart nginx.service
 
 for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
@@ -14,6 +14,10 @@ done
 echo 1 | sudo tee /proc/sys/net/ipv4/tcp_tw_reuse
 chmod -R 775 /var/log/nginx
 
+mysql -u root -e "USE mysql;"
+mysql -u root -e "UPDATE user SET plugin='mysql_native_password' WHERE User='root';"
+mysql -u root -e "FLUSH PRIVILEGES;"
+
 for (( i=1; i<=$1; i++ ))
 do
 	su $SUDO_USER -c "echo '****************************************************';	\
@@ -23,5 +27,5 @@ do
 	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm"
 done
 
-systemctl stop mysql.service
+service mysql stop
 systemctl stop nginx.service
