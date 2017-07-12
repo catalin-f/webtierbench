@@ -10,7 +10,7 @@ the service that you want to add to the image (for example memcached) and run th
 
 **docker build --no-cache -t <image_name> .**
 
-[Do not forget the dot at the end]
+*Do not forget the dot at the end*
 
 You can check if the image has been built successfully with the following command:
 
