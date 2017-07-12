@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # This script will configure and start the memcached service inside a docker
 # container based on Ubuntu 16.04
 
