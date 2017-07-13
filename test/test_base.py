@@ -8,6 +8,7 @@ from _base import parse_run_args
 from _base import _check_ipv4
 from _base import _Logger
 from _base import pickle_deployment
+from _base import unpickle_deployment
 import os
 import stat
 import argparse
@@ -68,12 +69,14 @@ def test_platform():
     assert myplatform.type == os.name
 
 
-def test_pickle_deployment():
+def test_pickle_unpickle_deployment():
     myplatform = Platform()
     myplatform.detect()
     deployment = Deployment('test_deployment', {}, myplatform)
     pickle_deployment(deployment)
     assert os.path.isfile(".deployment.pickle")
+    deployment = unpickle_deployment()
+    assert deployment.name == 'test_deployment'
 
 
 def test_file_exists():
