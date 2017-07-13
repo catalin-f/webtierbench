@@ -1,4 +1,5 @@
 from _base import _RUN_GENERIC_SCRIPT
+from _base import _HOST_REBOOT_REQUIRED
 from _base import _file_exists
 from _base import Platform
 from _base import Deployment
@@ -225,6 +226,24 @@ def test_logger(capsys):
     assert out == "ijkl\n"
 
 
+def test_reboot_required():
+    try:
+        os.unlink(_HOST_REBOOT_REQUIRED)
+    except:
+        pass
+
+    deployment = Deployment('', {}, Platform())
+    assert not deployment.reboot_required()
+
+    with open(_HOST_REBOOT_REQUIRED, "w") as temp:
+        temp.write("")
+        temp.flush()
+    assert deployment.reboot_required()
+
+    os.unlink(_HOST_REBOOT_REQUIRED)
+    assert not deployment.reboot_required()
+
+
 def test_deployment_basic():
     myplatform = Platform()
     myplatform.detect()
@@ -265,23 +284,22 @@ def test_deployment_basic():
 def test_deployment_advanced():
     myplatform = Platform()
     myplatform.detect()
-    deploy_config = {
-        'field': 'value'
-    }
-    deployment = Deployment('advanced_deployment', deploy_config, myplatform)
+    deployment = Deployment('advanced_deployment', {}, myplatform)
     assert deployment.name == 'advanced_deployment'
 
-    config_app = {}
-    config_cache = {}
-    config_client = {}
-    config_db = {}
-    config_perf = {}
+    # add custom runners and apps
+    def TEST_RUN_APP_SCRIPT(name, platform, script, async=False):
+        cmd = "test/%s/%s/%s" % (name, platform.distribution, script)
+        return _RUN_GENERIC_SCRIPT(cmd, async)
+    import _base
+    _base.__dict__['_ALLOWED_APPLICATIONS'] = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
+    _base.__dict__['RUN_APP_SCRIPT'] = TEST_RUN_APP_SCRIPT
 
-    test_app = MyApp(config_app, myplatform)
-    test_cache = MyCache(config_cache, myplatform)
-    test_client = MyClient(config_client, myplatform)
-    test_db = MyDb(config_db, myplatform)
-    test_perf = MyPerf(config_perf, myplatform)
+    test_app = MyApp({}, myplatform)
+    test_cache = MyCache({}, myplatform)
+    test_client = MyClient({}, myplatform)
+    test_db = MyDb({}, myplatform)
+    test_perf = MyPerf({}, myplatform)
 
     deployment.add_application(test_app)
     deployment.add_cache(test_cache)
