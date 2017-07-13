@@ -20,6 +20,7 @@ _ALLOWED_CLIENTS = ['siege', 'ab']
 _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
+_ALLOWED_TESTS = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
 
@@ -38,6 +39,7 @@ def _RUN_GENERIC_SCRIPT(name, async=False):
 
 
 def RUN_APP_SCRIPT(name, platform, script, async=False):
+    # cmd = "%s/apps/%s/%s/%s" % (os.getcwd(), name, platform.distribution, script)
     cmd = "apps/%s/%s/%s" % (name, platform.distribution, script)
     return _RUN_GENERIC_SCRIPT(cmd, async)
 
@@ -371,7 +373,8 @@ consoleLogger = _Logger("", showTimestamp=False).log
 ###############################################################################
 # Applications
 ###############################################################################
-_ALLOWED_APPLICATIONS = _ALLOWED_CACHES + _ALLOWED_CLIENTS + _ALLOWED_DBS + _ALLOWED_PERFS + _ALLOWED_WORKLOADS
+_ALLOWED_APPLICATIONS = _ALLOWED_CACHES + _ALLOWED_CLIENTS + _ALLOWED_DBS + \
+                        _ALLOWED_PERFS + _ALLOWED_WORKLOADS + _ALLOWED_TESTS
 _HOST_SETUP_MARK = '.host.setup.done'
 _HOST_REBOOT_REQUIRED = '/tmp/.host.reboot.required'
 
@@ -464,11 +467,11 @@ class Deployment:
         return '', ''
 
     def set_benchmark_config(self, benchmark_config):
-        if self.client != None:
+        if self.client is not None:
             self.client.set_benchmark_config(benchmark_config)
 
     def start_benchmark_client(self):
-        if self.client != None:
+        if self.client is not None:
             out, err = self.client.start()
             return out, err
         return '', ''
@@ -488,7 +491,7 @@ class Deployment:
         return '', ''
 
     def stop_benchmark_client(self):
-        if self.client != None:
+        if self.client is not None:
             out, err = self.client.stop()
             return out, err
         return '', ''
