@@ -464,11 +464,14 @@ class Deployment:
         return '', ''
 
     def set_benchmark_config(self, benchmark_config):
-        self.client.set_benchmark_config(benchmark_config)
+        if self.client != None:
+            self.client.set_benchmark_config(benchmark_config)
 
     def start_benchmark_client(self):
-        out, err = self.client.start()
-        return out, err
+        if self.client != None:
+            out, err = self.client.start()
+            return out, err
+        return '', ''
 
     def stop_applications(self):
         outs = []
@@ -485,8 +488,10 @@ class Deployment:
         return '', ''
 
     def stop_benchmark_client(self):
-        out, err = self.client.stop()
-        return out, err
+        if self.client != None:
+            out, err = self.client.stop()
+            return out, err
+        return '', ''
 
     def collect_performance_data(self):
         # Create results directory tree

@@ -1,11 +1,14 @@
 from _base import _RUN_GENERIC_SCRIPT
 from _base import _file_exists
 from _base import Platform
+from _base import Deployment
 from _base import set_env
 from _base import parse_deploy_args
 from _base import parse_run_args
 from _base import _check_ipv4
 from _base import _Logger
+from _base import pickle_deployment
+from _base import unpickle_deployment
 import os
 import stat
 import argparse
@@ -64,6 +67,16 @@ def test_platform():
     myplatform.detect()
     assert myplatform.system == platform.system().lower()
     assert myplatform.type == os.name
+
+
+def test_pickle_unpickle_deployment():
+    myplatform = Platform()
+    myplatform.detect()
+    deployment = Deployment('test_deployment', {}, myplatform)
+    pickle_deployment(deployment)
+    assert os.path.isfile(".deployment.pickle")
+    deployment = unpickle_deployment()
+    assert deployment.name == 'test_deployment'
 
 
 def test_file_exists():
@@ -186,3 +199,42 @@ def test_logger(capsys):
     assert out == "ijkl\n"
 
 
+def test_deployment():
+    myplatform = Platform()
+    myplatform.detect()
+    deploy_config = {
+        'field': 'value'
+    }
+    deployment = Deployment('test_deployment', deploy_config, myplatform)
+
+
+    assert deployment.name == 'test_deployment'
+    assert len(deployment.applications) == 0
+    assert len(deployment.dbs) == 0
+    assert len(deployment.cache) == 0
+    assert len(deployment.perfs) == 0
+    assert deployment.client == None
+    assert len(deployment._all_apps) == 0
+
+    empty = ''
+
+    out, err = deployment.deploy()
+    assert out == empty and err == empty
+
+    out, err = deployment.start_applications()
+    assert out == empty and err == empty
+
+    out, err = deployment.start_performance_measurements()
+    assert out == empty and err == empty
+
+    out, err = deployment.start_benchmark_client()
+    assert out == empty and err == empty
+
+    out, err = deployment.stop_applications()
+    assert out == empty and err == empty
+
+    out, err = deployment.stop_performance_measurements()
+    assert out == empty and err == empty
+
+    out, err = deployment.stop_benchmark_client()
+    assert out == empty and err == empty
