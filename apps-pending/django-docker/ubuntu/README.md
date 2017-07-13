@@ -30,11 +30,11 @@ In order to push a built image to our repository, run the following commands:
 
 ## Pull a docker image from our docker repository
 
-docker pull rinftech/webtierbench:<image_tag>
+**docker pull rinftech/webtierbench:<image_tag>**
 
 ## Run a docker container with a specific image
 
-docker run -it rinftech/webtierbench:<image_tag> /bin/bash
+**docker run -it rinftech/webtierbench:<image_tag> /bin/bash**
 
 ## Additional information
 
