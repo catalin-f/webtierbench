@@ -10,7 +10,7 @@ if [ -f /etc/memcached.conf ]; then
     echo -e "\n\nBackup /etc/memcached.conf to /etc/memcached.conf.old"
 fi
 
-. memcached.cfg
+. /scripts/memcached.cfg
 
 echo -e "\n\nWrite memcached config file ..."
 cat > /etc/memcached.conf <<- EOF
