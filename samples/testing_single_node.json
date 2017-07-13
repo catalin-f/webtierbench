@@ -12,8 +12,10 @@
   },
   "cache": [
     {
-      "name": "memcached"
+      "name": "memcached",
+      "port": 11223,
       "memsize": 4368709120
+
     }
   ],
   "db": [],
