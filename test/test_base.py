@@ -9,6 +9,7 @@ from _base import _check_ipv4
 from _base import _Logger
 from _base import pickle_deployment
 from _base import unpickle_deployment
+from _base import Application
 import os
 import stat
 import argparse
@@ -39,6 +40,31 @@ def _create_empty_file():
         temp.write("")
         temp.flush()
     return name
+
+
+class MyApp(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(MyApp, self).__init__("_test_app", deploy_config, deploy_platform)
+
+
+class MyCache(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(MyCache, self).__init__("_test_cache", deploy_config, deploy_platform)
+
+
+class MyClient(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(MyClient, self).__init__("_test_client", deploy_config, deploy_platform)
+
+
+class MyDb(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(MyDb, self).__init__("_test_db", deploy_config, deploy_platform)
+
+
+class MyPerf(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(MyPerf, self).__init__("_test_perf", deploy_config, deploy_platform)
 
 
 ###############################################################################
@@ -202,12 +228,9 @@ def test_logger(capsys):
 def test_deployment_basic():
     myplatform = Platform()
     myplatform.detect()
-    deploy_config = {
-        'field': 'value'
-    }
-    deployment = Deployment('test_deployment', deploy_config, myplatform)
+    deployment = Deployment('simple_deployment', {}, myplatform)
 
-    assert deployment.name == 'test_deployment'
+    assert deployment.name == 'simple_deployment'
     assert len(deployment.applications) == 0
     assert len(deployment.dbs) == 0
     assert len(deployment.cache) == 0
@@ -237,3 +260,66 @@ def test_deployment_basic():
 
     out, err = deployment.stop_benchmark_client()
     assert out == empty and err == empty
+
+
+def test_deployment_advanced():
+    myplatform = Platform()
+    myplatform.detect()
+    deploy_config = {
+        'field': 'value'
+    }
+    deployment = Deployment('advanced_deployment', deploy_config, myplatform)
+    assert deployment.name == 'advanced_deployment'
+
+    config_app = {}
+    config_cache = {}
+    config_client = {}
+    config_db = {}
+    config_perf = {}
+
+    test_app = MyApp(config_app, myplatform)
+    test_cache = MyCache(config_cache, myplatform)
+    test_client = MyClient(config_client, myplatform)
+    test_db = MyDb(config_db, myplatform)
+    test_perf = MyPerf(config_perf, myplatform)
+
+    deployment.add_application(test_app)
+    deployment.add_cache(test_cache)
+    deployment.set_client(test_client)
+    deployment.add_db(test_db)
+    deployment.add_perf(test_perf)
+
+    assert len(deployment.applications) == 1
+    assert len(deployment.dbs) == 1
+    assert len(deployment.cache) == 1
+    assert len(deployment.perfs) == 1
+    assert deployment.client != None
+    assert len(deployment._all_apps) == 4
+
+    out, err = deployment.deploy()
+    assert out == "deploy app\n deploy cache\n deploy client\n deploy db\n deploy perf\n"
+    assert err.strip() == ''
+
+    out, err = deployment.start_applications()
+    assert out == "start app\n start cache\n start client\n start db\n"
+    assert err.strip() == ''
+
+    out, err = deployment.start_performance_measurements()
+    assert out == ''
+    assert err.strip() == ''
+
+    out, err = deployment.start_benchmark_client()
+    assert out == 'start client\n'
+    assert err.strip() == ''
+
+    out, err = deployment.stop_benchmark_client()
+    assert out == 'stop client\n'
+    assert err.strip() == ''
+
+    out, err = deployment.stop_performance_measurements()
+    assert out == ''
+    assert err == ''
+
+    out, err = deployment.stop_applications()
+    assert out == "stop app\n stop cache\n stop client\n stop db\n"
+    assert err.strip() == ''
