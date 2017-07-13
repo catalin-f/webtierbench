@@ -50,13 +50,19 @@ class Memcached(Application):
         if os.path.exists("/etc/memcached.conf"):
             os.rename("/etc/memcached.conf","/etc/memcached.conf.old")
         with open("/etc/memcached.conf", "w") as outfile:
+            if 'user' not in self.deploy_config:
+                self.deploy_config['user'] = "memcache"
+            if 'port' not in self.deploy_config:
+                self.deploy_config['port'] = 11811
             outfile.writelines("MEMORY:" + str(self.deploy_config['memsize']))
             outfile.write("LISTEN:" +  self.deploy_config['ip'])
-            outfile.write("PORT:" + self.deploy_config['port'])
+            outfile.write("PORT:" + str(self.deploy_config['port']))
             outfile.write("USER:" + self.deploy_config['user'])
         if usage.free <= self.deploy_config['memsize']:
-            consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
+            mem_size = (usage.free/1024)/1024
+            consoleLogger(str(mem_size)+"Mb not enough free memmory space for memcached. Minimum required 5Gb")
             exit();
+
         return super(Memcached, self).deploy(async)
 
 

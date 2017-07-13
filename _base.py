@@ -184,8 +184,8 @@ _deploySchema = {
                     'name': {'type': 'string', 'enum': _ALLOWED_CACHES},
                     'ip': {'type': 'string'},
                     'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535},
-                    'memsize': {'type': 'integer'},
-                    'user': {'type':'string'}
+                    'requiredMemory': {'type': 'integer'},
+                    'user': {'type': 'string'}
                 },
                 'required': ['name']
             },
@@ -302,10 +302,8 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
-                if 'memsize' not in obj:
-                    obj['memsize'] = _5Gb
-                if 'user' not in obj:
-                    obj['user'] = "memcache"
+                if 'requiredMemory' not in obj:
+                    obj['requiredMemory'] = _5Gb
 
         # db > ip
         if 'db' in config_json:
