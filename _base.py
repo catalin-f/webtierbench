@@ -183,7 +183,7 @@ _deploySchema = {
                 'properties': {
                     'name': {'type': 'string', 'enum': _ALLOWED_CACHES},
                     'ip': {'type': 'string'},
-                    'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535}
+                    'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535},
                     'memsize': {'type': 'integer'},
                     'user': {'type':'string'}
                 },
