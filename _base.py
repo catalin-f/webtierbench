@@ -344,7 +344,7 @@ def save_run_configuration(config_json):
 ###############################################################################
 # Logging
 ###############################################################################
-class consoleLogger = _Logger("", fullMode=False).log
+class _Logger:
     def __init__(self, filename, fullMode=True):
         self.filename = filename
         if not self.filename:
