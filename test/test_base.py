@@ -5,6 +5,7 @@ from _base import set_env
 from _base import parse_deploy_args
 from _base import parse_run_args
 from _base import _check_ipv4
+from _base import _Logger
 import os
 import stat
 import argparse
@@ -163,5 +164,25 @@ def test_check_ipv4():
         _check_ipv4("localhost")
     assert excinfo.match(msg)
 
+
+def test_logger(capsys):
+    file = _create_empty_file()
+    temp_logger = _Logger(file, showTimestamp=False).log
+
+    temp_logger("abcd")
+    with open(file, "r") as temp:
+        line = temp.readlines()
+    assert line[0] == "abcd\n"
+
+    temp_logger("efgh")
+    with open(file, "r") as temp:
+        line = temp.readlines()
+    assert line[0] == "abcd\n"
+    assert line[1] == "efgh\n"
+
+    temp_logger = _Logger("", showTimestamp=False).log
+    temp_logger("ijkl")
+    out, err = capsys.readouterr()
+    assert out == "ijkl\n"
 
 

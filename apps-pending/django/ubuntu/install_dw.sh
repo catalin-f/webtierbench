@@ -196,14 +196,3 @@ echo -e "\n\n"
 # Modifying limits.conf requires system reboot
 read -rsn1 -p "Press any key to reboot"
 reboot
-	* hard nofile 1000000
-EOF
-
-# Create siegerc
-echo -e "\n\nCreate siegerc ..."
-su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc"
-
-echo -e "\n\n"
-# Modifying limits.conf requires system reboot
-read -rsn1 -p "Press any key to reboot"
-reboot
