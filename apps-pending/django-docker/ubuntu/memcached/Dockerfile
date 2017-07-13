@@ -1,17 +1,17 @@
 # Use the latest ubuntu image as a base OS
 FROM ubuntu:16.04
 
-# Update our apt index
-RUN apt-get update
+# Set terminal to noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
-# Install memcached
-RUN apt-get -y install memcached
+# Update our apt index and create scripts directory
+RUN apt-get update && apt-get -y install memcached && mkdir scripts
 
-# Copy the memcached config to the root directory on the container
-ADD memcached.cfg /
+# Copy necessary files to the container
+COPY memcached_init.sh memcached.cfg /scripts/
 
-# Copy the memcached init script to the container
-ADD memcached_init.sh /
+# Set terminal to teletype
+ENV DEBIAN_FRONTEND teletype
 
 # Make memcached to start on boot time
-CMD ./memcached_init.sh
+CMD ./scripts/memcached_init.sh
