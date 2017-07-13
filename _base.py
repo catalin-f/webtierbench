@@ -20,15 +20,11 @@ _ALLOWED_CLIENTS = ['siege', 'ab']
 _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
-<<<<<<< HEAD
+
 _ALLOWED_TESTS = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
 _5Gb = 5368709120
-=======
->>>>>>> ac6dd32d49057fd5b90b220eb6f217b07206c23d
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
-
-
 
 
 ###############################################################################

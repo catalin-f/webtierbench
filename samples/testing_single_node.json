@@ -10,7 +10,12 @@
     "requests": "1000",
     "endpoint": "http://localhost:80/index.html"
   },
-  "cache": [],
+  "cache": [
+    {
+      "name": "memcached"
+      "memsize": 4368709120
+    }
+  ],
   "db": [],
   "perf": [
     {

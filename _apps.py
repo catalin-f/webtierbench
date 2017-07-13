@@ -4,8 +4,6 @@ import psutil
 from _base import Application
 from _base import consoleLogger
 from _base import set_env
-from _base import _5Gb
-
 
 
 
@@ -49,9 +47,6 @@ class Memcached(Application):
 
     def deploy(self, async=False):
         usage = psutil.virtual_memory()
-        if usage.free <= _5Gb:
-            consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
-            exit();
         if os.path.exists("/etc/memcached.conf"):
             os.rename("/etc/memcached.conf","/etc/memcached.conf.old")
         with open("/etc/memcached.conf", "w") as outfile:
@@ -59,6 +54,9 @@ class Memcached(Application):
             outfile.write("LISTEN=" +  self.deploy_config["ip"])
             outfile.write("PORT=" + self.deploy_config["port"])
             outfile.write("USER" + self.deploy_config["user"])
+        if usage.free <= self.deploy_config["memsize"]:
+            consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
+            exit();
         return super(Memcached, self).deploy(async)
 
 
