@@ -345,13 +345,13 @@ def save_run_configuration(config_json):
 # Logging
 ###############################################################################
 class _Logger:
-    def __init__(self, filename, fullMode=True):
+    def __init__(self, filename, showTimestamp=True):
         self.filename = filename
         if not self.filename:
             self.fd = sys.stdout
         else:
             self.fd = open(filename, "a")
-        self.fullMode = fullMode
+        self.fullMode = showTimestamp
 
     def _get_prefix(self):
         if self.fullMode:
@@ -364,8 +364,8 @@ class _Logger:
 
 
 debugLogger = _Logger("webtierbench.log").log
-masterLogger = _Logger("results.log", fullMode=False).log
-consoleLogger = _Logger("", fullMode=False).log
+masterLogger = _Logger("results.log", showTimestamp=False).log
+consoleLogger = _Logger("", showTimestamp=False).log
 
 
 ###############################################################################
