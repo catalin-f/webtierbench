@@ -296,8 +296,13 @@ def test_deployment_advanced():
     config_db = {}
     config_perf = {}
 
+    # add custom runners and apps
+    def TEST_RUN_APP_SCRIPT(name, platform, script, async=False):
+        cmd = "test/%s/%s/%s" % (name, platform.distribution, script)
+        return _RUN_GENERIC_SCRIPT(cmd, async)
     import _base
-    _base.__dict__['_ALLOWED_APPLICATIONS'] += ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
+    _base.__dict__['_ALLOWED_APPLICATIONS'] = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
+    _base.__dict__['RUN_APP_SCRIPT'] = TEST_RUN_APP_SCRIPT
 
     test_app = MyApp(config_app, myplatform)
     test_cache = MyCache(config_cache, myplatform)
