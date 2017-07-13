@@ -199,14 +199,13 @@ def test_logger(capsys):
     assert out == "ijkl\n"
 
 
-def test_deployment():
+def test_deployment_basic():
     myplatform = Platform()
     myplatform.detect()
     deploy_config = {
         'field': 'value'
     }
     deployment = Deployment('test_deployment', deploy_config, myplatform)
-
 
     assert deployment.name == 'test_deployment'
     assert len(deployment.applications) == 0

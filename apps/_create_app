@@ -13,10 +13,23 @@ DISTRIBUTION=$2
 mkdir -p ${APP}/${DISTRIBUTION}
 echo "Created ${APP}/${DISTRIBUTION}"
 
-echo -e "#!/bin/bash\n" > ${APP}/${DISTRIBUTION}/deploy.sh
-echo -e "#!/bin/bash\n" >  ${APP}/${DISTRIBUTION}/undeploy.sh
-echo -e "#!/bin/bash\n" >  ${APP}/${DISTRIBUTION}/start.sh
-echo -e "#!/bin/bash\n" >  ${APP}/${DISTRIBUTION}/stop.sh
+content="#!/bin/bash
+
+###############################################################################
+# Environment data
+###############################################################################
+
+
+###############################################################################
+# Commands
+###############################################################################
+
+"
+
+echo "$content" > ${APP}/${DISTRIBUTION}/deploy.sh
+echo "$content" >  ${APP}/${DISTRIBUTION}/undeploy.sh
+echo "$content" >  ${APP}/${DISTRIBUTION}/start.sh
+echo "$content" >  ${APP}/${DISTRIBUTION}/stop.sh
 echo "Created stub scripts"
 
 chmod +x ${APP}/${DISTRIBUTION}/*.sh

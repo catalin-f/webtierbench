@@ -66,7 +66,7 @@ def get_cpu_count():
 
 class Platform:
     def __init__(self):
-        self.distribution = ''  # Ubuntu, etc
+        self.distribution = ''  # ubuntu, etc
         self.version = ''       # 16.04, etc
         self.type = ''          # posix
         self.system = ''        # linux, mac, win
