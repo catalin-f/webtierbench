@@ -8,6 +8,8 @@ git clone this_repo dir
 
 cd dir
 
+pip install -r requirements.txt  (this can be done only once)
+
 sudo ./deploy --setup=setup.json
 
 ## Running
@@ -20,7 +22,7 @@ sudo ./run --benchmark=benchmark.json
 
 cd dir
 
-sudo ./deploy
+sudo ./undeploy
 
 ## Testing
 cd dir 
