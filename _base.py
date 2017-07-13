@@ -21,8 +21,11 @@ _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
 _ALLOWED_TESTS = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
+_5Gb = 5368709120
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
+
+
 
 
 ###############################################################################
@@ -182,6 +185,8 @@ _deploySchema = {
                     'name': {'type': 'string', 'enum': _ALLOWED_CACHES},
                     'ip': {'type': 'string'},
                     'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535}
+                    'memsize': {'type': 'integer'},
+                    'user': {'type':'string'}
                 },
                 'required': ['name']
             },
@@ -298,6 +303,10 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
+                if 'memsize' not in obj:
+                    obj['memsize'] = _5Gb
+                if 'user' not in obj:
+                    obj['user'] = "memcache"
 
         # db > ip
         if 'db' in config_json:

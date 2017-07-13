@@ -1,11 +1,13 @@
 import os
 import time
+import psutil
 from _base import Application
 from _base import consoleLogger
 from _base import set_env
-import psutil
+from _base import _5Gb
 
-_5Gb = 5368709120
+
+
 
 #TODO: add all apps here
 def gen_perf_filename():
@@ -50,6 +52,13 @@ class Memcached(Application):
         if usage.free <= _5Gb:
             consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
             exit();
+        if os.path.exists("/etc/memcached.conf"):
+            os.rename("/etc/memcached.conf","/etc/memcached.conf.old")
+        with open("/etc/memcached.conf", "w") as outfile:
+            outfile.write("MEMORY" + self.deploy_config["memsize"])
+            outfile.write("LISTEN=" +  self.deploy_config["ip"])
+            outfile.write("PORT=" + self.deploy_config["port"])
+            outfile.write("USER" + self.deploy_config["user"])
         return super(Memcached, self).deploy(async)
 
 
