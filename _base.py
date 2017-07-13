@@ -20,7 +20,6 @@ _ALLOWED_CLIENTS = ['siege', 'ab']
 _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
-_ALLOWED_TESTS = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
 
@@ -374,7 +373,7 @@ consoleLogger = _Logger("", showTimestamp=False).log
 # Applications
 ###############################################################################
 _ALLOWED_APPLICATIONS = _ALLOWED_CACHES + _ALLOWED_CLIENTS + _ALLOWED_DBS + \
-                        _ALLOWED_PERFS + _ALLOWED_WORKLOADS + _ALLOWED_TESTS
+                        _ALLOWED_PERFS + _ALLOWED_WORKLOADS
 _HOST_SETUP_MARK = '.host.setup.done'
 _HOST_REBOOT_REQUIRED = '/tmp/.host.reboot.required'
 

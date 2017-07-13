@@ -227,7 +227,10 @@ def test_logger(capsys):
 
 
 def test_reboot_required():
-    os.unlink(_HOST_REBOOT_REQUIRED)
+    try:
+        os.unlink(_HOST_REBOOT_REQUIRED)
+    except:
+        pass
 
     deployment = Deployment('', {}, Platform())
     assert not deployment.reboot_required()
@@ -292,6 +295,9 @@ def test_deployment_advanced():
     config_client = {}
     config_db = {}
     config_perf = {}
+
+    import _base
+    _base.__dict__['_ALLOWED_APPLICATIONS'] += ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
 
     test_app = MyApp(config_app, myplatform)
     test_cache = MyCache(config_cache, myplatform)
