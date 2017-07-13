@@ -1,5 +1,5 @@
 #!/bin/bash
-. common_func.sh
+. ./common_func.sh
 
 ###############################################################################
 # Environment data
