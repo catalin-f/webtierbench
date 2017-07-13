@@ -1,4 +1,5 @@
 from _base import _RUN_GENERIC_SCRIPT
+from _base import _HOST_REBOOT_REQUIRED
 from _base import _file_exists
 from _base import Platform
 from _base import Deployment
@@ -223,6 +224,21 @@ def test_logger(capsys):
     temp_logger("ijkl")
     out, err = capsys.readouterr()
     assert out == "ijkl\n"
+
+
+def test_reboot_required():
+    os.unlink(_HOST_REBOOT_REQUIRED)
+
+    deployment = Deployment('', {}, Platform())
+    assert not deployment.reboot_required()
+
+    with open(_HOST_REBOOT_REQUIRED, "w") as temp:
+        temp.write("")
+        temp.flush()
+    assert deployment.reboot_required()
+
+    os.unlink(_HOST_REBOOT_REQUIRED)
+    assert not deployment.reboot_required()
 
 
 def test_deployment_basic():
