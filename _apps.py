@@ -47,7 +47,7 @@ class Memcached(Application):
 
     def deploy(self, async=False):
         usage = psutil.virtual_memory()
-        if usage.free is not _5Gb:
+        if usage.free <= _5Gb:
             consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
             exit();
         return super(Memcached, self).deploy(async)
