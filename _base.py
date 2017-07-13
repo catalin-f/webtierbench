@@ -8,7 +8,6 @@ import errno
 import time
 import argparse
 import json
-import psutil
 from jsonschema import validate
 
 _WEBTIER_VERSION = "1.0"
@@ -23,6 +22,7 @@ _ALLOWED_DBS = ['cassandra']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
+
 
 ###############################################################################
 # Common functions and classes
@@ -387,11 +387,6 @@ class Application(object):
         self.deploy_platform = deploy_platform
 
     def deploy(self, async=False):
-        if self.name == "memcached":
-            usage = psutil.disk_usage('/')
-            if usage.free is not 5368709120:
-                consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
-                exit();
         out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "deploy.sh", async)
         return out, err
 

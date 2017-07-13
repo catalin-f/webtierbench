@@ -1,7 +1,11 @@
 import os
 import time
 from _base import Application
+from _base import consoleLogger
 from _base import set_env
+import psutil
+
+_5Gb = 5368709120
 
 #TODO: add all apps here
 def gen_perf_filename():
@@ -40,6 +44,13 @@ class Memcached(Application):
 
     def start(self, async=False):
         return super(Memcached, self).start(async)
+
+    def deploy(self, async=False):
+        usage = psutil.virtual_memory()
+        if usage.free is not _5Gb:
+            consoleLogger("Not enough free memmory space for memcached. Minimum required 5Gb")
+            exit();
+        return super(Memcached, self).deploy(async)
 
 
 ###############################################################################
