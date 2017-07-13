@@ -199,3 +199,42 @@ def test_logger(capsys):
     assert out == "ijkl\n"
 
 
+def test_deployment():
+    myplatform = Platform()
+    myplatform.detect()
+    deploy_config = {
+        'field': 'value'
+    }
+    deployment = Deployment('test_deployment', deploy_config, myplatform)
+
+
+    assert deployment.name == 'test_deployment'
+    assert len(deployment.applications) == 0
+    assert len(deployment.dbs) == 0
+    assert len(deployment.cache) == 0
+    assert len(deployment.perfs) == 0
+    assert deployment.client == None
+    assert len(deployment._all_apps) == 0
+
+    empty = ''
+
+    out, err = deployment.deploy()
+    assert out == empty and err == empty
+
+    out, err = deployment.start_applications()
+    assert out == empty and err == empty
+
+    out, err = deployment.start_performance_measurements()
+    assert out == empty and err == empty
+
+    out, err = deployment.start_benchmark_client()
+    assert out == empty and err == empty
+
+    out, err = deployment.stop_applications()
+    assert out == empty and err == empty
+
+    out, err = deployment.stop_performance_measurements()
+    assert out == empty and err == empty
+
+    out, err = deployment.stop_benchmark_client()
+    assert out == empty and err == empty
