@@ -184,7 +184,7 @@ _deploySchema = {
                     'name': {'type': 'string', 'enum': _ALLOWED_CACHES},
                     'ip': {'type': 'string'},
                     'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535},
-                    'requiredMemory': {'type': 'integer'},
+                    'minrequiredMemory': {'type': 'integer'},
                     'user': {'type': 'string'}
                 },
                 'required': ['name']
@@ -280,6 +280,7 @@ def load_deploy_configuration(config_filename):
             _check_ipv4(config_json['master'])
         else:
             config_json['master'] = '127.0.0.1'
+            consoleLogger("IP value not set in the json file for" +  config_json['master'])
 
         # slave
         if 'slave' in config_json:
@@ -287,12 +288,14 @@ def load_deploy_configuration(config_filename):
                 _check_ipv4(ip)
         else:
             config_json['slave'] = ['127.0.0.1']
+            consoleLogger("IP value not set in the json file for" + config_json['slave'])
 
         # client > ip
         if 'ip' in config_json['client']:
             _check_ipv4(config_json['client']['ip'])
         else:
             config_json['client']['ip'] = '127.0.0.1'
+            consoleLogger("IP value not set in the json file for" + config_json['client'])
 
         # cache > ip
         if 'cache' in config_json:
@@ -302,7 +305,8 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
-                if 'requiredMemory' not in obj:
+                    consoleLogger("IP value not set in the json file for" + obj['name'])
+                if 'minrequiredMemory' not in obj:
                     obj['requiredMemory'] = _5Gb
 
         # db > ip
@@ -313,6 +317,7 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
+                    consoleLogger("IP value not set in the json file for" + obj['name'])
 
     except Exception as ex:
         debugLogger("Exception in load_deploy_configuration: %r" % ex)

@@ -5,7 +5,8 @@ from _base import Application
 from _base import consoleLogger
 from _base import set_env
 
-
+_MB = (1024*1024)
+port_increment = 0
 
 #TODO: add all apps here
 def gen_perf_filename():
@@ -46,6 +47,7 @@ class Memcached(Application):
         return super(Memcached, self).start(async)
 
     def deploy(self, async=False):
+        global port_increment
         usage = psutil.virtual_memory()
         if os.path.exists("/etc/memcached.conf"):
             os.rename("/etc/memcached.conf","/etc/memcached.conf.old")
@@ -53,13 +55,15 @@ class Memcached(Application):
             if 'user' not in self.deploy_config:
                 self.deploy_config['user'] = "memcache"
             if 'port' not in self.deploy_config:
-                self.deploy_config['port'] = 11811
+                self.deploy_config['port'] = 11811 + port_increment
+                port_increment = port_increment + 1
+                consoleLogger("Port value not set in the json file for"+self.deploy_config['name'])
             outfile.writelines("MEMORY:" + str(self.deploy_config['memsize']))
             outfile.write("LISTEN:" +  self.deploy_config['ip'])
             outfile.write("PORT:" + str(self.deploy_config['port']))
             outfile.write("USER:" + self.deploy_config['user'])
         if usage.free <= self.deploy_config['memsize']:
-            mem_size = (usage.free/1024)/1024
+            mem_size = usage.free/_MB
             consoleLogger(str(mem_size)+"Mb not enough free memmory space for memcached. Minimum required 5Gb")
             exit();
 
