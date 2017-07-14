@@ -7,6 +7,9 @@ ENV DJANGO_REVISION b18dace0491051ba85b5fed908db8a92adb2f2ae
 # Update apt index
 RUN apt-get update
 
+# Create scripts directory
+RUN mkdir /scripts
+
 # Install siege dependencies
 RUN apt-get -y install git siege python3
 
@@ -20,7 +23,7 @@ RUN cd django-workload/client && git checkout $DJANGO_REVISION && ./gen-urls-fil
 RUN echo 'failures = 1000000' > .siegerc
 
 # Add the init script on the container to be run
-COPY siege_init.sh /
+COPY siege_init.sh /scripts/
 
 # Make siege to start on boot time
 CMD ./siege_init.sh
