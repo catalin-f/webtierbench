@@ -20,9 +20,9 @@ start_service() {
 #######################################
 check_proxy_parameter() {
 	if [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+$ ]]; then
-  	return 0
+  		return 0
 	else
-  	return 1
+	  	return 1
 	fi
 }
 
@@ -40,7 +40,7 @@ set_general_proxy_configuration() {
 	echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
 	echo "Environment='HTTP_PROXY=http://$1'">> /etc/systemd/system/docker.service.d/http-proxy.conf
 
-  # Set git configuration to pull through proxy
+	# Set git configuration to pull through proxy
 	git config --global http.proxy http://$1
 }
 
