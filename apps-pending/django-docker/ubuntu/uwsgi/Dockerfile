@@ -7,8 +7,11 @@ RUN apt-get update && apt-get install -y git python3-virtualenv python3-dev pyth
 # Clone django workload repository
 RUN git clone https://github.com/Instagram/django-workload
 
+# Set work directory
+WORKDIR django-workload/django-workload
+
 # Switch the repository to our checked revisions
-RUN cd django-workload/django-workload && git checkout b18dace0491051ba85b5fed908db8a92adb2f2ae
+RUN git checkout b18dace0491051ba85b5fed908db8a92adb2f2ae
 
 # Create the virtual environment and activate it
 RUN python3 -m virtualenv -p python3 venv
@@ -17,10 +20,10 @@ RUN python3 -m virtualenv -p python3 venv
 RUN /bin/bash -c "source venv/bin/activate"
 
 # Install necessary requirements
-RUN cd django-workload/django-workload && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Update the cluster settings file
-RUN cd django-workload/django-workload && cp cluster_settings_template.py cluster_settings.py
+RUN cp cluster_settings_template.py cluster_settings.py
 
 # Start uWSGI
 CMD cd django-workload/django-workload && /bin/bash -c "source ./venv/bin/activate" \
