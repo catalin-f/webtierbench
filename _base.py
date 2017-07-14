@@ -280,7 +280,7 @@ def load_deploy_configuration(config_filename):
             _check_ipv4(config_json['master'])
         else:
             config_json['master'] = '127.0.0.1'
-            consoleLogger("IP value not set in the json file for" +  config_json['master'])
+            consoleLogger("IP value not set in the json file for master")
 
         # slave
         if 'slave' in config_json:
@@ -288,14 +288,14 @@ def load_deploy_configuration(config_filename):
                 _check_ipv4(ip)
         else:
             config_json['slave'] = ['127.0.0.1']
-            consoleLogger("IP value not set in the json file for" + config_json['slave'])
+            consoleLogger("IP value not set in the json file for slave")
 
         # client > ip
         if 'ip' in config_json['client']:
             _check_ipv4(config_json['client']['ip'])
         else:
             config_json['client']['ip'] = '127.0.0.1'
-            consoleLogger("IP value not set in the json file for" + config_json['client'])
+            consoleLogger("IP value not set in the json file for client")
 
         # cache > ip
         if 'cache' in config_json:
@@ -305,9 +305,9 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
-                    consoleLogger("IP value not set in the json file for" + obj['name'])
+                    consoleLogger("IP value not set in the json file for "+ str(obj['name']))
                 if 'minrequiredMemory' not in obj:
-                    obj['requiredMemory'] = _5Gb
+                    obj['minrequiredMemory'] = _5Gb
 
         # db > ip
         if 'db' in config_json:

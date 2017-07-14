@@ -58,11 +58,11 @@ class Memcached(Application):
                 self.deploy_config['port'] = 11811 + port_increment
                 port_increment = port_increment + 1
                 consoleLogger("Port value not set in the json file for"+self.deploy_config['name'])
-            outfile.writelines("MEMORY:" + str(self.deploy_config['memsize']))
+            outfile.writelines("MEMORY:" + str(self.deploy_config['minrequiredMemory']))
             outfile.write("LISTEN:" +  self.deploy_config['ip'])
             outfile.write("PORT:" + str(self.deploy_config['port']))
             outfile.write("USER:" + self.deploy_config['user'])
-        if usage.free <= self.deploy_config['memsize']:
+        if usage.free <= self.deploy_config['minrequiredMemory']:
             mem_size = usage.free/_MB
             consoleLogger(str(mem_size)+"Mb not enough free memmory space for memcached. Minimum required 5Gb")
             exit();
