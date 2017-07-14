@@ -26,5 +26,4 @@ RUN pip install -r requirements.txt
 RUN cp cluster_settings_template.py cluster_settings.py
 
 # Start uWSGI
-CMD cd django-workload/django-workload && /bin/bash -c "source ./venv/bin/activate" \
-DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null && uwsgi uwsgi.ini &
+CMD /bin/bash -c "source ./venv/bin/activate" && DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null && uwsgi uwsgi.ini &
