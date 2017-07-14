@@ -32,3 +32,6 @@ DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
 # Start uwsgi process
 uwsgi uwsgi.ini
+
+# Keep the uwsgi process running
+tail -F /dev/null
