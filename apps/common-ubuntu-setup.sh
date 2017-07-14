@@ -21,6 +21,13 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
     curl
 debug ">>>> apt-get install curl\n"
 
+if [ "${WEBTIER_HTTP_PROXY}" ]; then
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://${WEBTIER_HTTP_PROXY}" --recv 0xC2518248EEA14886
+else
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886
+fi
+debug ">>>> apt-key adv --keyserver hkp://keyserver.ubuntu.com:80  \n"
+
 # Prepare for Docker
 curl --proxy "${WEBTIER_HTTP_PROXY}" -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 http_proxy=${WEBTIER_HTTP_PROXY} https_proxy=${WEBTIER_HTTP_PROXY} apt-key fingerprint 0EBFCD88

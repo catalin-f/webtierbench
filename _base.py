@@ -280,7 +280,7 @@ def load_deploy_configuration(config_filename):
             _check_ipv4(config_json['master'])
         else:
             config_json['master'] = '127.0.0.1'
-            consoleLogger("IP value not set in the json file for master")
+            consoleLogger("IP value not set in the json file for master, 127.0.0.1 is going to be used")
 
         # slave
         if 'slave' in config_json:
@@ -288,14 +288,14 @@ def load_deploy_configuration(config_filename):
                 _check_ipv4(ip)
         else:
             config_json['slave'] = ['127.0.0.1']
-            consoleLogger("IP value not set in the json file for slave")
+            consoleLogger("IP value not set in the json file for slave, 127.0.0.1 is going to be used")
 
         # client > ip
         if 'ip' in config_json['client']:
             _check_ipv4(config_json['client']['ip'])
         else:
             config_json['client']['ip'] = '127.0.0.1'
-            consoleLogger("IP value not set in the json file for client")
+            consoleLogger("IP value not set in the json file for "+ str(config_json['client']['name']) + "127.0.0.1 is going to be used")
 
         # cache > ip
         if 'cache' in config_json:
@@ -317,7 +317,7 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
-                    consoleLogger("IP value not set in the json file for" + obj['name'])
+                    consoleLogger("IP value not set in the json file for " + obj['name'])
 
     except Exception as ex:
         debugLogger("Exception in load_deploy_configuration: %r" % ex)
