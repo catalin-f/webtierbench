@@ -100,3 +100,8 @@ check_root_privilege() {
 	   exit 1
 	fi
 }
+
+usage() {
+    echo "Usage sudo $0 $1"
+    exit 7 
+}

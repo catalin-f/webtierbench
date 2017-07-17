@@ -5,21 +5,31 @@
 
 check_root_privilege
 
-if [ "$1" ]; then
-    echo -e "\n\nSet proxy ..."
+# Check for proxy
+if [ "$#" -gt "0" ]; then
+    case "$1" in
+        -p | --proxy)
+            [ -z "$2" ] && usage "<proxy_ip:proxy_port>"
 
-    proxy_endpoint="$1"
-    http_proxy=http://"$proxy_endpoint"
-    https_proxy=http://"$proxy_endpoint"
-    export http_proxy
-    export https_proxy
- 
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$proxy_endpoint" --recv 0xC2518248EEA14886
+            echo -e "\n\nSet proxy ..."
+            
+            proxy_endpoint="$2"
+            http_proxy=http://"$proxy_endpoint"
+            https_proxy=http://"$proxy_endpoint"
+            export http_proxy
+            export https_proxy
+            
+            apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$proxy_endpoint" --recv 0xC2518248EEA14886
+            
+            # Set docker proxy
+            mkdir -p /etc/systemd/system/docker.service.d
+            echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+            echo "Environment='HTTP_PROXY=http://$proxy_endpoint'" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+            ;;
 
-    # Set docker proxy
-    mkdir -p /etc/systemd/system/docker.service.d
-    echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-    echo "Environment='HTTP_PROXY=http://$proxy_endpoint'" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+        *)
+            usage "<proxy_ip:proxy_port>"
+    esac
 fi
 
 # Add apt repositories
@@ -133,7 +143,7 @@ echo -e "\n\nGenerate siege urls file ..."
 # Set cores count to uwsgi.ini
 (
     su "$SUDO_USER" -c                             \
-    "cd django-workload/django-workload || exit 4; \
+    "cd django-workload/django-workload || exit 6; \
     sed -i 's/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
 )
 
