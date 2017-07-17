@@ -26,4 +26,4 @@ RUN echo 'failures = 1000000' > .siegerc
 COPY siege_init.sh /scripts/
 
 # Make siege to start on boot time
-CMD ./siege_init.sh
+CMD cd /scripts && ./siege_init.sh
