@@ -19,4 +19,4 @@ docker run rintech/webtierbench:cassandra-webtier
 docker run -e CASSANDRA_ENDPOINT='<ip>:<port>' -e MEMCACHED_ENDPOINT='<ip>:<port>' rintech/webtierbench:uwsgi-webtier
 
 # Start siege container
-docker run -e ATTEMPTS='<no_attempts>' rintech/webtierbench:siege-webtier
+docker run -e ATTEMPTS='<no_attempts>' -e TARGET_ENDPOINT='<ip>:<port>' rintech/webtierbench:siege-webtier

@@ -16,8 +16,11 @@ RUN apt-get -y install git siege python3
 # Clone the django repository
 RUN git clone https://github.com/Instagram/django-workload.git
 
+# Set the working directory
+WORKDIR django-workload/
+
 # Switch the repository to our checked revision and generate siege urls
-RUN cd django-workload/client && git checkout $DJANGO_REVISION && ./gen-urls-file
+RUN git checkout $DJANGO_REVISION
 
 # Update siegerc with the failures limit
 RUN echo 'failures = 1000000' > .siegerc

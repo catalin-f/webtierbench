@@ -8,9 +8,9 @@
 # and we read them in this script.
 # For example, consider following command:
 #
-#   docker run -e ATTEMPTS=10 siege-webtier
+#   docker run -e ATTEMPTS=10 -e TARGET_ENDPOINT='192.168.0.1:5050' siege-webtier
 #
-# In this script, we will have access to the RUNS variable.
+# In this script, we will have access to the ATTEMPTS variable.
 #
 ########################################################################################
 
@@ -18,6 +18,12 @@
 
 # Set the working directory
 cd django-workload/client
+
+# Update the target endpoint
+sed -i 's/localhost:8000/$TARGET_ENDPOINT/g' urls_template.txt
+
+# Generate the urls with the updated endpoint
+./gen-urls-file
 
 # Run siege $ATTEMPTS times
 for (( i=1; i<=$ATTEMPTS; i++ ))

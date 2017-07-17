@@ -16,6 +16,8 @@
 
 #### This script is currently under development ####
 
+echo "Starting uWSGI init script on container..."
+
 # Go on the working directory
 cd /django-workload/django-workload
 
@@ -23,9 +25,8 @@ cd /django-workload/django-workload
 source venv/bin/activate
 
 # Update the cluster_settings with the appropriate settings (passed through environment variables)
-sed -i 's/DATABASES[\'default\'][\'HOST\'] = \'localhost\'/DATABASES[\'default\'][\'HOST\'] = \'$CASSANDRA_ENDPOINT\'/g' cluster_settings.py
-
-sed -i 's/CACHES[\'default\'][\'LOCATION\'] = \'127.0.0.1:11811\'/CACHES[\'default\'][\'LOCATION\'] = \'$MEMCACHED_ENDPOINT\'/g' cluster_settings.py
+sed -i "s/DATABASES\['default'\]\['HOST'\] = 'localhost'/DATABASES\['default'\]\['HOST'\] = '$CASSANDRA_ENDPOINT'/g" cluster_settings.py
+sed -i "s/CACHES\['default'\]\['LOCATION'\] = '127.0.0.1:11811'/CACHES\['default'\]\['LOCATION'\] = '$MEMCACHED_ENDPOINT'/g" cluster_settings.py
 
 # Set the django settings
 DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
