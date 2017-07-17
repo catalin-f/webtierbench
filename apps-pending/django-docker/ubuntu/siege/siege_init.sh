@@ -17,7 +17,7 @@
 #### This script is currently under development ####
 
 # Set the working directory
-cd django-workload/client
+cd /django-workload/client
 
 # Update the target endpoint
 sed -i 's/localhost:8000/$TARGET_ENDPOINT/g' urls_template.txt

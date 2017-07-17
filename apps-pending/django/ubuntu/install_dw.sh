@@ -5,79 +5,64 @@
 
 check_root_privilege
 
-# This is true if we have proxy data supplied [default is false]
-proxy_flag=false
+# Check for proxy
+if [ "$#" -gt "0" ]; then
+    case "$1" in
+        -p | --proxy)
+            [ -z "$2" ] && usage "-p | --proxy <proxy_ip:proxy_port>"
 
-[ "$1" ] && proxy_endpoint="$1"
+            echo -e "\n\nSet proxy ..."
+            
+            proxy_endpoint="$2"
+            http_proxy=http://"$proxy_endpoint"
+            https_proxy=http://"$proxy_endpoint"
+            export http_proxy
+            export https_proxy
+            
+            apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$proxy_endpoint" --recv 0xC2518248EEA14886
+            
+            # Set docker proxy
+            mkdir -p /etc/systemd/system/docker.service.d
+            echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+            echo "Environment='HTTP_PROXY=http://$proxy_endpoint'" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+            ;;
 
-# If we have a proxy, then we set the appropriate state
-if [ "$#" -eq 1 ]  && check_proxy_parameter $proxy_endpoint; then
-  echo "Proxy information was supplied correctly. Continuing with proxy settings..."
-  set_general_proxy_configuration $proxy_endpoint
-  proxy_flag=true
-
-# If we don't have a proxy, we continue normally
-else
-  echo "Proxy information was supplied incorrectly (or not supplied at all). Continuing without proxy settings..."
+        *)
+            usage "-p | --proxy <proxy_ip:proxy_port>"
+    esac
 fi
 
-# Download neccessary packets
-if [ "$proxy_flag" == "true" ]; then
-  curl --proxy http://$proxy_endpoint https://www.apache.org/dist/cassandra/KEYS | apt-key add -
-  curl --proxy http://$proxy_endpoint -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-else
-  curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-fi
-
-# Add repositories
+# Add apt repositories
 echo -e "\n\nAdd apt repositories ..."
 
-if [ "$proxy_flag" == "true" ]; then
-	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$proxy_endpoint" --recv 0xC2518248EEA14886
-else
-	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886
-fi
+curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886
 
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
 > /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
 
-
-echo "deb http://www.apache.org/dist/cassandra/debian 310x main" | \
-     tee -a /etc/apt/sources.list.d/cassandra.sources.list
+echo "deb http://www.apache.org/dist/cassandra/debian 310x main" \
+> /etc/apt/sources.list.d/cassandra.sources.list
 
 apt-key fingerprint 0EBFCD88
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable"
 
-# We update our apt index
-if [ "$proxy_flag" == "true" ]; then
-  http_proxy=http://$proxy_endpoint apt-get update
-else
-  apt-get update
-fi
+echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" \
+> /etc/apt/sources.list.d/docker.list
 
-# Install packages
+apt-get update
+
+# Accept java license prompt
+echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
+
 echo -e "\n\nInstall packages ..."
-
-if [ "$proxy_flag" == "true" ]; then
-  http_proxy=http://$proxy_endpoint apt-get install -y software-properties-common     \
-      cassandra memcached apt-transport-https ca-certificates docker-ce   \
-      build-essential git libmemcached-dev python3-virtualenv python3-dev \
-      zlib1g-dev siege curl
-
-  http_proxy=http://$proxy_endpoint https_proxy=https://$proxy_endpoint apt-get install -y oracle-java8-installer
-
-else
-  apt-get install -y software-properties-common oracle-java8-installer    \
-      cassandra memcached apt-transport-https ca-certificates docker-ce   \
-      build-essential git libmemcached-dev python3-virtualenv python3-dev \
-      zlib1g-dev siege curl
-
-  apt-get install -y oracle-java8-installer
-fi
-
-#echo -e "\n\nDocker pull graphite image ..."
+apt-get install -y software-properties-common oracle-java8-installer    \
+    cassandra memcached apt-transport-https ca-certificates docker-ce   \
+    build-essential git libmemcached-dev python3-virtualenv python3-dev \
+    zlib1g-dev siege curl
+ 
+echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
 
 #Initialize docker container
@@ -116,7 +101,7 @@ else
     exit 3
 fi
 
-echo -e "\n\nClone django-workload repository ..."
+echo -e "\n\n"
 su "$SUDO_USER" -c "git clone https://github.com/Instagram/django-workload"
 
 # Config memcached
@@ -139,36 +124,28 @@ cat > /etc/memcached.conf <<- EOF
 	-l "$LISTEN"
 EOF
 
-echo -e "\n\nCreate python virtual environment ..."
+echo -e "\n\nCreate python virtualenv ..."
 (
-su "$SUDO_USER" -c                                    \
-"cd django-workload/django-workload || exit 4         ;\
-
-https_proxy=https://$proxy_endpoint http_proxy=http://$proxy_endpoint python3 -m virtualenv -p python3 venv  ;\
-
-source venv/bin/activate                              ;\
-if [ $proxy_flag == true ]; then
-  https_proxy=https://$proxy_endpoint http_proxy=http://$proxy_endpoint pip install --proxy https://$proxy_endpoint -r requirements.txt   ;\
-else
-  pip install -r requirements.txt                     ;\
-fi
-
-deactivate                                            ;\
-cp cluster_settings_template.py cluster_settings.py"
+    cd django-workload/django-workload || exit 4
+    python3 -m virtualenv -p python3 venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    deactivate
+    cp cluster_settings_template.py cluster_settings.py
 )
 
 echo -e "\n\nGenerate siege urls file ..."
 (
-su "$SUDO_USER" -c                    \
-"cd django-workload/client || exit 5; \
-./gen-urls-file"
+    su "$SUDO_USER" -c                    \
+    "cd django-workload/client || exit 5; \
+    ./gen-urls-file"
 )
 
 # Set cores count to uwsgi.ini
 (
-su "$SUDO_USER" -c                             \
-"cd django-workload/django-workload || exit 4; \
-sed -i 's/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
+    su "$SUDO_USER" -c                             \
+    "cd django-workload/django-workload || exit 6; \
+    sed -i 's/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
 )
 
 # Append client settings to /etc/sysctl.conf
@@ -195,6 +172,9 @@ EOF
 # Create siegerc
 echo -e "\n\nCreate siegerc ..."
 su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc"
+
+unset http_proxy
+unset https_proxy
 
 echo -e "\n\n"
 # Modifying limits.conf requires system reboot

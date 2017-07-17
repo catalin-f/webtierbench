@@ -7,11 +7,10 @@ check_root_privilege
 
 # Remove repositories
 echo -e "\n\nRemove apt repositories ..."
-add-apt-repository -r ppa:webupd8team/java
-add-apt-repository -r "deb [arch=amd64]      \
-    https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable"
-rm -f /etc/apt/sources.list.d/cassandra.sources.list
+rm -f /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list \
+/etc/apt/sources.list.d/cassandra.sources.list                    \
+/etc/apt/sources.list.d/docker.list
+
 apt-key del 0EBFCD88
 apt-key del EEA14886
 
@@ -34,9 +33,6 @@ apt-get purge -y oracle-java8-installer \
 apt-mark manual ntp
 
 apt-get -y autoremove
-
-echo -e "\n\nUpdate repositories ..."
-apt-get update
 
 echo -e "\n\nRemove django-workload cloned repository ..."
 rm -rf django-workload

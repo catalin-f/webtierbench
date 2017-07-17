@@ -1,9 +1,6 @@
 # Use the latest ubuntu image as a base OS
 FROM ubuntu:16.04
 
-# This is the commit of the stable revision of django workload
-ENV DJANGO_REVISION b18dace0491051ba85b5fed908db8a92adb2f2ae
-
 # Update our apt index and install necessary packets
 RUN apt-get update && apt-get install -y git python3-virtualenv python3-dev python-pip libmemcached-dev zlib1g-dev
 
@@ -20,7 +17,7 @@ RUN git clone https://github.com/Instagram/django-workload
 WORKDIR django-workload/django-workload
 
 # Switch the repository to our checked revisions
-RUN git checkout $(DJANGO_REVISION)
+RUN git checkout b18dace0491051ba85b5fed908db8a92adb2f2ae
 
 # Create the virtual environment and activate it
 RUN python3 -m virtualenv -p python3 venv
