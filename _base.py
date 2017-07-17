@@ -21,7 +21,6 @@ _ALLOWED_CACHES = ['memcached']
 _ALLOWED_DBS = ['cassandra', 'mariadb']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
 
-_ALLOWED_TESTS = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
 _5Gb = 5368709120
 
 WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
