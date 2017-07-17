@@ -22,9 +22,11 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
 debug ">>>> apt-get install curl\n"
 
 if [ "${WEBTIER_HTTP_PROXY}" ]; then
-	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://${WEBTIER_HTTP_PROXY}" --recv 0xC2518248EEA14886
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://${WEBTIER_HTTP_PROXY}" --recv 0xC2518248EEA14886
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://${WEBTIER_HTTP_PROXY}" --recv-keys 0x5a16e7281be7a449
 else
 	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886
+	apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0x5a16e7281be7a449
 fi
 debug ">>>> apt-key adv --keyserver hkp://keyserver.ubuntu.com:80  \n"
 
@@ -42,7 +44,10 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
     ca-certificates \
     docker-ce \
     git \
-    zlib1g-dev
+    zlib1g-dev\
+    util-linux\
+    software-properties-common
+
 debug  ">>>> other requirements\n"
 
 # Prepare the Python environment

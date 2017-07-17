@@ -13,9 +13,11 @@ from _apps import Apache2
 from _apps import Perf
 from _apps import ApacheBenchmark
 from _apps import Django
+from _apps import Wordpress
 from _apps import Siege
 from _apps import Memcached
 from _apps import Cassandra
+from _apps import MariaDb
 from _apps import Sar
 from _apps import Statsd
 import sys
@@ -61,6 +63,10 @@ def main():
         apache = Apache2(config_json['workload'], myplatform)
         deployment.add_application(apache)
         debugLogger("Added application: %s" % config_json['workload']['name'])
+    if config_json['workload']['name'] == 'wordpress':
+        wordpress = Wordpress(config_json['workload'], myplatform)
+        deployment.add_application(wordpress)
+        debugLogger("Added application: %s" % config_json['workload']['name'])
 
     ###############################################################################
     # Benchmark clients
@@ -90,6 +96,10 @@ def main():
         if config['name'] == 'cassandra':
             cassandra = Cassandra(config, myplatform)
             deployment.add_db(cassandra)
+            debugLogger("Added db server: %s " % config['name'])
+        if config['name'] == 'mariadb':
+            mariadb = MariaDb(config, myplatform)
+            deployment.add_db(mariadb)
             debugLogger("Added db server: %s " % config['name'])
 
     ###############################################################################

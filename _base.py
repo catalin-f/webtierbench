@@ -18,7 +18,7 @@ _WEBTIER_RUN_JSON = ".running.json"
 _ALLOWED_WORKLOADS = ['django', 'wordpress', 'apache2']
 _ALLOWED_CLIENTS = ['siege', 'ab']
 _ALLOWED_CACHES = ['memcached']
-_ALLOWED_DBS = ['cassandra']
+_ALLOWED_DBS = ['cassandra', 'mariadb']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
 
 _ALLOWED_TESTS = ['_test_app', '_test_cache', '_test_client', '_test_db', '_test_perf']
@@ -295,7 +295,7 @@ def load_deploy_configuration(config_filename):
             _check_ipv4(config_json['client']['ip'])
         else:
             config_json['client']['ip'] = '127.0.0.1'
-            consoleLogger("IP value not set in the json file for "+ str(config_json['client']['name']) + "127.0.0.1 is going to be used")
+            consoleLogger("IP value not set in the json file for "+ str(config_json['client']['name']) + ", 127.0.0.1 is going to be used")
 
         # cache > ip
         if 'cache' in config_json:

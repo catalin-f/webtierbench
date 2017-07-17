@@ -35,6 +35,15 @@ class Django(Application):
         set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workers'])
         return super(Django, self).deploy(async)
 
+class Wordpress(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Wordpress, self).__init__("wordpress", deploy_config, deploy_platform)
+
+    def deploy(self, async=False):
+        set_env('WEBTIER_OSS_PERFROMANCE_REV', 'x')
+        set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
+        return super(Wordpress, self).deploy(async)
+
 
 ###############################################################################
 # Caching
@@ -57,7 +66,7 @@ class Memcached(Application):
             if 'port' not in self.deploy_config:
                 self.deploy_config['port'] = 11811 + port_increment
                 port_increment = port_increment + 1
-                consoleLogger("Port value not set in the json file for"+self.deploy_config['name'])
+                consoleLogger("Port value not set in the json file for "+self.deploy_config['name'])
             outfile.writelines("MEMORY:" + str(self.deploy_config['minrequiredMemory']))
             outfile.write("LISTEN:" +  self.deploy_config['ip'])
             outfile.write("PORT:" + str(self.deploy_config['port']))
@@ -66,7 +75,6 @@ class Memcached(Application):
             mem_size = usage.free/_MB
             consoleLogger(str(mem_size)+"Mb not enough free memmory space for memcached. Minimum required 5Gb")
             exit();
-
         return super(Memcached, self).deploy(async)
 
 
@@ -79,6 +87,13 @@ class Cassandra(Application):
 
     def start(self, async=False):
         return super(Cassandra, self).start(async)
+
+class MariaDb(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(MariaDb, self).__init__("mariadb", deploy_config, deploy_platform)
+
+    def start(self, async=False):
+        return super(MariaDb, self).start(async)
 
 
 ###############################################################################

@@ -1,6 +1,6 @@
 {
   "workload": {
-    "name": "django"
+    "name": "wordpress"
   },
   "proxy":"",
   "client": {
