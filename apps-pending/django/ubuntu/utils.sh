@@ -12,39 +12,6 @@ start_service() {
 }
 
 #######################################
-# Checks if the proxy parameter is correctly supplied
-# Arguments:
-#	  $1 = The proxy in the format of <ip_address>:<port>
-# Additional information:
-#	  None
-#######################################
-check_proxy_parameter() {
-	if [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+$ ]]; then
-  		return 0
-	else
-	  	return 1
-	fi
-}
-
-#######################################
-# Configures the general proxy settings
-# Arguments:
-#	  $1 = The proxy in the format of <ip_address>:<port>
-# Additional information:
-#	  None
-#######################################
-set_general_proxy_configuration() {
-
-	# Set Docker proxy
-	mkdir -p /etc/systemd/system/docker.service.d
-	echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-	echo "Environment='HTTP_PROXY=http://$1'">> /etc/systemd/system/docker.service.d/http-proxy.conf
-
-	# Set git configuration to pull through proxy
-	git config --global http.proxy http://$1
-}
-
-#######################################
 # Starts a service
 # Arguments:
 #	  $1 = The service you want to stop
