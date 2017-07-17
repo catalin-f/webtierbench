@@ -4,7 +4,7 @@ This directory contains all the necessary scripts that you can use to interact w
 
 ## Install
 
-sudo ./install_dw.sh [<proxy_ip>:<proxy_port>]
+sudo ./install_dw.sh [-p | --proxy <proxy_ip:proxy_port>]
 
 ## Uninstall
 
