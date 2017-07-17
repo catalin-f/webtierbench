@@ -34,9 +34,6 @@ apt-mark manual ntp
 
 apt-get -y autoremove
 
-echo -e "\n\nUpdate repositories ..."
-apt-get update
-
 echo -e "\n\nRemove django-workload cloned repository ..."
 rm -rf django-workload
 
