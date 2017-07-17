@@ -9,7 +9,7 @@ check_root_privilege
 if [ "$#" -gt "0" ]; then
     case "$1" in
         -p | --proxy)
-            [ -z "$2" ] && usage "<proxy_ip:proxy_port>"
+            [ -z "$2" ] && usage "-p | --proxy <proxy_ip:proxy_port>"
 
             echo -e "\n\nSet proxy ..."
             
@@ -28,7 +28,7 @@ if [ "$#" -gt "0" ]; then
             ;;
 
         *)
-            usage "<proxy_ip:proxy_port>"
+            usage "-p | --proxy <proxy_ip:proxy_port>"
     esac
 fi
 
