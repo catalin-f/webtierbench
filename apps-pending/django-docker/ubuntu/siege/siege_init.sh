@@ -10,7 +10,7 @@
 #
 #   docker run -e ATTEMPTS=10 -e TARGET_ENDPOINT='192.168.0.1:5050' siege-webtier
 #
-# In this script, we will have access to the RUNS variable.
+# In this script, we will have access to the ATTEMPTS variable.
 #
 ########################################################################################
 
