@@ -7,11 +7,10 @@ check_root_privilege
 
 # Remove repositories
 echo -e "\n\nRemove apt repositories ..."
-add-apt-repository -r ppa:webupd8team/java
-add-apt-repository -r "deb [arch=amd64]      \
-    https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) stable"
-rm -f /etc/apt/sources.list.d/cassandra.sources.list
+rm -f /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list \
+/etc/apt/sources.list.d/cassandra.sources.list                    \
+/etc/apt/sources.list.d/docker.list
+
 apt-key del 0EBFCD88
 apt-key del EEA14886
 
