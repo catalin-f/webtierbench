@@ -9,6 +9,7 @@ from _base import pickle_deployment
 from _base import parse_deploy_args
 from _base import load_deploy_configuration
 from _base import save_deploy_configuration
+from _base import root_access
 from _apps import Apache2
 from _apps import Perf
 from _apps import ApacheBenchmark
@@ -24,6 +25,12 @@ import sys
 
 
 def main():
+    # Check for root access
+    if not root_access():
+        consoleLogger("Please run this as root!")
+        sys.exit(1)
+
+    # Initialize log files
     debugLogger("%s (deploy)" % WEBTIER_PUBLIC_INFO)
     masterLogger("%s (deploy)" % WEBTIER_PUBLIC_INFO)
 
