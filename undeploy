@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 from _base import WEBTIER_PUBLIC_INFO
+from _base import consoleLogger
 from _base import debugLogger
 from _base import masterLogger
 from _base import parse_undeploy_args
+from _base import root_access
 import os
+import sys
 
 
 def main():
+    # Check for root access
+    if not root_access():
+        consoleLogger("Please run this as root!")
+        sys.exit(1)
+
+    # Initialize log files
     debugLogger("%s (undeploy)" % WEBTIER_PUBLIC_INFO)
     masterLogger("%s (undeploy)" % WEBTIER_PUBLIC_INFO)
 
