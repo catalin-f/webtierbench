@@ -7,6 +7,7 @@ from _base import set_env
 from _base import parse_deploy_args
 from _base import parse_run_args
 from _base import _check_ipv4
+from _base import root_access
 from _base import _Logger
 from _base import pickle_deployment
 from _base import unpickle_deployment
@@ -94,6 +95,11 @@ def test_platform():
     myplatform.detect()
     assert myplatform.system == platform.system().lower()
     assert myplatform.type == os.name
+
+
+def test_root_access():
+    has_root = root_access()
+    assert has_root == (os.geteuid()==0)
 
 
 def test_pickle_unpickle_deployment():
