@@ -1,0 +1,27 @@
+{
+  "workload": {
+    "name": "wordpress"
+  },
+  "proxy":"",
+  "client": {
+    "name": "siege"
+  },
+  "cache": [
+    {
+      "name": "memcached"
+    }
+  ],
+  "db": [
+    {
+      "name": "mariadb"
+    }
+  ],
+  "perf": [
+    {
+      "name": "sar"
+    },
+    {
+      "name": "statsd"
+    }
+  ]
+}
