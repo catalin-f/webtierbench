@@ -67,6 +67,10 @@ def get_cpu_count():
     return multiprocessing.cpu_count()
 
 
+def root_access():
+    return os.geteuid() == 0
+
+
 class Platform:
     def __init__(self):
         self.distribution = ''  # ubuntu, etc
