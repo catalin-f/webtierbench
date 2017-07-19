@@ -1,16 +1,8 @@
-# Use ubuntu 16.04 image as a base OS
-# Update apt repositories
-# Install curl
-# Add the java and cassandra repositories keys
-# Add java and cassandra repositories
-# Accept java license prompt
-# Install java and cassandra
-
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update								       \
+RUN apt-get update                                                                     \
     && mkdir /scripts                                                                  \
     && apt-get install -y curl                                                         \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886 \
@@ -32,4 +24,5 @@ RUN /scripts/init_config.sh
 
 ENV DEBIAN_FRONTEND teletype
 
-CMD service cassandra start && tail -f /dev/null
+CMD service cassandra start \
+    && tail -f /dev/null

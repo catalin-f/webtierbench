@@ -24,4 +24,5 @@ cat > /etc/memcached.conf <<- EOF
 EOF
 
 # Run the memcached service
-service memcached start && tail -F /dev/null
+service memcached start  \
+    && tail -f /dev/null

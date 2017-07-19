@@ -17,7 +17,7 @@
 #### This script is currently under development ####
 
 # Set the working directory
-cd /django-workload/client
+cd /django-workload/client || exit 1
 
 # Update the target endpoint
 sed -i "s/localhost:8000/$TARGET_ENDPOINT/g" urls_template.txt
@@ -26,10 +26,10 @@ sed -i "s/localhost:8000/$TARGET_ENDPOINT/g" urls_template.txt
 ./gen-urls-file
 
 # Run siege $ATTEMPTS times
-for (( i=1; i<=$ATTEMPTS; i++ ))
+for (( i=1; i<=ATTEMPTS; i++ ))
 	do
 	   ./run-siege.sh
 done
 
 # Keep the siege process running
-tail -F /dev/null
+tail -f /dev/null

@@ -20,7 +20,7 @@ echo "Starting uWSGI init script on container..."
 
 (
 # Go on the working directory
-cd /django-workload/django-workload
+cd /django-workload/django-workload || exit 1
 
 # Activate the virtual environment
 source venv/bin/activate
@@ -38,4 +38,4 @@ DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 uwsgi uwsgi.ini
 )
 # Keep the uwsgi process running
-tail -F /dev/null
+tail -f /dev/null
