@@ -10,7 +10,8 @@ FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update                                                                     \
+RUN apt-get update
+    && mkdir /scripts                                                                     \
     && apt-get install -y curl                                                         \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886 \
     && curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -                 \
@@ -25,4 +26,8 @@ RUN apt-get update                                                              
     && apt-get update                                                                  \
     && apt-get install -y oracle-java8-installer cassandra
 
+COPY init_config.sh /scripts
+
 ENV DEBIAN_FRONTEND teletype
+
+CMD service cassandra start && tail -f /dev/null
