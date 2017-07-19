@@ -11,6 +11,7 @@ from _base import root_access
 from _base import _Logger
 from _base import pickle_deployment
 from _base import unpickle_deployment
+from _base import load_run_configuration
 from _base import Application
 import os
 import stat
@@ -19,6 +20,7 @@ import pytest
 import platform
 import sys
 import socket
+import json
 
 
 def _create_dummy_script():
@@ -42,6 +44,24 @@ def _create_empty_file():
         temp.write("")
         temp.flush()
     return name
+
+
+def _create_run_json_inputfile(createExtraFile=True):
+    if createExtraFile:
+        empty_file = _create_empty_file()
+    else:
+        empty_file = ""
+    config = {
+        "scenario": "file",
+        "workers": 4,
+        "duration": 120,
+        "filename": empty_file
+    }
+    name = "/tmp/inputfile.json"
+    with open(name, "w") as temp:
+        temp.write(json.dumps(config))
+        temp.flush()
+    return name, empty_file
 
 
 class MyApp(Application):
@@ -197,6 +217,20 @@ def test_parse_run_args(capsys):
         config = parse_run_args()
     out, err = capsys.readouterr()
     assert err.startswith("usage: ")
+
+
+def test_load_run_configuration_inputfile(capsys):
+    file, extra_file = _create_run_json_inputfile(createExtraFile=True)
+    config_json = load_run_configuration(file)
+    assert config_json["filename"] == extra_file
+
+    os.remove(file)
+
+    file, extra_file = _create_run_json_inputfile(createExtraFile=False)
+    with pytest.raises(SystemExit) as excinfo:
+        config_json = load_run_configuration(file)
+    out, err = capsys.readouterr()
+    assert out == ''
 
 
 def test_check_ipv4():
