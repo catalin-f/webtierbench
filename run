@@ -26,8 +26,15 @@ def main():
     # Read command line params
     benchmark_json_filename = parse_run_args()
 
-    # Parse JSON and save it locally
+    # Parse JSON
     config_json = load_run_configuration(benchmark_json_filename)
+
+    # TODO remove this when this feature is implemented
+    if config_json["scenario"] == "endpoint":
+        consoleLogger("This feature is not implemented in this version.")
+        sys.exit(2)
+
+    # If everything is ok, save it locally
     save_run_configuration(config_json)
 
     # Load deployment environment
