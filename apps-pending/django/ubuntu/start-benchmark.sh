@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Invoke the utils script ###
-source utils.sh
+. utils.sh
 
 #######################################
 # Checks the type of the supplied parameter and also it's value
@@ -58,7 +58,7 @@ set_cpu_performance() {
 start_uwsgi() {
 	cd django-workload/django-workload || exit 1
 
-	source venv/bin/activate > /dev/null
+	. venv/bin/activate > /dev/null
 
 	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 

@@ -10,8 +10,9 @@ RUN apt-get update                                            \
     && cd django-workload/django-workload                     \
     && git checkout b18dace0491051ba85b5fed908db8a92adb2f2ae  \
     && python3 -m virtualenv -p python3 venv                  \
-    && /bin/bash -c "source venv/bin/activate"                \
+    && . venv/bin/activate                                    \
     && pip install -r requirements.txt                        \
+    && deactivate                                             \
     && cp cluster_settings_template.py cluster_settings.py
 
 COPY uwsgi_init.sh /scripts

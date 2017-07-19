@@ -128,7 +128,7 @@ echo -e "\n\nCreate python virtualenv ..."
 (
     cd django-workload/django-workload || exit 4
     python3 -m virtualenv -p python3 venv
-    source venv/bin/activate
+    . venv/bin/activate
     pip install -r requirements.txt
     deactivate
     cp cluster_settings_template.py cluster_settings.py

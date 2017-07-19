@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Invoke the utils script ###
-source utils.sh
+. utils.sh
 
 #######################################
 # Stops all uwsgi processes
