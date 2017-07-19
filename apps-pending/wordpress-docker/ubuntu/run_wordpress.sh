@@ -3,7 +3,7 @@
 oss_dir="/home/hhvmuser/oss-performance"
 
 service mysql start
-systemctl restart nginx.service
+service nginx start
 
 for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 do
@@ -28,4 +28,4 @@ do
 done
 
 service mysql stop
-systemctl stop nginx.service && tail -F /dev/null
+service nginx stop && tail -F /dev/null

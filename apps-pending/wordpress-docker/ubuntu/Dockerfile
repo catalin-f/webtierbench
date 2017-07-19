@@ -38,8 +38,6 @@ RUN cd /home								\
 	&& make								\
 	&& make install
 
-RUN /home/hhvmuser/check_oss.sh
-
 ENV DEBIAN_FRONTEND teletype
 RUN su hhvmuser -c /home/hhvmuser/install_oss.sh
 

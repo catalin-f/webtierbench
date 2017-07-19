@@ -8,5 +8,5 @@ sudo docker pull rinftech/webtierbench:wordpress-webtier
 
 ## Run Benchmark
 
-docker run -e ATTEMPTS='<no_attempts>' wordpress-webtier:latest
+docker run --privileged -e ATTEMPTS='<no_attempts>' wordpress-webtier:latest
 
