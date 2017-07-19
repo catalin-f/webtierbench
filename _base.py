@@ -531,9 +531,9 @@ class Deployment:
 
         # Move files
         # TODO take into consideration the perfs content
-        perf_data = os.environ['PERF_FILENAME']
-        if os.path.isfile(perf_data):
-            os.rename(perf_data, '%s/%s' % (measurement_dirs, perf_data))
+        # perf_data = os.environ['PERF_FILENAME']
+        # if os.path.isfile(perf_data):
+        #     os.rename(perf_data, '%s/%s' % (measurement_dirs, perf_data))
 
     #####
     def add_application(self, app):
