@@ -4,6 +4,8 @@ The WebTier Benchmark repo
 
 ## Installing
 
+sudo apt-get install -y python-pip
+
 git clone this_repo dir
 
 cd dir
