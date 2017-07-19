@@ -10,8 +10,8 @@ FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
-    && mkdir /scripts                                                                     \
+RUN apt-get update								       \
+    && mkdir /scripts                                                                  \
     && apt-get install -y curl                                                         \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886 \
     && curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -                 \
@@ -24,7 +24,7 @@ RUN apt-get update
     && echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true"     \
         | debconf-set-selections                                                       \
     && apt-get update                                                                  \
-    && apt-get install -y oracle-java8-installer cassandra
+    && apt-get install -y net-tools oracle-java8-installer cassandra
 
 COPY init_config.sh /scripts
 
