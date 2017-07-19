@@ -11,5 +11,5 @@ WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
 ###############################################################################
 # Commands
 ###############################################################################
-check_root_privilege
+
 apt-get purge -y  mariadb-server

@@ -12,7 +12,6 @@ WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
 # Commands
 ###############################################################################
 
-check_root_privilege
 
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" \
     add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"

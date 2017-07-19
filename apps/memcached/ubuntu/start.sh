@@ -11,8 +11,6 @@
 # Commands
 ###############################################################################
 
-check_root_privilege
-
 ### SET ENVIRONMENT ###
 set_cpu_performance
 

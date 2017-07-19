@@ -63,20 +63,6 @@ check_service_stopped() {
 }
 
 #######################################
-# Checks if this script is run as root
-# Arguments:
-#	  None
-# Additional information:
-#	  This method contains the exit call
-#######################################
-check_root_privilege() {
-	if [ "$(id -u)" != "0" ]; then
-	   echo "This script must be run as root"
-	   exit 1
-	fi
-}
-
-#######################################
 # Checks if the proxy parameter is correctly supplied
 # Arguments:
 #	  $1 = The proxy in the format of <ip_address>:<port>

@@ -30,8 +30,6 @@ run_siege() {
 	done
 }
 
-check_root_privilege
-
 ### SET ENVIRONMENT ###
 set_cpu_performance
 
