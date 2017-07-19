@@ -1,0 +1,6 @@
+{
+  "scenario": "file",
+  "workers": 4,
+  "duration": 120,
+  "filename": "samples/django_urls.txt"
+}
