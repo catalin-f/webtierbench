@@ -5,7 +5,9 @@ FROM ubuntu:16.04
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update our apt index and create scripts directory
-RUN apt-get update && apt-get -y install memcached && mkdir scripts
+RUN apt-get update                  \
+    && apt-get -y install memcached \
+    && mkdir scripts
 
 # Copy necessary files to the container
 COPY memcached_init.sh memcached.cfg /scripts/
