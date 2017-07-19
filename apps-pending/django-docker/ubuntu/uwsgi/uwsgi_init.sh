@@ -18,11 +18,14 @@
 
 echo "Starting uWSGI init script on container..."
 
+(
 # Go on the working directory
 cd /django-workload/django-workload
 
 # Activate the virtual environment
 source venv/bin/activate
+
+pip install -r requirements.txt
 
 # Update the cluster_settings with the appropriate settings (passed through environment variables)
 sed -i "s/DATABASES\['default'\]\['HOST'\] = 'localhost'/DATABASES\['default'\]\['HOST'\] = '$CASSANDRA_ENDPOINT'/g" cluster_settings.py
@@ -33,6 +36,6 @@ DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
 # Start uwsgi process
 uwsgi uwsgi.ini
-
+)
 # Keep the uwsgi process running
 tail -F /dev/null
