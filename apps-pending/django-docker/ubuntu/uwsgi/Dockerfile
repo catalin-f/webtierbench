@@ -23,10 +23,7 @@ RUN git checkout b18dace0491051ba85b5fed908db8a92adb2f2ae
 RUN python3 -m virtualenv -p python3 venv
 
 # Activate the virtual environment
-RUN /bin/bash -c "source venv/bin/activate"
-
-# Install necessary requirements
-RUN pip install -r requirements.txt
+RUN /bin/bash -c "source venv/bin/activate" && pip install -r requirements.txt
 
 # Update the cluster settings file
 RUN cp cluster_settings_template.py cluster_settings.py
