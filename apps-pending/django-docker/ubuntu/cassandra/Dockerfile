@@ -28,6 +28,8 @@ RUN apt-get update
 
 COPY init_config.sh /scripts
 
+RUN /scripts/init_config.sh
+
 ENV DEBIAN_FRONTEND teletype
 
 CMD service cassandra start && tail -f /dev/null
