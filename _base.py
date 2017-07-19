@@ -341,7 +341,15 @@ def load_run_configuration(config_filename):
         validate(config_json, _runSchema_general)
         if config_json['scenario'] == 'file':
             validate(config_json, _runSchema_file)
-            # TODO add other validations here
+
+            # filename
+            config_json["filename"] = config_json["filename"].strip()
+            if config_json["filename"] == "":
+                consoleLogger("JSON filename key cannot be empty")
+                raise Exception("JSON filename key cannot be empty")
+            if not os.path.exists(config_json["filename"]):
+                consoleLogger("%s does not exist" % config_json["filename"])
+                raise Exception("File does not exist")
         else:
             validate(config_json, _runSchema_endpoint)
             # TODO add other validations here
