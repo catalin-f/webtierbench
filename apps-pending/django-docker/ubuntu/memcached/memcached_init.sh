@@ -5,8 +5,6 @@
 
 IP_ADDR=$(ifconfig eth0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1)
 
-# Config memcached
-# Backup old memcached config file
 if [ -f /etc/memcached.conf ]; then
     mv /etc/memcached.conf /etc/memcached.conf.old
     echo -e "\n\nBackup /etc/memcached.conf to /etc/memcached.conf.old"
@@ -25,6 +23,5 @@ cat > /etc/memcached.conf <<- EOF
 	-l "$LISTEN"
 EOF
 
-# Run the memcached service
 service memcached start  \
     && tail -f /dev/null
