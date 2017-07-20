@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update                                            \
-    && apt-get install -y git python3-virtualenv python3-dev  \
+    && apt-get install -y net-tools git python3-virtualenv python3-dev  \
         python-pip libmemcached-dev zlib1g-dev                \
     && mkdir /scripts                                         \
     && git clone https://github.com/Instagram/django-workload \

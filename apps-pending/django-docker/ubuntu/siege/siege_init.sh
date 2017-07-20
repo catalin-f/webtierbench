@@ -20,7 +20,7 @@
 cd /django-workload/client || exit 1
 
 # Update the target endpoint
-sed -i "s/localhost:8000/$TARGET_ENDPOINT/g" urls_template.txt
+sed -i "s/localhost/$TARGET_ENDPOINT/g" urls_template.txt
 
 # Generate the urls with the updated endpoint
 ./gen-urls-file

@@ -18,12 +18,19 @@
 
 echo "Starting uWSGI init script on container..."
 
+IP_ADDR=$(ifconfig eth0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1)
+
+(
 # Go on the working directory
 cd /django-workload/django-workload || exit 1
+
+# Activate the virtual environment
+source venv/bin/activate
 
 # Update the cluster_settings with the appropriate settings (passed through environment variables)
 sed -i "s/DATABASES\['default'\]\['HOST'\] = 'localhost'/DATABASES\['default'\]\['HOST'\] = '$CASSANDRA_ENDPOINT'/g" cluster_settings.py
 sed -i "s/CACHES\['default'\]\['LOCATION'\] = '127.0.0.1:11811'/CACHES\['default'\]\['LOCATION'\] = '$MEMCACHED_ENDPOINT'/g" cluster_settings.py
+sed -i "s/ALLOWED_HOSTS = \[/ALLOWED_HOSTS = \['$CASSANDRA_ENDPOINT','$MEMCACHED_ENDPOINT','$IP_ADDR',/g" cluster_settings.py
 
 # Activate the virtual environment
 . venv/bin/activate
