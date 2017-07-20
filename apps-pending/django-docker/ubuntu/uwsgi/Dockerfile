@@ -19,4 +19,4 @@ COPY uwsgi_init.sh /scripts
 
 ENV DEBIAN_FRONTEND teletype
 
-CMD /scripts/uwsgi_init.sh
+CMD /scripts/uwsgi_init.sh uwsgi
