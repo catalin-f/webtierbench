@@ -25,8 +25,6 @@ cat > /etc/memcached.conf <<- EOF
 	-l "$LISTEN"
 EOF
 
-echo "Memcached IP: $IP_ADDR"
-
 # Run the memcached service
 service memcached start  \
     && tail -f /dev/null
