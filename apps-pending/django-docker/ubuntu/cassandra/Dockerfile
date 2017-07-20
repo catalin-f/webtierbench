@@ -20,7 +20,7 @@ RUN apt-get update                                                              
 
 COPY init_config.sh /scripts
 
-RUN /scripts/init_config.sh
+RUN /scripts/init_config.sh cassandra
 
 ENV DEBIAN_FRONTEND teletype
 
