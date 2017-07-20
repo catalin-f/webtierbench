@@ -31,7 +31,7 @@ class Django(Application):
         super(Django, self).__init__("django", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', '96b12d5e13a6ec2141fd7e8bd8b31f9c87630ea4')
+        set_env('WEBTIER_DJANGO_REVISION', 'b55c9a4788cffafaf8e1be7b9e82c37e135dacd6')
         set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workers'])
         return super(Django, self).deploy(async)
 
@@ -40,7 +40,7 @@ class Wordpress(Application):
         super(Wordpress, self).__init__("wordpress", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
-        set_env('WEBTIER_OSS_PERFROMANCE_REV', 'x')
+        set_env('WEBTIER_OSS_PERFROMANCE_REV', '9b1a334c4fd0974cdb52dfb5a0862f77e5d2a9c0')
         set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
         return super(Wordpress, self).deploy(async)
 
@@ -153,8 +153,9 @@ class Siege(Application):
         self.benchmark_config = benchmark_config
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', '96b12d5e13a6ec2141fd7e8bd8b31f9c87630ea4')
+        set_env('WEBTIER_DJANGO_REVISION', 'b55c9a4788cffafaf8e1be7b9e82c37e135dacd6')
         return super(Siege, self).deploy(async)
 
     def start(self, async=False):
+        set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
         return super(Siege, self).start(async)

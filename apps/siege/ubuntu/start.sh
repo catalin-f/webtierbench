@@ -1,10 +1,11 @@
 #!/bin/bash
 
-. ../../common_func.sh
+. /home/$SUDO_USER/webtierbench/apps/common_func.sh
 
 ###############################################################################
 # Environment data
-WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
+WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
+
 ###############################################################################
 
 
@@ -26,11 +27,11 @@ run_siege() {
 	do
 	   printf "\n### SIEGE RUN %d OUT OF %d ###\n\n" "$i" "$1"
 
-	   su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege.sh"
+	   su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege"
 	done
 }
 
 ### SET ENVIRONMENT ###
 set_cpu_performance
 
-run_siege
+run_siege ${WEBTIER_SIEGE_WORKERS}
