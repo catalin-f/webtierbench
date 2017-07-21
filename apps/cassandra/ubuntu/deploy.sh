@@ -23,8 +23,8 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get u
 
 # Install packages
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get install -y \
-    cassandra \
     oracle-java8-installer \
+    cassandra \
     software-properties-common
 
 

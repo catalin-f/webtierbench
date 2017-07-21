@@ -1,17 +1,16 @@
 #!/bin/bash
 set -x
-. ../../common_func.sh
 
 ###############################################################################
 # Environment data
 ###############################################################################
 WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
-
+WEBTIER_PATH=${WEBTIER_PATH}
 
 ###############################################################################
 # Commands
 ###############################################################################
-
+. ${WEBTIER_PATH}/apps/common_func.sh
 
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" \
     add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
