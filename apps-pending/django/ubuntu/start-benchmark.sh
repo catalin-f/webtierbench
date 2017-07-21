@@ -92,7 +92,7 @@ run_siege() {
 
 	printf "\n### SIEGE RUN ###\n\n"
 
-	su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege.sh"
+	su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege"
 }
 
 #######################################
