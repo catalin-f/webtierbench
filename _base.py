@@ -1,5 +1,6 @@
 import socket
 import os
+import glob
 import sys
 import platform
 import pickle
@@ -488,7 +489,7 @@ class Deployment:
 
     def start_performance_measurements(self):
         for app in self.perfs:
-            app.start(async=True)
+            app.stalrt(async=True)
         return '', ''
 
     def set_benchmark_config(self, benchmark_config):
@@ -531,12 +532,12 @@ class Deployment:
                 pass
             else:
                 raise
-
         # Move files
         # TODO take into consideration the perfs content
-        # perf_data = os.environ['PERF_FILENAME']
-        # if os.path.isfile(perf_data):
-        #     os.rename(perf_data, '%s/%s' % (measurement_dirs, perf_data))
+        collect = filter(os.path.isfile, glob.glob('./*data'))
+        if collect:
+            for step in collect:
+                os.rename(step, '%s/%s' % (measurement_dirs, step))
 
     #####
     def add_application(self, app):
