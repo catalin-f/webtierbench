@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # This script will configure and start the memcached service inside a docker
-# container based on Ubuntu 16.04
-
-IP_ADDR=$(ifconfig eth0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1)
+# container
 
 if [ -f /etc/memcached.conf ]; then
     mv /etc/memcached.conf /etc/memcached.conf.old
