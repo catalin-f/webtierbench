@@ -9,6 +9,7 @@ from _base import parse_run_args
 from _base import load_run_configuration
 from _base import save_run_configuration
 from _base import root_access
+from _base import get_path
 import json
 import sys
 
@@ -18,6 +19,9 @@ def main():
     if not root_access():
         consoleLogger("Please run this as root!")
         sys.exit(1)
+
+    # Get project path
+    get_path()
 
     # Initialize log files
     debugLogger("%s (run)" % WEBTIER_PUBLIC_INFO)

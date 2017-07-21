@@ -1,13 +1,13 @@
 #!/bin/bash
 
-. /home/$SUDO_USER/webtierbench/apps/common_func.sh
-
 ###############################################################################
 # Environment data
 WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
+WEBTIER_PATH=${WEBTIER_PATH}
 
 ###############################################################################
 
+. ${WEBTIER_PATH}/apps/common_func.sh
 
 ###############################################################################
 # Commands
@@ -21,6 +21,7 @@ WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
 #	This method contains the exit call
 #######################################
 run_siege() {
+	pip3 install numpy
 	cd django-workload/client || exit 1
 
 	for (( i=1; i<=$1; i++ ))
@@ -29,6 +30,7 @@ run_siege() {
 
 	   su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege"
 	done
+	#pip3 uninstall numpy
 }
 
 ### SET ENVIRONMENT ###

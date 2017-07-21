@@ -70,6 +70,9 @@ def get_cpu_count():
 def root_access():
     return os.geteuid() == 0
 
+def get_path():
+    set_env('WEBTIER_PATH',os.path.realpath("."))
+
 
 class Platform:
     def __init__(self):

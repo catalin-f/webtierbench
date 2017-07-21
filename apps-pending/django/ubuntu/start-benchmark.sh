@@ -96,6 +96,7 @@ run_siege() {
 
 	   su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege.sh"
 	done
+	deactivate
 }
 
 #######################################

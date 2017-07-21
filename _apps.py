@@ -35,6 +35,10 @@ class Django(Application):
         set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workers'])
         return super(Django, self).deploy(async)
 
+    def start(self, async=False):
+        return super(Django, self).deploy(async)
+
+
 class Wordpress(Application):
     def __init__(self, deploy_config, deploy_platform):
         super(Wordpress, self).__init__("wordpress", deploy_config, deploy_platform)

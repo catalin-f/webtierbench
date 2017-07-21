@@ -47,7 +47,9 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
     zlib1g-dev\
     util-linux\
     software-properties-common \
-    python-pip
+    python-pip\
+    python3-virtualenv\
+    python3-dev
 
 debug  ">>>> other requirements\n"
 
