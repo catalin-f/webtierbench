@@ -489,7 +489,7 @@ class Deployment:
 
     def start_performance_measurements(self):
         for app in self.perfs:
-            app.stalrt(async=True)
+            app.start(async=True)
         return '', ''
 
     def set_benchmark_config(self, benchmark_config):
