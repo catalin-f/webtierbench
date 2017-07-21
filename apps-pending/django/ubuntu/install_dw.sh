@@ -60,7 +60,7 @@ echo -e "\n\nInstall packages ..."
 apt-get install -y software-properties-common oracle-java8-installer    \
     cassandra memcached apt-transport-https ca-certificates docker-ce   \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
-    zlib1g-dev siege curl
+    zlib1g-dev siege python3-numpy curl
  
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd

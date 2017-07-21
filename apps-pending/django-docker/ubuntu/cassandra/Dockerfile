@@ -16,7 +16,7 @@ RUN apt-get update                                                              
     && echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true"     \
         | debconf-set-selections                                                       \
     && apt-get update                                                                  \
-    && apt-get install -y net-tools oracle-java8-installer cassandra
+    && apt-get install -y oracle-java8-installer cassandra
 
 COPY init_config.sh /scripts
 
