@@ -104,7 +104,9 @@ fi
 echo -e "\n\n"
 
 su "$SUDO_USER" -c "git clone https://github.com/Instagram/django-workload"
-su "$SUDO_USER" -c "git checkout f300654b1ba98aa649795b0af637f721dd6b2cd1"
+(
+su "$SUDO_USER" -c "cd django-workload && git checkout f300654b1ba98aa649795b0af637f721dd6b2cd1"
+)
 
 # Config memcached
 # Backup old memcached config file
@@ -131,7 +133,7 @@ echo -e "\n\nCreate python virtualenv ..."
     cd django-workload/django-workload || exit 4
     python3 -m virtualenv -p python3 venv
     . venv/bin/activate
-    pip install -r requirements.txt
+    python -m pip install -r requirements.txt
     deactivate
     cp cluster_settings_template.py cluster_settings.py
 )
