@@ -12,9 +12,9 @@ sudo ./uninstall_dw.sh
 
 ## Run Benchmark
 
-sudo ./start-benchmark.sh <number_of_attempts>
+sudo ./start-benchmark.sh
 
-For example: **sudo ./start-benchmark.sh 1**
+For example: **sudo ./start-benchmark.sh**
 
 ## Stop Benchmark
 
