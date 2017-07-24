@@ -8,7 +8,7 @@ RUN apt-get update                                            \
     && mkdir /scripts                                         \
     && git clone https://github.com/Instagram/django-workload \
     && cd django-workload/django-workload                     \
-    && git checkout b18dace0491051ba85b5fed908db8a92adb2f2ae  \
+    && git checkout f300654b1ba98aa649795b0af637f721dd6b2cd1  \
     && python3 -m virtualenv -p python3 venv                  \
     && . venv/bin/activate                                    \
     && pip install -r requirements.txt                        \
