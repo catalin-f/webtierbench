@@ -14,9 +14,7 @@ done
 echo 1 | tee /proc/sys/net/ipv4/tcp_tw_reuse
 chmod -R 775 /var/log/nginx
 
-mysql -u root -e "USE mysql;"
-mysql -u root -e "UPDATE user SET plugin='mysql_native_password' WHERE User='root';"
-mysql -u root -e "FLUSH PRIVILEGES;"
+mysql -u root -e "USE mysql; UPDATE user SET plugin='mysql_native_password' WHERE User='root'; FLUSH PRIVILEGES;"
 
 for (( i=1; i<=$ATTEMPTS; i++ ))
 do
@@ -29,3 +27,4 @@ done
 
 service mysql stop
 service nginx stop && tail -F /dev/null
+
