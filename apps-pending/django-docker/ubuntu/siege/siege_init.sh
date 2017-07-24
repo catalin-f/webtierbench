@@ -8,9 +8,6 @@ sed -i "s/localhost/$TARGET_ENDPOINT/g" urls_template.txt
 
 ./gen-urls-file
 
-for (( i=1; i<=ATTEMPTS; i++ ))
-	do
-	   ./run-siege.sh
-done
+./run-siege
 
 tail -f /dev/null
