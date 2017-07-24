@@ -12,15 +12,15 @@ if [ "$#" -gt "0" ]; then
             [ -z "$2" ] && usage "-p | --proxy <proxy_ip:proxy_port>"
 
             echo -e "\n\nSet proxy ..."
-            
+
             proxy_endpoint="$2"
             http_proxy=http://"$proxy_endpoint"
             https_proxy=http://"$proxy_endpoint"
             export http_proxy
             export https_proxy
-            
+
             apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="http://$proxy_endpoint" --recv 0xC2518248EEA14886
-            
+
             # Set docker proxy
             mkdir -p /etc/systemd/system/docker.service.d
             echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
@@ -61,7 +61,7 @@ apt-get install -y software-properties-common oracle-java8-installer    \
     cassandra memcached apt-transport-https ca-certificates docker-ce   \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
     zlib1g-dev siege python3-numpy curl
- 
+
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
 
@@ -102,7 +102,9 @@ else
 fi
 
 echo -e "\n\n"
+
 su "$SUDO_USER" -c "git clone https://github.com/Instagram/django-workload"
+su "$SUDO_USER" -c "git checkout f300654b1ba98aa649795b0af637f721dd6b2cd1"
 
 # Config memcached
 # Backup old memcached config file
