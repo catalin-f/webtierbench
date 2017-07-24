@@ -4,36 +4,6 @@
 . utils.sh
 
 #######################################
-# Checks the type of the supplied parameter and also it's value
-# Arguments:
-# 	$1 = the parameter to be checked
-# Additional information:
-#	This method contains the exit call
-#######################################
-check_parameter_validity() {
-	re='^[1-9]+$'
-
-	if ! [[ $1 =~ $re ]] ; then
-	   echo "The first parameter must be a non zero number"
-	   exit 1
-	fi
-}
-
-#######################################
-# Checks the number of parameters supplied to the script
-# Arguments:
-#	$1 = the number of supplied parameters
-# Additional information:
-#	This method contains the exit call
-#######################################
-check_script_usage() {
-	if [ "$1" -ne 1 ]; then
-	    echo "Usage: ./start-benchmark.sh <number_of_attempts>"
-	    exit 1
-	fi
-}
-
-#######################################
 # Sets the CPU FREQUENCY to no scaling in order to obtain accurate measurements
 # Arguments:
 #	None
@@ -108,8 +78,6 @@ main() {
 
 	### CHECKS ###
 	check_root_privilege
-	check_script_usage $1
-	check_parameter_validity $2
 
 	### SET ENVIRONMENT ###
 	set_cpu_performance
