@@ -9,6 +9,14 @@ def avg_compute():
     try:
         f = pn.read_csv("siege.log")
         f.drop("      Date & Time", 1, inplace=True)
+        f.drop("  Trans", 1, inplace=True)
+        f.drop("  Elap Time", 1, inplace=True)
+        f.drop("  Data Trans", 1, inplace=True)
+        f.drop("  Resp Time", 1, inplace=True)
+        f.drop("  Throughput", 1, inplace=True)
+        f.drop("  Concurrent", 1, inplace=True)
+        f.drop("    OKAY", 1, inplace=True)
+        f.drop("   Failed", 1, inplace=True)
         f.to_csv("interm.csv")
     except "FileNotFoundError":
         print "The results file dosen't exist."
