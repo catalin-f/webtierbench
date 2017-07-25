@@ -20,16 +20,23 @@ echo "Memcached is up and running!"
 # Start cassandra container
 docker run -tid --privileged -h cassandra --name cassandra_container --network django_network --ip 10.10.10.10 rinftech/webtierbench:cassandra-webtier
 
-sleep 30
+while ! netcat -w 5 10.10.10.10 9042; do
+  echo "Waiting for cassandra..."
+  sleep 3
+done
+
 echo "Cassandra is up and running!"
 
 # Start uwsgi container
 docker run -tid -h uwsgi --name uwsgi_container --network django_network --ip 10.10.10.11 -e CASSANDRA_ENDPOINT=10.10.10.10 -e MEMCACHED_ENDPOINT=10.10.10.9 rinftech/webtierbench:uwsgi-webtier
 
-sleep 30
+while ! netcat -w 5 10.10.10.11 8000; do
+  echo "Waiting for uwsgi..."
+  sleep 3
+done
+
 echo "uWSGI is up and running!"
 
 # Start siege container
 docker run -ti -h siege --name siege_container --network django_network --ip 10.10.10.12 -e ATTEMPTS=10 -e TARGET_ENDPOINT=10.10.10.11 rinftech/webtierbench:siege-webtier
-
 echo "Siege is up and running!"
