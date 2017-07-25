@@ -30,6 +30,7 @@ def avg_compute():
                         continue
                     avg = list(col)
                     avg  = map(float, avg)
+                    avg = list(set(avg))
                     avg.remove(min(avg))
                     avg.remove(max(avg))
                     tuple(avg)
