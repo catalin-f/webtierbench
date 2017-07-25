@@ -1,0 +1,58 @@
+version: "2"
+
+networks:
+    django_network:
+        driver_opts:
+            com.docker.network.bridge.name: django
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.10.10.0/24
+                  ip_range: 10.10.10.8/29
+                  gateway: 10.10.10.1
+
+services:
+
+    memcached:
+        image: rinftech/webtierbench:memcached-webtier
+        container_name: memcached_container
+        networks:
+            django_network:
+                ipv4_address: 10.10.10.9
+        hostname: memcached
+
+    cassandra:
+        image: rinftech/webtierbench:cassandra-webtier
+        container_name: cassandra_container
+        networks:
+            django_network:
+                ipv4_address: 10.10.10.10
+        hostname: cassandra
+        privileged: true
+
+    uwsgi:
+        image: rinftech/webtierbench:uwsgi-webtier
+        container_name: uwsgi_container
+        depends_on: 
+            - memcached
+            - cassandra
+        networks:
+            django_network:
+                ipv4_address: 10.10.10.11
+        hostname: uwsgi
+        environment:
+            - CASSANDRA_ENDPOINT=10.10.10.10
+            - MEMCACHED_ENDPOINT=10.10.10.9
+            - SIEGE_ENDPOINT=10.10.10.12
+
+    siege:
+        container_name: siege_container
+        image: rinftech/webtierbench:siege-webtier
+        depends_on:
+            - uwsgi
+        networks:
+            django_network:
+                ipv4_address: 10.10.10.12
+        hostname: siege
+        environment:
+            - TARGET_ENDPOINT=10.10.10.11
