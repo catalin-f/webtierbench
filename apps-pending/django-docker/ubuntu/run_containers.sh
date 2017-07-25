@@ -13,23 +13,23 @@ docker network create --opt com.docker.network.bridge.name=django --attachable -
 echo "The network is up and running!"
 
 # Start memcached container
-docker run -tid -h memcached --name memcached_container --network django_network --ip 10.10.10.9 memcached-webtier
+docker run -tid -h memcached --name memcached_container --network django_network --ip 10.10.10.9 rinftech/webtierbench:memcached-webtier
 
 echo "Memcached is up and running!"
 
 # Start cassandra container
-docker run -tid --privileged -h cassandra --name cassandra_container --network django_network --ip 10.10.10.10 cassandra-webtier
+docker run -tid --privileged -h cassandra --name cassandra_container --network django_network --ip 10.10.10.10 rinftech/webtierbench:cassandra-webtier
 
 sleep 30
 echo "Cassandra is up and running!"
 
 # Start uwsgi container
-docker run -tid -h uwsgi --name uwsgi_container --network django_network --ip 10.10.10.11 -e CASSANDRA_ENDPOINT=10.10.10.10 -e MEMCACHED_ENDPOINT=10.10.10.9 uwsgi-webtier
+docker run -tid -h uwsgi --name uwsgi_container --network django_network --ip 10.10.10.11 -e CASSANDRA_ENDPOINT=10.10.10.10 -e MEMCACHED_ENDPOINT=10.10.10.9 rinftech/webtierbench:uwsgi-webtier
 
 sleep 30
 echo "uWSGI is up and running!"
 
 # Start siege container
-docker run -ti -h siege --name siege_container --network django_network --ip 10.10.10.12 -e ATTEMPTS=10 -e TARGET_ENDPOINT=10.10.10.11 siege-webtier
+docker run -ti -h siege --name siege_container --network django_network --ip 10.10.10.12 -e ATTEMPTS=10 -e TARGET_ENDPOINT=10.10.10.11 rinftech/webtierbench:siege-webtier
 
 echo "Siege is up and running!"
