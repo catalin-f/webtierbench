@@ -5,7 +5,7 @@
 
 echo "Starting uWSGI init script on container..."
 
-IP_ADDR=$(cat /etc/hosts | grep $1 | cut -d $'\t' -f 1)
+IP_ADDR=$(grep "$1" /etc/hosts | awk '{print $1}')
 
 cd /django-workload/django-workload || exit 1
 
