@@ -31,7 +31,7 @@ class Django(Application):
         super(Django, self).__init__("django", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', 'b55c9a4788cffafaf8e1be7b9e82c37e135dacd6')
+        set_env('WEBTIER_DJANGO_REVISION', '10f55a11ffb38ab4e2fec73b0a76229fc7af1e6c')
         set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workers'])
         return super(Django, self).deploy(async)
 
