@@ -238,16 +238,18 @@ _runSchema_general = {
 _runSchema_file = {
     'type': 'object',
     'properties': {
+        'customrun': {'type': 'boolean'},
         'workers': {'type': 'integer', 'minimum': 1},
         'duration': {'type': 'number', 'minimum': 1},
         'filename': {'type': 'string'}
     },
-    'required': ['workers', 'duration', 'filename']
+    'required': ['duration', 'filename']
 }
 
 _runSchema_endpoint = {
     'type': 'object',
     'properties': {
+        'customrun': {'type': 'boolean'},
         'workers': {'type': 'integer', 'minimum': 1},
         'duration': {'type': 'number', 'minimum': 1},
         'endpoint': {
@@ -264,7 +266,7 @@ _runSchema_endpoint = {
             'minItems': 1
         }
     },
-    'required': ['workers', 'duration', 'endpoint']
+    'required': ['duration', 'endpoint']
 }
 
 

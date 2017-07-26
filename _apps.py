@@ -31,7 +31,7 @@ class Django(Application):
         super(Django, self).__init__("django", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', '10f55a11ffb38ab4e2fec73b0a76229fc7af1e6c')
+        set_env('WEBTIER_DJANGO_REVISION', '3d408cb9f81bbbeb634b6923f3ef2bb6566d39a2')
         set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workers'])
         return super(Django, self).deploy(async)
 
@@ -157,9 +157,12 @@ class Siege(Application):
         self.benchmark_config = benchmark_config
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', 'b55c9a4788cffafaf8e1be7b9e82c37e135dacd6')
+        set_env('WEBTIER_DJANGO_REVISION', '3d408cb9f81bbbeb634b6923f3ef2bb6566d39a2')
         return super(Siege, self).deploy(async)
 
     def start(self, async=False):
+        if 'customrun' in self.benchmark_config:
+            set_env('WEBTIER_SIEGE_RUNMODE', self.benchmark_config['customrun'])
+            consoleLogger("Be aware that the siege will run in a custom way decided by the user in the json file")
         set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
         return super(Siege, self).start(async)
