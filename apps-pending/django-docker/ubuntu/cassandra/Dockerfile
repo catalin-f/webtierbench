@@ -18,7 +18,7 @@ RUN apt-get update                                                              
     && apt-get update                                                                  \
     && apt-get install -y oracle-java8-installer cassandra
 
-COPY init_config.sh /scripts
+COPY init_config.sh /scripts/
 
 RUN /scripts/init_config.sh cassandra
 

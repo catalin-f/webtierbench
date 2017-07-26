@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update                                            \
     && apt-get install -y git python3-virtualenv python3-dev  \
-        python-pip libmemcached-dev zlib1g-dev                \
+        python-pip libmemcached-dev zlib1g-dev netcat-openbsd \
     && mkdir /scripts                                         \
     && git clone https://github.com/Instagram/django-workload \
     && cd django-workload/django-workload                     \
@@ -15,7 +15,7 @@ RUN apt-get update                                            \
     && deactivate                                             \
     && cp cluster_settings_template.py cluster_settings.py
 
-COPY uwsgi_init.sh /scripts
+COPY wait-for-cassandra.sh uwsgi_init.sh /scripts/
 
 ENV DEBIAN_FRONTEND teletype
 
