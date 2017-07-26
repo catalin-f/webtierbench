@@ -5,7 +5,7 @@
 
 echo "Starting uWSGI init script on container..."
 
-HOSTNAME=$1
+IP_ADDR=$(cat /etc/hosts | grep $1 | cut -d $'\t' -f 1)
 
 cd /django-workload/django-workload || exit 1
 
@@ -14,7 +14,7 @@ if [ -f cluster_settings.py.bak ]; then
 else
     sed -e "s/DATABASES\['default'\]\['HOST'\] = 'localhost'/DATABASES\['default'\]\['HOST'\] = '$CASSANDRA_ENDPOINT'/g"             \
         -e "s/CACHES\['default'\]\['LOCATION'\] = '127.0.0.1:11811'/CACHES\['default'\]\['LOCATION'\] = '$MEMCACHED_ENDPOINT'/g"     \
-        -e "s/ALLOWED_HOSTS = \[/ALLOWED_HOSTS = \['$CASSANDRA_ENDPOINT', '$MEMCACHED_ENDPOINT', '$SIEGE_ENDPOINT', '$HOSTNAME', /g" \
+        -e "s/ALLOWED_HOSTS = \[/ALLOWED_HOSTS = \['$CASSANDRA_ENDPOINT', '$MEMCACHED_ENDPOINT', '$SIEGE_ENDPOINT', '$IP_ADDR', /g" \
         -i cluster_settings.py
 
     sed -i "s/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g" uwsgi.ini
