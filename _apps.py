@@ -37,7 +37,11 @@ class Django(Application):
         return super(Django, self).deploy(async)
 
     def start(self, async=False):
-        return super(Django, self).deploy(async)
+        return super(Django, self).start(async)
+
+    def undeploy(self, async=False):
+        os.system('rm -rf django-workload')
+        return super(Django, self).undeploy(async)
 
 
 class Wordpress(Application):
@@ -48,6 +52,11 @@ class Wordpress(Application):
         set_env('WEBTIER_OSS_PERFROMANCE_REV', '9b1a334c4fd0974cdb52dfb5a0862f77e5d2a9c0')
         set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
         return super(Wordpress, self).deploy(async)
+
+    def undeploy(self, async=False):
+        os.system('rm -rf oss-performance')
+        return super(Wordpress, self).undeploy(async)
+
 
 
 ###############################################################################
@@ -93,12 +102,18 @@ class Cassandra(Application):
     def start(self, async=False):
         return super(Cassandra, self).start(async)
 
+    def undeploy(self, async=False):
+        return super(Cassandra, self).undeploy(async)
+
 class MariaDb(Application):
     def __init__(self, deploy_config, deploy_platform):
         super(MariaDb, self).__init__("mariadb", deploy_config, deploy_platform)
 
     def start(self, async=False):
         return super(MariaDb, self).start(async)
+
+    def undeploy(self, async=False):
+        return super(MariaDb, self).undeploy(async)
 
 
 ###############################################################################
@@ -112,6 +127,10 @@ class Perf(Application):
         set_env('PERF_FILENAME', gen_perf_filename())
         return super(Perf, self).start(async)
 
+    def undeploy(self, async=False):
+        del_env('PERF_FILENAME')
+        return super(Perf, self).undeploy(async)
+
 
 class Sar(Application):
     def __init__(self, deploy_config, deploy_platform):
@@ -121,6 +140,10 @@ class Sar(Application):
         set_env('SAR_FILENAME', gen_perf_filename())
         return super(Sar, self).start(async)
 
+    def undeploy(self, async=False):
+        del_env('SAR_FILENAME')
+        return super(Sar, self).undeploy(async)
+
 
 class Statsd(Application):
     def __init__(self, deploy_config, deploy_platform):
@@ -129,6 +152,10 @@ class Statsd(Application):
     def start(self, async=False):
         set_env('SAR_FILENAME', gen_perf_filename())
         return super(Statsd, self).start(async)
+
+    def undeploy(self, async=False):
+        del_env('SAR_FILENAME')
+        return super(Statsd, self).undeploy(async)
 
 
 ###############################################################################
@@ -147,6 +174,11 @@ class ApacheBenchmark(Application):
         set_env('WEBTIER_AB_REQUESTS', 1000)
         set_env('WEBTIER_AB_ENDPOINT', "http://localhost:80/index.html")
         return super(ApacheBenchmark, self).start(async)
+
+    def undeploy(self, async=False):
+        del_env('WEBTIER_AB_WORKERS')
+        del_env('WEBTIER_AB_REQUESTS')
+        return super(ApacheBenchmark, self).undeploy(async)
 
 
 class Siege(Application):
@@ -169,4 +201,7 @@ class Siege(Application):
         return super(Siege, self).start(async)
 
     def undeploy(self, async=False ):
+        if os.path.isfile('siege-2.78.tar.gz'):
+            os.system('rm -rf siege-2.78.tar.gz')
+            os.system('rm -rf siege-2.78')
         return super(Siege, self).undeploy(async)
