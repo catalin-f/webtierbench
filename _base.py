@@ -62,6 +62,8 @@ def unpickle_deployment():
 def set_env(key, value):
     os.environ[str(key)] = str(value)
 
+def del_env(value):
+    del os.environ[str(value)]
 
 def get_cpu_count():
     import multiprocessing
@@ -476,6 +478,21 @@ class Deployment:
         for app in self.perfs:
             consoleLogger("Deploying %s" % app.name)
             out, err = app.deploy()
+            outs.append(out)
+            errs.append(err)
+        return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
+
+    def undeploy(self,undeploy_apps, undeploy_perfs):
+        outs = []
+        errs = []
+        for app in undeploy_apps:
+            consoleLogger("Undeploying %s" % app.name)
+            out, err = app.undeploy()
+            outs.append(out)
+            errs.append(err)
+        for app in undeploy_perfs:
+            consoleLogger("Undeploying %s" % app.name)
+            out, err = app.undeploy()
             outs.append(out)
             errs.append(err)
         return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)

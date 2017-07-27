@@ -4,6 +4,7 @@ import psutil
 from _base import Application
 from _base import consoleLogger
 from _base import set_env
+from _base import del_env
 
 _MB = (1024*1024)
 port_increment = 0
@@ -166,3 +167,6 @@ class Siege(Application):
             consoleLogger("Be aware that the siege will run in a custom way decided by the user in the json file")
         set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
         return super(Siege, self).start(async)
+
+    def undeploy(self, async=False ):
+        return super(Siege, self).undeploy(async)
