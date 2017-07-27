@@ -47,9 +47,12 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
     zlib1g-dev\
     util-linux\
     software-properties-common \
+    python-software-properties \
     python-pip\
     python3-virtualenv\
     python3-dev
+
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" add-apt-repository ppa:webupd8team/java
 
 debug  ">>>> other requirements\n"
 
