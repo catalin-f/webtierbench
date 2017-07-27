@@ -26,6 +26,9 @@ class Apache2(Application):
         set_env('WEBTIER_APACHE_PORT', self.deploy_config["port"])
         return super(Apache2, self).deploy(async)
 
+    def undeploy(self, async=False):
+        return super(Apache2, self).undeploy(async
+
 
 class Django(Application):
     def __init__(self, deploy_config, deploy_platform):
@@ -91,6 +94,8 @@ class Memcached(Application):
             exit();
         return super(Memcached, self).deploy(async)
 
+    def undeploy(self, async=False):
+        return super(Memcached, self).undeploy(async)
 
 ###############################################################################
 # Databases
