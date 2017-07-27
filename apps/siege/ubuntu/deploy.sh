@@ -5,6 +5,7 @@
 ###############################################################################
 WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
 WEBTIER_DJANGO_REVISION=${WEBTIER_DJANGO_REVISION}
+WEBTIER_OSS_PERFROMANCE_REV=${WEBTIER_OSS_PERFROMANCE_REV}
 
 
 ###############################################################################
@@ -14,7 +15,7 @@ WEBTIER_DJANGO_REVISION=${WEBTIER_DJANGO_REVISION}
 
 if [ "${WEBTIER_OSS_PERFROMANCE_REV}" ]; then
     su "$SUDO_USER" -c "HTTPS_PROXY=${WEBTIER_HTTP_PROXY} wget http://download.joedog.org/siege/siege-2.78.tar.gz"
-    su "$SUDO_USER" tar xzf siege-2.78.tar.gz
+    tar xzf siege-2.78.tar.gz
     cd siege-2.78/
     ./configure
     make

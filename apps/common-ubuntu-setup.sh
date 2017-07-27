@@ -52,7 +52,7 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
     python3-virtualenv\
     python3-dev
 
-http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" add-apt-repository ppa:webupd8team/java
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" add-apt-repositoryn -y ppa:webupd8team/java
 
 debug  ">>>> other requirements\n"
 
