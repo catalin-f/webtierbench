@@ -135,6 +135,22 @@ class Cassandra(Application):
     def undeploy(self, async=False):
         return super(Cassandra, self).undeploy(async)
 
+class Cassandra_docker(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Cassandra_docker, self).__init__("cassandra_docker", deploy_config, deploy_platform)
+
+    def deploy(self, async=False):
+	return super(Cassandra_docker, self).deploy(async)
+
+    def start(self, async=False):
+        return super(Cassandra_docker, self).start(async)
+
+    def stop(self, async=False):
+	return super(Cassandra_docker, self).stop(async)
+
+    def undeploy(self, async=False):
+        return super(Cassandra_docker, self).undeploy(async)
+
 class MariaDb(Application):
     def __init__(self, deploy_config, deploy_platform):
         super(MariaDb, self).__init__("mariadb", deploy_config, deploy_platform)
