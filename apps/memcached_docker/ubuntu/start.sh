@@ -9,4 +9,4 @@
 # Commands
 ###############################################################################
 
-
+docker run -tid -h memcached --name memcached_container --network django_network --ip 10.10.10.9 rinftech/webtierbench:memcached-webtier

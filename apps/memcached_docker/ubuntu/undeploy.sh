@@ -9,4 +9,5 @@
 # Commands
 ###############################################################################
 
-
+docker rm memcached_container
+docker rmi rinftech/webtierbench:memcached-webtier
