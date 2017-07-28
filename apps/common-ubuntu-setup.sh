@@ -79,3 +79,6 @@ EOF
 
 # If reboot is required
 touch /tmp/.host.reboot.required
+
+# We create the docker bridge that we use to manage our containers
+docker network create --opt com.docker.network.bridge.name=django --attachable -d bridge --gateway 10.10.10.1 --subnet 10.10.10.0/24 --ip-range 10.10.10.8/29 django_network
