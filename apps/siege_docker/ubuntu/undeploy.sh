@@ -9,4 +9,5 @@
 # Commands
 ###############################################################################
 
-
+docker rm siege_container
+docker rmi rinftech/webtierbench:siege-webtier
