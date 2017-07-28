@@ -60,3 +60,4 @@ services:
         entrypoint: bash -c "/home/tester/scripts/wait-for-uwsgi.sh && /home/tester/scripts/siege_init.sh"
         volumes:
             - ../data_store/tmp:/tmp
+        privileged: true
