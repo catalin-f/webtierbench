@@ -250,4 +250,21 @@ class Siege(Application):
         if os.path.isfile('siege-2.78.tar.gz'):
             os.system('rm -rf siege-2.78.tar.gz')
             os.system('rm -rf siege-2.78')
-        return super(Siege, self).undeploy(async)
+        return super(Siege, self).undeploy(async
+
+class Siege_docker(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        self.benchmark_config = {}
+        super(Siege_docker, self).__init__("siege_docker", deploy_config, deploy_platform)
+
+    def deploy(self, async=False):
+        return super(Siege_docker, self).deploy(async)
+
+    def start(self, async=False):
+        return super(Siege_docker, self).start(async)
+
+    def stop(self, async=False):
+	return super(Siege_docker).stop(async)
+
+    def undeploy(self, async=False ):
+        return super(Siege_docker, self).undeploy(async)
