@@ -9,4 +9,4 @@
 # Commands
 ###############################################################################
 
-
+docker run -tid --privileged -h cassandra --name cassandra_container --network django_network --ip 10.10.10.10 rinftech/webtierbench:cassandra-webtier

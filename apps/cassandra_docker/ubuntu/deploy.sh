@@ -9,4 +9,4 @@
 # Commands
 ###############################################################################
 
-
+docker pull rinftech/webtierbench:cassandra-webtier
