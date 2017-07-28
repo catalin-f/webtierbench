@@ -17,7 +17,7 @@ RUN useradd -m tester                                                    \
 
 COPY wait-for-uwsgi.sh siege_init.sh /home/tester/scripts/
 
-RUN chown -R tester:tester /home/tester \
+RUN chown -R tester:tester /home/tester /tmp \
     && echo "Write sysctl settings ...\n"\
     && echo "net.ipv4.tcp_tw_reuse=1\n\
 net.ipv4.ip_local_port_range=1024 64000\n\
