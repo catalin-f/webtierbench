@@ -57,4 +57,6 @@ services:
         hostname: siege
         environment:
             - TARGET_ENDPOINT=10.10.10.11
-        entrypoint: bash -c "/scripts/wait-for-uwsgi.sh && /scripts/siege_init.sh"
+        entrypoint: bash -c "/home/tester/scripts/wait-for-uwsgi.sh && /home/tester/scripts/siege_init.sh"
+        volumes:
+            - ../data_store/tmp:/tmp

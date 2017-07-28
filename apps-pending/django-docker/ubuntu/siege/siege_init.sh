@@ -1,13 +1,7 @@
 #!/bin/bash
 
-# This script is called each time the siege container is run
-
-cd /django-workload/client || exit 1
-
-sed -i "s/localhost/$TARGET_ENDPOINT/g" urls_template.txt
-
-./gen-urls-file
-
-./run-siege
+su - tester -c "rm -rf /tmp/siege*                 \
+    && cd django-workload/client                   \
+    && LOG='/tmp/siege.log' ./run-siege" || exit 1
 
 tail -f /dev/null
