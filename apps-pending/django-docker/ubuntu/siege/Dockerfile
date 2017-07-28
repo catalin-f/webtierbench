@@ -10,9 +10,6 @@ RUN useradd -m tester                                                    \
     && cd /home/tester/django-workload/                                  \
     && git checkout f300654b1ba98aa649795b0af637f721dd6b2cd1             \
     && echo 'failures = 1000000' > /home/tester/.siegerc                 \
-    && cd /home/tester/django-workload/client                            \
-    && sed -i 's/localhost/$TARGET_ENDPOINT/g' urls_template.txt         \
-    && ./gen-urls-file                                                   \ 
     && mkdir -p /home/tester/scripts
 
 COPY wait-for-uwsgi.sh siege_init.sh /home/tester/scripts/
