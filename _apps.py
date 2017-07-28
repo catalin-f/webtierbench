@@ -46,6 +46,18 @@ class Django(Application):
         os.system('rm -rf django-workload')
         return super(Django, self).undeploy(async)
 
+class Django_docker(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Django_docker, self).__init__("django_docker", deploy_config, deploy_platform)
+
+    def deploy(self, async=False):
+        return super(Django_docker, self).deploy(async)
+
+    def start(self, async=False):
+        return super(Django_docker, self).start(async)
+
+    def undeploy(self, async=False):
+        return super(Django_docker, self).undeploy(async)
 
 class Wordpress(Application):
     def __init__(self, deploy_config, deploy_platform):
