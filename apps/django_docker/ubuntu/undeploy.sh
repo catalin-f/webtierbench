@@ -9,4 +9,5 @@
 # Commands
 ###############################################################################
 
-
+docker rm uwsgi_container
+docker rmi rinftech/webtierbench:uwsgi-webtier
