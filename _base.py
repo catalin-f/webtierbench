@@ -16,10 +16,10 @@ _WEBTIER_NAME = "WebTier Benchmark"
 _WEBTIER_DEPLOYMENT_JSON = ".deployment.json"
 _WEBTIER_RUN_JSON = ".running.json"
 
-_ALLOWED_WORKLOADS = ['django', 'wordpress', 'apache2']
-_ALLOWED_CLIENTS = ['siege', 'ab']
-_ALLOWED_CACHES = ['memcached']
-_ALLOWED_DBS = ['cassandra', 'mariadb']
+_ALLOWED_WORKLOADS = ['django', 'django_docker', 'wordpress', 'apache2']
+_ALLOWED_CLIENTS = ['siege', 'siege_docker', 'ab']
+_ALLOWED_CACHES = ['memcached', 'memcached_docker']
+_ALLOWED_DBS = ['cassandra', 'cassandra_docker', 'mariadb']
 _ALLOWED_PERFS = ['perf', 'statsd', 'sar']
 
 _5Gb = 5368709120
