@@ -109,6 +109,19 @@ class Memcached(Application):
     def undeploy(self, async=False):
         return super(Memcached, self).undeploy(async)
 
+class Memcached_docker(Application):
+    def __init__(self, deploy_config, deploy_platform):
+        super(Memcached, self).__init__("memcached_docker", deploy_config, deploy_platform)
+
+    def start(self, async=False):
+        return super(Memcached_docker, self).start(async)
+
+    def deploy(self, async=False):
+        return super(Memcached_docker, self).deploy(async)
+
+    def undeploy(self, async=False):
+        return super(Memcached_docker, self).undeploy(async)
+
 ###############################################################################
 # Databases
 ###############################################################################
