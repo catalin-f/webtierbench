@@ -27,7 +27,7 @@ class Apache2(Application):
         return super(Apache2, self).deploy(async)
 
     def undeploy(self, async=False):
-        return super(Apache2, self).undeploy(async
+        return super(Apache2, self).undeploy(async)
 
 
 class Django(Application):
@@ -250,7 +250,7 @@ class Siege(Application):
         if os.path.isfile('siege-2.78.tar.gz'):
             os.system('rm -rf siege-2.78.tar.gz')
             os.system('rm -rf siege-2.78')
-        return super(Siege, self).undeploy(async
+        return super(Siege, self).undeploy(async)
 
 class Siege_docker(Application):
     def __init__(self, deploy_config, deploy_platform):
