@@ -174,7 +174,6 @@ class Perf(Application):
         return super(Perf, self).start(async)
 
     def undeploy(self, async=False):
-        del_env('PERF_FILENAME')
         return super(Perf, self).undeploy(async)
 
 
@@ -187,7 +186,6 @@ class Sar(Application):
         return super(Sar, self).start(async)
 
     def undeploy(self, async=False):
-        del_env('SAR_FILENAME')
         return super(Sar, self).undeploy(async)
 
 
@@ -200,7 +198,6 @@ class Statsd(Application):
         return super(Statsd, self).start(async)
 
     def undeploy(self, async=False):
-        del_env('SAR_FILENAME')
         return super(Statsd, self).undeploy(async)
 
 
