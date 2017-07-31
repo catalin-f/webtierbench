@@ -500,6 +500,7 @@ class Deployment:
     def start_applications(self):
         outs = []
         errs = []
+
         for app in self._all_apps:
             out, err = app.start()
             outs.append(out)
@@ -576,4 +577,3 @@ class Deployment:
 
     def set_client(self, app):
         self.client = app
-        self._all_apps.append(app)
