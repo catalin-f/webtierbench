@@ -1,18 +1,15 @@
 #!/bin/bash
 
-. ../../common_func.sh
-
 ###############################################################################
 # Environment data
 ###############################################################################
-WEBTIER_HTTP_PROXY=${WEBTIER_HTTP_PROXY}
-
+WEBTIER_PATH=${WEBTIER_PATH}
 
 ###############################################################################
 # Commands
 ###############################################################################
+. ${WEBTIER_PATH}/apps/common_func.sh
 
-#Stop data bese service
 
 stop_service "mysql"
 check_service_stopped "mysql"

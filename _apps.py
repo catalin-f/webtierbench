@@ -68,6 +68,12 @@ class Wordpress(Application):
         set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
         return super(Wordpress, self).deploy(async)
 
+    def start(self, async=False):
+        return super(Wordpress, self).start(async)
+
+    def stop(self, async=False):
+        return super(Wordpress, self).stop(async)
+
     def undeploy(self, async=False):
         os.system('rm -rf oss-performance')
         return super(Wordpress, self).undeploy(async)
@@ -219,8 +225,6 @@ class ApacheBenchmark(Application):
         return super(ApacheBenchmark, self).start(async)
 
     def undeploy(self, async=False):
-        del_env('WEBTIER_AB_WORKERS')
-        del_env('WEBTIER_AB_REQUESTS')
         return super(ApacheBenchmark, self).undeploy(async)
 
 
