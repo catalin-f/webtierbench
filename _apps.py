@@ -111,7 +111,7 @@ class Memcached(Application):
 
 class Memcached_docker(Application):
     def __init__(self, deploy_config, deploy_platform):
-        super(Memcached, self).__init__("memcached_docker", deploy_config, deploy_platform)
+        super(Memcached_docker, self).__init__("memcached_docker", deploy_config, deploy_platform)
 
     def start(self, async=False):
         return super(Memcached_docker, self).start(async)
