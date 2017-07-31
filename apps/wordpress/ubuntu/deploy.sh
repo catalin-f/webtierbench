@@ -12,6 +12,8 @@ WEBTIER_PATH=${WEBTIER_PATH}
 ###############################################################################
 . ${WEBTIER_PATH}/apps/common_func.sh
 
+oss_dir="${WEBTIER_PATH}/oss-performance"
+
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" \
     add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
 
