@@ -15,10 +15,14 @@ from _apps import Apache2
 from _apps import Perf
 from _apps import ApacheBenchmark
 from _apps import Django
+from _apps import Django_docker
 from _apps import Wordpress
 from _apps import Siege
+from _apps import Siege_docker
 from _apps import Memcached
+from _apps import Memcached_docker
 from _apps import Cassandra
+from _apps import Cassandra_docker
 from _apps import MariaDb
 from _apps import Sar
 from _apps import Statsd
