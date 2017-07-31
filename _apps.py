@@ -258,6 +258,9 @@ class Siege_docker(Application):
         self.benchmark_config = {}
         super(Siege_docker, self).__init__("siege_docker", deploy_config, deploy_platform)
 
+    def set_benchmark_config(self, benchmark_config):
+	self.benchmark_config = benchmark_config
+
     def deploy(self, async=False):
         return super(Siege_docker, self).deploy(async)
 
@@ -265,7 +268,7 @@ class Siege_docker(Application):
         return super(Siege_docker, self).start(async)
 
     def stop(self, async=False):
-	return super(Siege_docker).stop(async)
+	return super(Siege_docker, self).stop(async)
 
     def undeploy(self, async=False ):
         return super(Siege_docker, self).undeploy(async)
