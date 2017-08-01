@@ -500,8 +500,9 @@ class Deployment:
     def start_applications(self):
         outs = []
         errs = []
-
         for app in self._all_apps:
+            if app.name == 'siege':
+                continue
             out, err = app.start()
             outs.append(out)
             errs.append(err)
@@ -526,6 +527,8 @@ class Deployment:
         outs = []
         errs = []
         for app in self._all_apps:
+            if app.name == 'siege':
+                continue
             out, err = app.stop()
             outs.append(out)
             errs.append(err)
