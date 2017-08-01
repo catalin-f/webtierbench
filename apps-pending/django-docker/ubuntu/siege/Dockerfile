@@ -31,4 +31,4 @@ net.netfilter.nf_conntrack_max=256000" >> /etc/sysctl.conf \
 
 ENV DEBIAN_FRONTEND teletype
 
-CMD /home/tester/scripts/siege_init.sh
+CMD /home/tester/scripts/wait-for-uwsgi.sh && /home/tester/scripts/siege_init.sh
