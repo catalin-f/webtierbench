@@ -577,3 +577,4 @@ class Deployment:
 
     def set_client(self, app):
         self.client = app
+        self._all_apps.append(app)
