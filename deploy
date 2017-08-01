@@ -68,11 +68,45 @@ def main():
 
     # Get the configuration for each app from config_json and pass it in the constructor
     ###############################################################################
+    # Caching
+    ###############################################################################
+    for config in config_json['cache']:
+        if config['name'] == 'memcached':
+            memcached = Memcached(config, myplatform)
+            deployment.add_cache(memcached)
+            debugLogger("Added caching server: %s " % config['name'])
+        if config['name'] == 'memcached_docker':
+            memcached_docker = Memcached_docker(config, myplatform)
+            deployment.add_cache(memcached_docker)
+            debugLogger("Added caching server: %s " % config['name'])
+
+    ###############################################################################
+    # Databases
+    ###############################################################################
+    for config in config_json['db']:
+        if config['name'] == 'cassandra':
+            cassandra = Cassandra(config, myplatform)
+            deployment.add_db(cassandra)
+            debugLogger("Added db server: %s " % config['name'])
+        if config['name'] == 'cassandra_docker':
+            cassandra_docker = Cassandra_docker(config, myplatform)
+            deployment.add_db(cassandra_docker)
+            debugLogger("Added db server: %s " % config['name'])        
+	if config['name'] == 'mariadb':
+            mariadb = MariaDb(config, myplatform)
+            deployment.add_db(mariadb)
+            debugLogger("Added db server: %s " % config['name'])
+
+    ###############################################################################
     # Applications
     ###############################################################################
     if config_json['workload']['name'] == 'django':
         django = Django(config_json['workload'], myplatform)
         deployment.add_application(django)
+        debugLogger("Added application: %s" % config_json['workload']['name'])
+    if config_json['workload']['name'] == 'django_docker':
+	django_docker = Django_docker(config_json['workload'], myplatform)
+	deployment.add_application(django_docker)
         debugLogger("Added application: %s" % config_json['workload']['name'])
     if config_json['workload']['name'] == 'apache2':
         apache = Apache2(config_json['workload'], myplatform)
@@ -90,32 +124,14 @@ def main():
         siege = Siege(config_json['client'], myplatform)
         deployment.set_client(siege)
         debugLogger("Added benchmark client: %s" % config_json['client']['name'])
+    if config_json['client']['name'] == 'siege_docker':
+        siege_docker = Siege_docker(config_json['client'], myplatform)
+        deployment.set_client(siege_docker)
+        debugLogger("Added benchmark client: %s" % config_json['client']['name'])
     if config_json['client']['name'] == 'ab':
         ab = ApacheBenchmark(config_json['client'], myplatform)
         deployment.set_client(ab)
         debugLogger("Added benchmark client: %s" % config_json['client']['name'])
-
-    ###############################################################################
-    # Caching
-    ###############################################################################
-    for config in config_json['cache']:
-        if config['name'] == 'memcached':
-            memcached = Memcached(config, myplatform)
-            deployment.add_cache(memcached)
-            debugLogger("Added caching server: %s " % config['name'])
-
-    ###############################################################################
-    # Databases
-    ###############################################################################
-    for config in config_json['db']:
-        if config['name'] == 'cassandra':
-            cassandra = Cassandra(config, myplatform)
-            deployment.add_db(cassandra)
-            debugLogger("Added db server: %s " % config['name'])
-        if config['name'] == 'mariadb':
-            mariadb = MariaDb(config, myplatform)
-            deployment.add_db(mariadb)
-            debugLogger("Added db server: %s " % config['name'])
 
     ###############################################################################
     # Performance measurements
