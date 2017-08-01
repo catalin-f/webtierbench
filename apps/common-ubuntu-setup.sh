@@ -49,16 +49,19 @@ http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get i
     software-properties-common \
     python-software-properties \
     python-pip\
+    python3-pip\
     python3-virtualenv\
     python3-dev
 
+debug  ">>>> other requirements\n"
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" add-apt-repository -y ppa:webupd8team/java
 
-debug  ">>>> other requirements\n"
+debug  ">>>> add-apt-repository ppa:webupd8team/java \n"
 
 # Prepare the Python environment
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" pip install --upgrade pip
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" pip --no-cache-dir install -r requirements.txt
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" pip3 install numpy
 debug  "pip install\n"
 
 # Disable Docker service

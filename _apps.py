@@ -35,7 +35,7 @@ class Django(Application):
         super(Django, self).__init__("django", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', '3d408cb9f81bbbeb634b6923f3ef2bb6566d39a2')
+        set_env('WEBTIER_DJANGO_REVISION', '1109c7eecf23584fd3520bd7257f8b1268b78c3b')
         set_env('WEBTIER_DJANGO_WORKERS', self.deploy_config['workers'])
         return super(Django, self).deploy(async)
 
@@ -237,7 +237,7 @@ class Siege(Application):
         self.benchmark_config = benchmark_config
 
     def deploy(self, async=False):
-        set_env('WEBTIER_DJANGO_REVISION', '3d408cb9f81bbbeb634b6923f3ef2bb6566d39a2')
+        set_env('WEBTIER_DJANGO_REVISION', '1109c7eecf23584fd3520bd7257f8b1268b78c3b')
         return super(Siege, self).deploy(async)
 
     def start(self, async=False):
