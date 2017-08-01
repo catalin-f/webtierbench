@@ -22,7 +22,7 @@ do
 	echo '*                  Test Run No $i                   *';			\
 	echo '****************************************************';			\
 	cd $oss_dir; 									\
-	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm"
+	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm --db-username root --db-password ''"
 done
 
 service mysql stop

@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 if [ "$(id -u)" != "0" ]; then
 	echo "This script must be run as root"
@@ -22,6 +21,7 @@ cd siege-2.78/
 ./configure
 make
 make install
+rm -rf $HOME/siege-2.78.tar.gz
 
 cd $HOME
 echo '************************************************************'
