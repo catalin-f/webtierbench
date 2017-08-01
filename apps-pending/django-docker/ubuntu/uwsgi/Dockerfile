@@ -19,4 +19,4 @@ COPY wait-for-cassandra.sh uwsgi_init.sh /scripts/
 
 ENV DEBIAN_FRONTEND teletype
 
-CMD /scripts/uwsgi_init.sh uwsgi
+CMD /scripts/wait-for-cassandra.sh && /scripts/uwsgi_init.sh uwsgi
