@@ -26,7 +26,7 @@ run_siege() {
 	cd django-workload/client || exit 1
 
 
-	if [ -n "$(WEBTIER_SIEGE_RUNMODE)" ]; then
+	if [ -n "${WEBTIER_SIEGE_RUNMODE}" ]; then
 
 	    for (( i=1; i<=$1; i++ ))
 	    do
