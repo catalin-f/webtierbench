@@ -121,3 +121,33 @@ set_cpu_performance() {
 debug(){
     echo -e $1
 }
+
+#######################################
+# Remove the settings made in the deploy phase
+#Argumets:
+#   None
+# Additional information:
+#	None
+######################################
+remove_settings() {
+# Remove sysctl settings
+echo -e "\n\nRemove sysctl settings ..."
+sed -e '/net.ipv4.tcp_tw_reuse=1/d'                 \
+    -e '/net.ipv4.ip_local_port_range=1024 64000/d' \
+    -e '/net.ipv4.tcp_fin_timeout=45/d'             \
+    -e '/net.core.netdev_max_backlog=10000/d'       \
+    -e '/net.ipv4.tcp_max_syn_backlog=12048/d'      \
+    -e '/net.core.somaxconn=1024/d'                 \
+    -e '/net.netfilter.nf_conntrack_max=256000/d'   \
+    -i /etc/sysctl.conf
+
+# Remove nf_conntrack module
+echo -e "\n\nRemove nf_conntrack module ..."
+sed '/nf_conntrack/d' -i /etc/modules
+
+# Remove limits settings
+echo -e "\n\nRemove limits settings ..."
+sed -e '/* soft nofile 1000000/d' \
+    -e '/* hard nofile 1000000/d' \
+    -i /etc/security/limits.conf
+}

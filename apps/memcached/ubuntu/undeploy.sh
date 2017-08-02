@@ -8,3 +8,8 @@
 ###############################################################################
 # Commands
 ###############################################################################
+
+apt-get purge -y memcached
+
+echo -e "\n\nRemove memcached backup config file ..."
+rm -f /etc/memcached.conf.old
