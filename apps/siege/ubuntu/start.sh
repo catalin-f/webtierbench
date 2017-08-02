@@ -43,4 +43,4 @@ run_siege() {
 ### SET ENVIRONMENT ###
 set_cpu_performance
 
-run_siege ${WEBTIER_SIEGE_WORKERS}
+(run_siege ${WEBTIER_SIEGE_WORKERS})

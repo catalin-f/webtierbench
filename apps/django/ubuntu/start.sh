@@ -19,9 +19,14 @@ WEBTIER_PATH=${WEBTIER_PATH}
 #	This method uses the virtual environment to start the uwsgi
 #######################################
 start_uwsgi() {
+    mode=$(nodetool netstats | grep 'Mode')
+    while [[$mode != *"NORMAL"*]]; do
+        sleep 1
+        mode=$(nodetool netstats | grep 'Mode')
+    done
 	cd django-workload/django-workload || exit 1
 
-	source venv/bin/activate > /dev/null:q
+	source venv/bin/activate > /dev/null
 
 	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
@@ -34,5 +39,5 @@ start_uwsgi() {
 ### SET ENVIRONMENT ###
 set_cpu_performance
 
-start_uwsgi
+(start_uwsgi)
 
