@@ -501,7 +501,7 @@ class Deployment:
         outs = []
         errs = []
         for app in self._all_apps:
-            if app.name == 'siege':
+            if app.name == self.client.name:
                 continue
             out, err = app.start()
             outs.append(out)
@@ -527,7 +527,7 @@ class Deployment:
         outs = []
         errs = []
         for app in self._all_apps:
-            if app.name == 'siege':
+            if app.name == self.client.name:
                 continue
             out, err = app.stop()
             outs.append(out)
