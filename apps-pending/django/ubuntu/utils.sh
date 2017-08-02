@@ -98,3 +98,11 @@ usage() {
     echo "Usage sudo $0 $1"
     exit 7
 }
+
+set_cpu_performance() {
+    for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+    do
+        [ -f $CPUFREQ ] || continue
+        echo -n performance > $CPUFREQ
+    done
+}

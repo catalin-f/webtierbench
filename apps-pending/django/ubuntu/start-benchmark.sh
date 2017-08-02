@@ -4,21 +4,6 @@
 . utils.sh
 
 #######################################
-# Sets the CPU FREQUENCY to no scaling in order to obtain accurate measurements
-# Arguments:
-#	None
-# Additional information:
-#	None
-#######################################
-set_cpu_performance() {
-	for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-	do
-	    [ -f $CPUFREQ ] || continue
-	    echo -n performance > $CPUFREQ
-	done
-}
-
-#######################################
 # Starts uwsgi in background
 # Arguments:
 #	None
