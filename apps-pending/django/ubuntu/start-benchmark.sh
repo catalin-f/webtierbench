@@ -85,7 +85,7 @@ main() {
 	start_service "cassandra"
 	check_service_started "cassandra"
 
-	sleep 5 # THIS WAITS FOR CASSANDRA TO LOAD COMPLETELY [CHANGE IT ACCORDING TO THE CPU]
+	wait_port 9042
 
 	start_service "memcached"
 	check_service_started "memcached"
@@ -97,6 +97,8 @@ main() {
 	#check_graphite_status
 
 	(start_uwsgi)
+
+	wait_port 8000
 
 	### RUN THE BENCHMARK ###
 	(run_siege)
