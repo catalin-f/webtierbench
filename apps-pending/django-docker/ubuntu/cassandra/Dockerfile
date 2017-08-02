@@ -19,7 +19,6 @@ RUN apt-get update                                                              
     && apt-get install -y oracle-java8-installer cassandra
 
 COPY init_config.sh /scripts/
-COPY jvm.options.128_GB /etc/cassandra/jvm.options
 
 RUN /scripts/init_config.sh cassandra
 
