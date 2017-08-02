@@ -46,7 +46,7 @@ fi
 
 # Set host's cpu for performance
 echo "Set CPU for performance ..."
-. ../django/ubuntu/utils.sh
+. ../django/ubuntu/start-benchmark.sh
 set_cpu_performance
 
 # Activate sysctl settings on host.
