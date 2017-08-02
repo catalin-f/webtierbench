@@ -85,7 +85,8 @@ main() {
 	start_service "cassandra"
 	check_service_started "cassandra"
 
-	wait_port 9042
+    #wait for cassandra a max of 3 minutes
+	wait_port 9042 1800 "cassandra"
 
 	start_service "memcached"
 	check_service_started "memcached"
@@ -98,7 +99,8 @@ main() {
 
 	(start_uwsgi)
 
-	wait_port 8000
+    #wait for uwsgi a max of 3 minutes
+	wait_port 8000 1800 "uwsgi"
 
 	### RUN THE BENCHMARK ###
 	(run_siege)
