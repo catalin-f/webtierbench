@@ -44,4 +44,17 @@ if [ "$#" -gt "0" ]; then
     esac
 fi
 
+# Set host's cpu for performance
+echo "Set CPU for performance ..."
+. ../django/ubuntu/utils.sh
+set_cpu_performance
+
+# Activate sysctl settings on host.
+# We keep all sysctl settings on host because,
+# we can't activate all of them in container,
+# even if container is running in privileged mode.
+
+echo "Activate sysctl settings ..."
+sysctl -p ../django-docker/ubuntu/siege/set_sysctl.conf
+
 docker-compose -f webtierbench.yml up

@@ -44,7 +44,6 @@ services:
             - CASSANDRA_ENDPOINT=10.10.10.10
             - MEMCACHED_ENDPOINT=10.10.10.9
             - SIEGE_ENDPOINT=10.10.10.12
-        entrypoint: bash -c "/scripts/wait-for-cassandra.sh && /scripts/uwsgi_init.sh uwsgi"
 
     siege:
         container_name: siege_container
@@ -57,7 +56,5 @@ services:
         hostname: siege
         environment:
             - TARGET_ENDPOINT=10.10.10.11
-        entrypoint: bash -c "/home/tester/scripts/wait-for-uwsgi.sh && /home/tester/scripts/siege_init.sh"
         volumes:
             - ../data_store/tmp:/tmp
-        privileged: true

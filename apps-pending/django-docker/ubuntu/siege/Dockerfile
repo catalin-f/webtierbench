@@ -15,14 +15,6 @@ RUN useradd -m tester                                                    \
 COPY wait-for-uwsgi.sh siege_init.sh /home/tester/scripts/
 
 RUN chown -R tester:tester /home/tester \
-    && echo "Write sysctl settings ...\n"\
-    && echo "net.ipv4.tcp_tw_reuse=1\n\
-net.ipv4.ip_local_port_range=1024 64000\n\
-net.ipv4.tcp_fin_timeout=45\n\
-net.core.netdev_max_backlog=10000\n\
-net.ipv4.tcp_max_syn_backlog=12048\n\
-net.core.somaxconn=1024\n\
-net.netfilter.nf_conntrack_max=256000" >> /etc/sysctl.conf \
     && echo "Add nf_conntrack to modules ...\n"\
     && echo "nf_conntrack" >> /etc/modules \
     && echo "Add limits settings ...\n"\
