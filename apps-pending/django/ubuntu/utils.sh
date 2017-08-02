@@ -12,7 +12,7 @@ start_service() {
 }
 
 #######################################
-# Starts a service
+# Stops a service
 # Arguments:
 #	  $1 = The service you want to stop
 # Additional information:
@@ -20,6 +20,20 @@ start_service() {
 #######################################
 stop_service() {
 	service $1 stop
+}
+
+#######################################
+# Waits for a port on localhost to become open
+# Arguments:
+#	  $1 = The port you want to wait for
+# Additional information:
+#	  None
+#######################################
+wait_port() {
+  while ! netcat -w 5 localhost "$1"; do
+    echo "Waiting for the port $1..."
+    sleep 3
+  done
 }
 
 #######################################
@@ -70,5 +84,5 @@ check_root_privilege() {
 
 usage() {
     echo "Usage sudo $0 $1"
-    exit 7 
+    exit 7
 }
