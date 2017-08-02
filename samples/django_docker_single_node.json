@@ -1,0 +1,27 @@
+{
+  "workload": {
+    "name": "django_docker"
+  },
+  "proxy":"",
+  "client": {
+    "name": "siege_docker"
+  },
+  "cache": [
+    {
+      "name": "memcached_docker"
+    }
+  ],
+  "db": [
+    {
+      "name": "cassandra_docker"
+    }
+  ],
+  "perf": [
+    {
+      "name": "sar"
+    },
+    {
+      "name": "statsd"
+    }
+  ]
+}
