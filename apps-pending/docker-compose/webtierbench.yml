@@ -44,6 +44,7 @@ services:
             - CASSANDRA_ENDPOINT=10.10.10.10
             - MEMCACHED_ENDPOINT=10.10.10.9
             - SIEGE_ENDPOINT=10.10.10.12
+            - GRAPHITE_ENDPOINT=10.10.10.13
 
     siege:
         container_name: siege_container
@@ -58,3 +59,13 @@ services:
             - TARGET_ENDPOINT=10.10.10.11
         volumes:
             - ../data_store/tmp:/tmp
+
+    graphite:
+        container_name: graphite_container
+        image: hopsoft/graphite-statsd
+        networks:
+            django_network:
+                ipv4_address: 10.10.10.13
+        hostname: graphite
+        depends_on:
+            - memcached

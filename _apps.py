@@ -9,6 +9,14 @@ from _base import del_env
 _MB = (1024*1024)
 port_increment = 0
 
+LOCALHOST_DOCKER_IP = '10.10.10.1'
+
+MEMCACHED_CONTAINER_IP = '10.10.10.9'
+CASSANDRA_CONTAINER_IP = '10.10.10.10'
+DJANGO_CONTAINER_IP = '10.10.10.11' # Django IP = uWSGI IP
+SIEGE_CONTAINER_IP = '10.10.10.12'
+GRAPHITE_CONTAINER_IP = '10.10.10.13'
+
 #TODO: add all apps here
 def gen_perf_filename():
     return '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime())
@@ -40,6 +48,14 @@ class Django(Application):
         return super(Django, self).deploy(async)
 
     def start(self, async=False):
+        set_env('CASSANDRA_IP', LOCALHOST_DOCKER_IP)
+        set_env('MEMCACHED_IP', LOCALHOST_DOCKER_IP)
+
+        if "memcached_docker" in os.environ:
+            set_env('MEMCACHED_IP', MEMCACHED_CONTAINER_IP)
+        if "cassandra_docker" in os.environ:
+            set_env('CASSANDRA_IP', CASSANDRA_CONTAINER_IP)
+
         return super(Django, self).start(async)
 
     def undeploy(self, async=False):
@@ -54,6 +70,20 @@ class Django_docker(Application):
         return super(Django_docker, self).deploy(async)
 
     def start(self, async=False):
+        set_env('CASSANDRA_IP', LOCALHOST_DOCKER_IP)
+        set_env('MEMCACHED_IP', LOCALHOST_DOCKER_IP)
+        set_env('SIEGE_IP', LOCALHOST_DOCKER_IP)
+        set_env('GRAPHITE_IP', GRAPHITE_CONTAINER_IP)
+
+        set_env('LOCALHOST_IP', LOCALHOST_DOCKER_IP)
+
+        if "memcached_docker" in os.environ:
+            set_env('MEMCACHED_IP', MEMCACHED_CONTAINER_IP)
+        if "cassandra_docker" in os.environ:
+            set_env('CASSANDRA_IP', CASSANDRA_CONTAINER_IP)
+        if "siege_docker" in os.environ:
+            set_env('SIEGE_IP', SIEGE_CONTAINER_IP)
+
         return super(Django_docker, self).start(async)
 
     def undeploy(self, async=False):
@@ -244,7 +274,14 @@ class Siege(Application):
         if 'customrun' in self.benchmark_config:
             set_env('WEBTIER_SIEGE_RUNMODE', self.benchmark_config['customrun'])
             consoleLogger("Be aware that the siege will run in a custom way decided by the user in the json file")
-        set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
+            set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
+
+
+        set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
+
+        if "siege_docker" in os.environ:
+            set_env('DJANGO_IP', DJANGO_CONTAINER_IP)
+
         return super(Siege, self).start(async)
 
     def undeploy(self, async=False ):
@@ -265,6 +302,11 @@ class Siege_docker(Application):
         return super(Siege_docker, self).deploy(async)
 
     def start(self, async=False):
+        set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
+
+        if "siege_docker" in os.environ:
+            set_env('DJANGO_IP', DJANGO_CONTAINER_IP)
+
         return super(Siege_docker, self).start(async)
 
     def stop(self, async=False):

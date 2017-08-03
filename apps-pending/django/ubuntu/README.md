@@ -25,4 +25,4 @@ For example: **sudo ./start-benchmark.sh**
 The files utils.sh and memcached.cfg are used internally by our scripts so they shouldn't be used by the user.
 
 The script **install_dw.sh** installs django workload natively. It clones the django workload (from [this](https://github.com/Instagram/django-workload)
-repository) and uses the state of the repository marked by the following commit id: **f300654b1ba98aa649795b0af637f721dd6b2cd1**
+repository) and uses the state of the repository marked by the following commit id: **2600e3e784cb912fe7b9dbe4ebc8b26d43e1bacb**

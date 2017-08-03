@@ -8,8 +8,9 @@ RUN useradd -m tester                                                    \
     && git clone https://github.com/Instagram/django-workload            \
         /home/tester/django-workload                                     \
     && cd /home/tester/django-workload/                                  \
-    && git checkout f300654b1ba98aa649795b0af637f721dd6b2cd1             \
-    && echo 'failures = 1000000' > /home/tester/.siegerc                 \
+    && git checkout 2600e3e784cb912fe7b9dbe4ebc8b26d43e1bacb             \
+    && echo "failures = 1000000" > /home/tester/.siegerc                 \
+    && echo "protocol = HTTP/1.1" >> /home/tester/.siegerc               \
     && mkdir -p /home/tester/scripts
 
 COPY wait-for-uwsgi.sh siege_init.sh /home/tester/scripts/
