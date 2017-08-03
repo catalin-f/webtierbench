@@ -58,3 +58,11 @@ services:
             - TARGET_ENDPOINT=10.10.10.11
         volumes:
             - ../data_store/tmp:/tmp
+
+    graphite:
+        container_name: graphite_container
+        image: hopsoft/graphite-statsd
+        networks:
+            django_network:
+                ipv4_address: 10.10.10.13
+        hostname: graphite
