@@ -59,6 +59,7 @@ debug  ">>>> other requirements\n"
 # Prepare the Python environment
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" pip install --upgrade pip
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" pip --no-cache-dir install -r requirements.txt
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" pip3 install numpy
 debug  "pip install\n"
 
 # Disable Docker service
