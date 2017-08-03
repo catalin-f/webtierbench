@@ -19,7 +19,7 @@ cat > /etc/memcached.conf <<- EOF
 	-p "$PORT"
 	-u "$USER"
 	-l "$LISTEN"
-    -t "$THREADS"
+	-t "$THREADS"
 EOF
 
 service memcached start  \
