@@ -11,6 +11,7 @@ from _base import load_deploy_configuration
 from _base import save_deploy_configuration
 from _base import root_access
 from _base import get_path
+from _base import set_env
 from _apps import Apache2
 from _apps import Perf
 from _apps import ApacheBenchmark
@@ -78,6 +79,7 @@ def main():
         if config['name'] == 'memcached_docker':
             memcached_docker = Memcached_docker(config, myplatform)
             deployment.add_cache(memcached_docker)
+            set_env("memcached_docker", "true")
             debugLogger("Added caching server: %s " % config['name'])
 
     ###############################################################################
@@ -91,11 +93,12 @@ def main():
         if config['name'] == 'cassandra_docker':
             cassandra_docker = Cassandra_docker(config, myplatform)
             deployment.add_db(cassandra_docker)
-            debugLogger("Added db server: %s " % config['name'])        
-	if config['name'] == 'mariadb':
-            mariadb = MariaDb(config, myplatform)
-            deployment.add_db(mariadb)
+            set_env("cassandra_docker", "true")
             debugLogger("Added db server: %s " % config['name'])
+    	if config['name'] == 'mariadb':
+                mariadb = MariaDb(config, myplatform)
+                deployment.add_db(mariadb)
+                debugLogger("Added db server: %s " % config['name'])
 
     ###############################################################################
     # Applications
@@ -105,8 +108,9 @@ def main():
         deployment.add_application(django)
         debugLogger("Added application: %s" % config_json['workload']['name'])
     if config_json['workload']['name'] == 'django_docker':
-	django_docker = Django_docker(config_json['workload'], myplatform)
-	deployment.add_application(django_docker)
+    	django_docker = Django_docker(config_json['workload'], myplatform)
+    	deployment.add_application(django_docker)
+        set_env("django_docker", "true")
         debugLogger("Added application: %s" % config_json['workload']['name'])
     if config_json['workload']['name'] == 'apache2':
         apache = Apache2(config_json['workload'], myplatform)
@@ -127,6 +131,7 @@ def main():
     if config_json['client']['name'] == 'siege_docker':
         siege_docker = Siege_docker(config_json['client'], myplatform)
         deployment.set_client(siege_docker)
+        set_env("siege_docker", "true")
         debugLogger("Added benchmark client: %s" % config_json['client']['name'])
     if config_json['client']['name'] == 'ab':
         ab = ApacheBenchmark(config_json['client'], myplatform)
