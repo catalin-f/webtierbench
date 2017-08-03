@@ -26,7 +26,7 @@ start_uwsgi() {
   done
 	cd django-workload/django-workload || exit 1
 
-	source venv/bin/activate > /dev/null
+	. venv/bin/activate > /dev/null
 
 	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 

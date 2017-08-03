@@ -32,10 +32,14 @@ WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
 ###############################################################################
 def _RUN_GENERIC_SCRIPT(name, async=False):
     proc = subprocess.Popen(name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    os.wait()
     if not async:
-        out = proc.stdout.read()
-        err = proc.stderr.read()
-        return out, err
+        if not proc.poll():
+            out = proc.stdout.read()
+            err = proc.stderr.read()
+            return out, err
+        else:
+            return 'Process terminated'
     else:
         return '', ''
 

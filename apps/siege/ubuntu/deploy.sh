@@ -37,7 +37,7 @@ fi
 
 # Create siegerc
     su - "$SUDO_USER" -c "echo 'failures = 1000000' > ~/.siegerc"
-    su - "$SUDO_USER" -c "echo 'protocol = HTTP/1.0' >> ~/.siegerc"
+    su - "$SUDO_USER" -c "echo 'protocol = HTTP/1.1' >> ~/.siegerc"
 
 
 # Append client settings to /etc/sysctl.conf
