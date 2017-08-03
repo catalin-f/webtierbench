@@ -96,9 +96,9 @@ def main():
             set_env("cassandra_docker", "true")
             debugLogger("Added db server: %s " % config['name'])
     	if config['name'] == 'mariadb':
-                mariadb = MariaDb(config, myplatform)
-                deployment.add_db(mariadb)
-                debugLogger("Added db server: %s " % config['name'])
+            mariadb = MariaDb(config, myplatform)
+            deployment.add_db(mariadb)
+            debugLogger("Added db server: %s " % config['name'])
 
     ###############################################################################
     # Applications
