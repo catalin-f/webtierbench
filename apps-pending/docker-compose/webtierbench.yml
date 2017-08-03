@@ -44,6 +44,7 @@ services:
             - CASSANDRA_ENDPOINT=10.10.10.10
             - MEMCACHED_ENDPOINT=10.10.10.9
             - SIEGE_ENDPOINT=10.10.10.12
+            - GRAPHITE_ENDPOINT=10.10.10.13
 
     siege:
         container_name: siege_container
@@ -66,3 +67,5 @@ services:
             django_network:
                 ipv4_address: 10.10.10.13
         hostname: graphite
+        depends_on:
+            - memcached
