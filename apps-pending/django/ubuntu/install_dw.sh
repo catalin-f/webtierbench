@@ -108,6 +108,14 @@ su "$SUDO_USER" -c "git clone https://github.com/Instagram/django-workload"
 su "$SUDO_USER" -c "cd django-workload && git checkout 2600e3e784cb912fe7b9dbe4ebc8b26d43e1bacb"
 )
 
+#Config django-workload for statsd & graphite statistics
+default_if=$(ip route sh | grep default | awk '{print $5}')
+echo "Default iface is $default_if"
+own_ip=$(ifconfig $default_if| grep "inet addr" | awk '{print substr($2,6)}')
+echo "Own IP is $own_ip"
+sed "s/STATSD_HOST = 'localhost'/STATSD_HOST = $own_ip/" -i django-workload/django-workload/cluster_settings_template.py
+sed "s/PROFILING = False/PROFILING = True/" -i django-workload/django-workload/cluster_settings_template.py
+
 # Config memcached
 # Backup old memcached config file
 if [ -f /etc/memcached.conf ]; then
