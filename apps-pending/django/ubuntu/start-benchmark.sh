@@ -76,11 +76,9 @@ main() {
 	start_service "memcached"
 	check_service_started "memcached"
 
-	# NEED TO INVESTIGATE WHY STATSD FILLS THE STORAGE VERY FAST #
-
-	#start_service "docker"
-	#check_service_started "docker"
-	#check_graphite_status
+	start_service "docker"
+	check_service_started "docker"
+	check_graphite_status
 
 	(start_uwsgi)
 

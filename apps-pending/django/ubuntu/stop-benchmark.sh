@@ -22,7 +22,7 @@ stop_uwsgi() {
 #	None
 #######################################
 stop_siege() {
-	killall run-siege.sh
+	killall run-siege
 	killall siege
 }
 
