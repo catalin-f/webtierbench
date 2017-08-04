@@ -118,10 +118,12 @@ su "$SUDO_USER" -c "cd django-workload && git checkout 2600e3e784cb912fe7b9dbe4e
 #Config django-workload for statsd & graphite statistics
 default_if=$(ip route sh | grep default | awk '{print $5}')
 echo "Default iface is $default_if"
-own_ip=$(ifconfig $default_if| grep "inet addr" | awk '{print substr($2,6)}')
+own_ip=$(ifconfig "$default_if" | grep "inet addr" | awk '{print substr($2,6)}')
 echo "Own IP is $own_ip"
-sed "s/STATSD_HOST = 'localhost'/STATSD_HOST = $own_ip/" -i django-workload/django-workload/cluster_settings_template.py
-sed "s/PROFILING = False/PROFILING = True/" -i django-workload/django-workload/cluster_settings_template.py
+
+sed -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = $own_ip/"         \
+    -e "s/PROFILING = False/PROFILING = True/"                      \
+    -i django-workload/django-workload/cluster_settings_template.py
 
 # Config memcached
 # Backup old memcached config file
@@ -141,6 +143,7 @@ cat > /etc/memcached.conf <<- EOF
 	-p "$PORT"
 	-u "$USER"
 	-l "$LISTEN"
+	-t "$THREADS"
 EOF
 
 echo -e "\n\nCreate python virtualenv ..."
@@ -164,7 +167,7 @@ echo -e "\n\nGenerate siege urls file ..."
 (
     su "$SUDO_USER" -c                             \
     "cd django-workload/django-workload || exit 6; \
-    sed -i 's/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
+    sed -i 's/processes = 88/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
 )
 
 # Append client settings to /etc/sysctl.conf
@@ -190,7 +193,8 @@ EOF
 
 # Create siegerc
 echo -e "\n\nCreate siegerc ..."
-su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc"
+su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc; \
+                      echo 'protocol = HTTP/1.1' >> .siegerc"
 
 unset http_proxy
 unset https_proxy
