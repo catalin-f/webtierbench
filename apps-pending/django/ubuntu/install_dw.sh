@@ -121,7 +121,7 @@ echo "Default iface is $default_if"
 own_ip=$(ifconfig "$default_if" | grep "inet addr" | awk '{print substr($2,6)}')
 echo "Own IP is $own_ip"
 
-sed -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = $own_ip/"         \
+sed -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = '$own_ip'/"       \
     -e "s/PROFILING = False/PROFILING = True/"                      \
     -i django-workload/django-workload/cluster_settings_template.py
 
