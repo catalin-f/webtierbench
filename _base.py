@@ -38,10 +38,8 @@ def _RUN_GENERIC_SCRIPT(name, async=False):
             out = proc.stdout.read()
             err = proc.stderr.read()
             return out, err
-        else:
-            return 'Process terminated'
-    else:
-        return '', ''
+    return '', ''
+
 
 
 def RUN_APP_SCRIPT(name, platform, script, async=False):
@@ -230,7 +228,7 @@ _deploySchema = {
         }
 
     },
-    'required': ['workload', 'client']
+    'required': ['workload']
 }
 
 _runSchema_general = {
@@ -249,7 +247,7 @@ _runSchema_file = {
         'duration': {'type': 'number', 'minimum': 1},
         'filename': {'type': 'string'}
     },
-    'required': ['duration', 'filename']
+    'required': ['duration']
 }
 
 _runSchema_endpoint = {
@@ -353,15 +351,6 @@ def load_run_configuration(config_filename):
         validate(config_json, _runSchema_general)
         if config_json['scenario'] == 'file':
             validate(config_json, _runSchema_file)
-
-            # filename
-            config_json["filename"] = config_json["filename"].strip()
-            if config_json["filename"] == "":
-                consoleLogger("JSON filename key cannot be empty")
-                raise Exception("JSON filename key cannot be empty")
-            if not os.path.exists(config_json["filename"]):
-                consoleLogger("%s does not exist" % config_json["filename"])
-                raise Exception("File does not exist")
         else:
             validate(config_json, _runSchema_endpoint)
             # TODO add other validations here
@@ -431,7 +420,7 @@ class Application(object):
         out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "undeploy.sh", async)
         return out, err
 
-    def start(self, async=True):
+    def start(self, async=False):
         out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "start.sh", async)
         return out, err
 
@@ -502,16 +491,12 @@ class Deployment:
         return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
 
     def start_applications(self):
-        outs = []
-        errs = []
         for app in self._all_apps:
             if app.name == self.client.name:
                 continue
             consoleLogger("Start app %s" % app.name)
-            out, err = app.start()
-            outs.append(out)
-            errs.append(err)
-        return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
+            app.start(async=True)
+            return '', ''
 
     def start_performance_measurements(self):
         for app in self.perfs:

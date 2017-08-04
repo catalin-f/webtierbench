@@ -95,10 +95,10 @@ class Wordpress(Application):
 
     def deploy(self, async=False):
         set_env('WEBTIER_OSS_PERFROMANCE_REV', '9b1a334c4fd0974cdb52dfb5a0862f77e5d2a9c0')
-        set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
         return super(Wordpress, self).deploy(async)
 
     def start(self, async=False):
+        set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
         return super(Wordpress, self).start(async)
 
     def stop(self, async=False):
@@ -276,11 +276,13 @@ class Siege(Application):
             consoleLogger("Be aware that the siege will run in a custom way decided by the user in the json file")
             set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
 
-
-        set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
+        if os.path.isfile('siege-2.78.tar.gz'):
+            set_env("WEBTIER_SIEGE_WORDPRESS", self.deploy_config['name'])
 
         if "siege_docker" in os.environ:
             set_env('DJANGO_IP', DJANGO_CONTAINER_IP)
+        else:
+            set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
 
         return super(Siege, self).start(async)
 

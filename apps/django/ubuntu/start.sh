@@ -36,7 +36,7 @@ start_uwsgi() {
   sed -i "s/processes = 88/processes = $(grep -c processor /proc/cpuinfo)/g" uwsgi.ini
 
   mode=$(nodetool netstats | grep 'Mode')
-  while [[$mode != *"NORMAL"*]]; do
+  while [[ $mode != *"NORMAL"* ]]; do
         sleep 1
         mode=$(nodetool netstats | grep 'Mode')
   done
