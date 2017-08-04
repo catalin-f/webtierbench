@@ -431,7 +431,7 @@ class Application(object):
         out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "undeploy.sh", async)
         return out, err
 
-    def start(self, async=False):
+    def start(self, async=True):
         out, err = RUN_APP_SCRIPT(self.name, self.deploy_platform, "start.sh", async)
         return out, err
 
@@ -507,6 +507,7 @@ class Deployment:
         for app in self._all_apps:
             if app.name == self.client.name:
                 continue
+            consoleLogger("Start app %s" % app.name)
             out, err = app.start()
             outs.append(out)
             errs.append(err)
@@ -523,6 +524,7 @@ class Deployment:
 
     def start_benchmark_client(self):
         if self.client is not None:
+            consoleLogger("Start client %s" % self.client.name)
             out, err = self.client.start()
             return out, err
         return '', ''
@@ -533,6 +535,7 @@ class Deployment:
         for app in self._all_apps:
             if app.name == self.client.name:
                 continue
+            consoleLogger("Stop app %s" % app.name)
             out, err = app.stop()
             outs.append(out)
             errs.append(err)
@@ -545,6 +548,7 @@ class Deployment:
 
     def stop_benchmark_client(self):
         if self.client is not None:
+            consoleLogger("Stop client %s" % self.client.name)
             out, err = self.client.stop()
             return out, err
         return '', ''
