@@ -32,6 +32,13 @@ if [ "$#" -gt "0" ]; then
     esac
 fi
 
+if ! which curl > /dev/null; then
+    echo "curl not found! Installing it ..."
+
+    apt-get update
+    apt-get install -y curl
+fi
+
 # Add apt repositories
 echo -e "\n\nAdd apt repositories ..."
 
@@ -60,7 +67,7 @@ echo -e "\n\nInstall packages ..."
 apt-get install -y software-properties-common oracle-java8-installer    \
     cassandra memcached apt-transport-https ca-certificates docker-ce   \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
-    zlib1g-dev siege python3-numpy curl
+    zlib1g-dev siege python3-numpy
 
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
