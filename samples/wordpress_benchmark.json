@@ -1,0 +1,6 @@
+{
+  "scenario": "file",
+  "workers": 1,
+  "duration": 120,
+  "filename": ""
+}
