@@ -3,7 +3,7 @@
 ###############################################################################
 # Environment data
 WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
-WEBTIER_SIEGE_RUNMODE=$(WEBTIER_SIEGE_RUNMODE)
+WEBTIER_SIEGE_RUNMODE=${WEBTIER_SIEGE_RUNMODE}
 WEBTIER_PATH=${WEBTIER_PATH}
 
 DJANGO_IP=${DJANGO_IP}
