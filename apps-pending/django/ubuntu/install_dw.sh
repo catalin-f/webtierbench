@@ -32,6 +32,13 @@ if [ "$#" -gt "0" ]; then
     esac
 fi
 
+if ! which curl > /dev/null; then
+    echo "curl not found! Installing it ..."
+
+    apt-get update
+    apt-get install -y curl
+fi
+
 # Add apt repositories
 echo -e "\n\nAdd apt repositories ..."
 
@@ -60,7 +67,7 @@ echo -e "\n\nInstall packages ..."
 apt-get install -y software-properties-common oracle-java8-installer    \
     cassandra memcached apt-transport-https ca-certificates docker-ce   \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
-    zlib1g-dev siege python3-numpy curl
+    zlib1g-dev siege python3-numpy
 
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
@@ -108,6 +115,16 @@ su "$SUDO_USER" -c "git clone https://github.com/Instagram/django-workload"
 su "$SUDO_USER" -c "cd django-workload && git checkout 2600e3e784cb912fe7b9dbe4ebc8b26d43e1bacb"
 )
 
+#Config django-workload for statsd & graphite statistics
+default_if=$(ip route sh | grep default | awk '{print $5}')
+echo "Default iface is $default_if"
+own_ip=$(ifconfig "$default_if" | grep "inet addr" | awk '{print substr($2,6)}')
+echo "Own IP is $own_ip"
+
+sed -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = '$own_ip'/"       \
+    -e "s/PROFILING = False/PROFILING = True/"                      \
+    -i django-workload/django-workload/cluster_settings_template.py
+
 # Config memcached
 # Backup old memcached config file
 if [ -f /etc/memcached.conf ]; then
@@ -126,6 +143,7 @@ cat > /etc/memcached.conf <<- EOF
 	-p "$PORT"
 	-u "$USER"
 	-l "$LISTEN"
+	-t "$THREADS"
 EOF
 
 echo -e "\n\nCreate python virtualenv ..."
@@ -149,7 +167,7 @@ echo -e "\n\nGenerate siege urls file ..."
 (
     su "$SUDO_USER" -c                             \
     "cd django-workload/django-workload || exit 6; \
-    sed -i 's/processes = 4/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
+    sed -i 's/processes = 88/processes = $(grep -c processor /proc/cpuinfo)/g' uwsgi.ini"
 )
 
 # Append client settings to /etc/sysctl.conf
@@ -175,7 +193,8 @@ EOF
 
 # Create siegerc
 echo -e "\n\nCreate siegerc ..."
-su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc"
+su - "$SUDO_USER" -c "echo 'failures = 1000000' > .siegerc; \
+                      echo 'protocol = HTTP/1.1' >> .siegerc"
 
 unset http_proxy
 unset https_proxy
