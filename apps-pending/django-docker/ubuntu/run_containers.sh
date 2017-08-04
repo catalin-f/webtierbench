@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# THIS SCRIPT IS NOT MAINTAINED ANYMORE
+
 ################################### Description ########################################
 #
 # This script will start a docker container for each service necessary in the django workload
