@@ -496,7 +496,7 @@ class Deployment:
                 continue
             consoleLogger("Start app %s" % app.name)
             app.start(async=True)
-            return '', ''
+        return '', ''
 
     def start_performance_measurements(self):
         for app in self.perfs:
