@@ -8,7 +8,8 @@
 #	  None
 #######################################
 start_service() {
-	service $1 start
+	echo "Starting $1 ..."
+	service "$1" start
 }
 
 #######################################
@@ -19,7 +20,8 @@ start_service() {
 #	  None
 #######################################
 stop_service() {
-	service $1 stop
+	echo "Stopping $1 ..."
+	service "$1" stop
 }
 
 #######################################

@@ -88,7 +88,6 @@ main() {
 	### RUN THE BENCHMARK ###
 	(run_siege)
 
-	./stop-benchmark.sh
 }
 
 ### MAIN CALL ###

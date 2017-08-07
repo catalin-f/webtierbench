@@ -11,7 +11,8 @@
 #	None
 #######################################
 stop_uwsgi() {
-	killall uwsgi
+	echo "Stopping uwsgi ..."
+	killall -q uwsgi
 }
 
 #######################################
@@ -22,8 +23,14 @@ stop_uwsgi() {
 #	None
 #######################################
 stop_siege() {
-	killall run-siege
-	killall siege
+	echo "Stopping siege ..."
+	killall -q run-siege
+	killall -q siege
+}
+
+stop_benchmark() {
+	echo "Stopping benchmark ..."
+	killall -q start-benchmark.sh
 }
 
 #######################################
@@ -43,6 +50,10 @@ main() {
 
 	stop_uwsgi
 	stop_siege
+
+	stop_service "docker"
+
+	stop_benchmark
 }
 
 ### MAIN CALL ###

@@ -16,6 +16,10 @@ apt-key del EEA14886
 
 # Remove docker image and container
 echo -e "\n\nRemove Docker image and container ..."
+
+# Ensure docker service is started
+systemctl start docker.service
+
 docker stop graphite
 docker rm graphite
 docker rmi hopsoft/graphite-statsd
