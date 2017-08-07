@@ -10,5 +10,5 @@
 ###############################################################################
 
 
-killall run-siege.sh
+killall run-siege
 killall siege
