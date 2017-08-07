@@ -50,11 +50,17 @@ class Django(Application):
     def start(self, async=False):
         set_env('CASSANDRA_IP', LOCALHOST_DOCKER_IP)
         set_env('MEMCACHED_IP', LOCALHOST_DOCKER_IP)
+        set_env('SIEGE_IP', LOCALHOST_DOCKER_IP)
+        set_env('GRAPHITE_IP', GRAPHITE_CONTAINER_IP)
+
+        set_env('LOCALHOST_IP', LOCALHOST_DOCKER_IP)
 
         if "memcached_docker" in os.environ:
             set_env('MEMCACHED_IP', MEMCACHED_CONTAINER_IP)
         if "cassandra_docker" in os.environ:
             set_env('CASSANDRA_IP', CASSANDRA_CONTAINER_IP)
+        if "siege_docker" in os.environ:
+            set_env('SIEGE_IP', SIEGE_CONTAINER_IP)
 
         return super(Django, self).start(async)
 
@@ -271,15 +277,20 @@ class Siege(Application):
         return super(Siege, self).deploy(async)
 
     def start(self, async=False):
+
         if 'customrun' in self.benchmark_config:
             set_env('WEBTIER_SIEGE_RUNMODE', self.benchmark_config['customrun'])
             consoleLogger("Be aware that the siege will run in a custom way decided by the user in the json file")
             set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
 
+<<<<<<< Updated upstream
         if os.path.isfile('siege-2.78.tar.gz'):
             set_env("WEBTIER_SIEGE_WORDPRESS", self.deploy_config['name'])
+=======
+        set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
+>>>>>>> Stashed changes
 
-        if "siege_docker" in os.environ:
+        if "django_docker" in os.environ:
             set_env('DJANGO_IP', DJANGO_CONTAINER_IP)
         else:
             set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
@@ -306,7 +317,7 @@ class Siege_docker(Application):
     def start(self, async=False):
         set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
 
-        if "siege_docker" in os.environ:
+        if "django_docker" in os.environ:
             set_env('DJANGO_IP', DJANGO_CONTAINER_IP)
 
         return super(Siege_docker, self).start(async)
