@@ -6,8 +6,6 @@ WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
 WEBTIER_SIEGE_RUNMODE=${WEBTIER_SIEGE_RUNMODE}
 WEBTIER_PATH=${WEBTIER_PATH}
 
-DJANGO_IP=${DJANGO_IP}
-
 ###############################################################################
 
 . ${WEBTIER_PATH}/apps/common_func.sh
@@ -24,10 +22,9 @@ DJANGO_IP=${DJANGO_IP}
 #	This method contains the exit call
 #######################################
 run_siege() {
+
 	pip3 install numpy
 	cd django-workload/client || exit 1
-
-	sed -i 's/localhost/$DJANGO_IP/g' urls.txt
 
 	if [ -n "${WEBTIER_SIEGE_RUNMODE}" ]; then
 
@@ -45,5 +42,4 @@ run_siege() {
 
 ### SET ENVIRONMENT ###
 set_cpu_performance
-
 (run_siege ${WEBTIER_SIEGE_WORKERS})
