@@ -283,12 +283,10 @@ class Siege(Application):
             consoleLogger("Be aware that the siege will run in a custom way decided by the user in the json file")
             set_env('WEBTIER_SIEGE_WORKERS', self.benchmark_config['workers'])
 
-<<<<<<< Updated upstream
         if os.path.isfile('siege-2.78.tar.gz'):
             set_env("WEBTIER_SIEGE_WORDPRESS", self.deploy_config['name'])
-=======
+
         set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
->>>>>>> Stashed changes
 
         if "django_docker" in os.environ:
             set_env('DJANGO_IP', DJANGO_CONTAINER_IP)

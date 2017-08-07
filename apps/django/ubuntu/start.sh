@@ -26,29 +26,22 @@ GRAPHITE_IP=${GRAPHITE_IP}
 #######################################
 start_uwsgi() {
 
-    while [[$mode != *"NORMAL"*]]; do
-          sleep 1
-          mode=$(nodetool netstats | grep 'Mode')
-    done
-
-    cd django-workload/django-workload || exit 1
-
-<<<<<<< Updated upstream
   mode=$(nodetool netstats | grep 'Mode')
+
   while [[ $mode != *"NORMAL"* ]]; do
         sleep 1
         mode=$(nodetool netstats | grep 'Mode')
   done
+
 	cd django-workload/django-workload || exit 1
-=======
-    source venv/bin/activate > /dev/null
->>>>>>> Stashed changes
 
-    DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
+  source venv/bin/activate > /dev/null
 
-    uwsgi uwsgi.ini &
+  DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
-    deactivate
+  uwsgi uwsgi.ini &
+
+  deactivate
 }
 
 set_cpu_performance
