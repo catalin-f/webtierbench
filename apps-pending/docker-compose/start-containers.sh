@@ -57,4 +57,7 @@ set_cpu_performance
 echo "Activate sysctl settings ..."
 sysctl -p ../django-docker/ubuntu/siege/set_sysctl.conf
 
+# Ensure docker service is started
+systemctl start docker.service
+
 docker-compose -f webtierbench.yml up
