@@ -6,13 +6,15 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 oss_dir="$HOME/oss-performance"
+current_dir=$(pwd)
+echo $current_dir
 
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
-add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
+echo "deb http://dl.hhvm.com/ubuntu xenial-lts-3.18 main" > /etc/apt/sources.list.d/hhvm.list
 http_proxy=http://$1 apt-get update
 
 apt-get -y install nginx unzip mariadb-server util-linux coreutils autotools-dev autoconf \
-	software-properties-common build-essential hhvm
+	software-properties-common build-essential python3 python-minimal hhvm
 
 cd $HOME
 wget http://download.joedog.org/siege/siege-2.78.tar.gz
@@ -41,6 +43,8 @@ cd $oss_dir;							\
 wget https://getcomposer.org/installer -O composer-setup.php;	\
 hhvm composer-setup.php;					\
 hhvm composer.phar install"
+
+sed "s/'--log='.\$logfile/'--log=Siege.log'/" -i $oss_dir/base/Siege.php 
 
 service mysql start
 systemctl stop nginx.service

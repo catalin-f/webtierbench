@@ -2,6 +2,7 @@
 
 oss_dir="$HOME/oss-performance"
 
+/usr/share/hhvm/uninstall_fastcgi.sh
 apt-get purge -y siege nginx mariadb-server hhvm
 
 cd $HOME
@@ -20,6 +21,8 @@ else
 	echo 'oss-performance directory was not found'
 	echo '************************************************************'
 fi
+
+rm -rf /etc/apt/sources.list.d/hhvm.list
 
 apt-get autoremove -y
 http_proxy=http://$1 apt-get update
