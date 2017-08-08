@@ -70,7 +70,7 @@ main() {
 	start_service "cassandra"
 	check_service_started "cassandra"
 
-    #wait for cassandra a max of 3 minutes
+	#wait for cassandra a max of 3 minutes
 	wait_port 9042 1800 "cassandra"
 
 	start_service "memcached"
@@ -78,11 +78,13 @@ main() {
 
 	start_service "docker"
 	check_service_started "docker"
+
+	docker start graphite
 	check_graphite_status
 
 	(start_uwsgi)
 
-    #wait for uwsgi a max of 3 minutes
+	#wait for uwsgi a max of 3 minutes
 	wait_port 8000 1800 "uwsgi"
 
 	### RUN THE BENCHMARK ###

@@ -76,7 +76,6 @@ docker pull hopsoft/graphite-statsd
 echo -e "\n\nInitialize container ..."
 docker run -d               \
     --name graphite         \
-    --restart=always        \
     -p 80:80                \
     -p 2003-2004:2003-2004  \
     -p 2023-2024:2023-2024  \

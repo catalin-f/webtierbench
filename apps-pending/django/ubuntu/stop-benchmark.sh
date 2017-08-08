@@ -51,6 +51,7 @@ main() {
 	stop_uwsgi
 	stop_siege
 
+	docker stop graphite
 	stop_service "docker"
 
 	stop_benchmark
