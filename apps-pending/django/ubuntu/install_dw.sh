@@ -49,8 +49,8 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
 > /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
 
-echo "deb http://www.apache.org/dist/cassandra/debian 310x main" \
-> /etc/apt/sources.list.d/cassandra.sources.list
+echo "deb http://www.apache.org/dist/cassandra/debian 30x main" \
+> /etc/apt/sources.list.d/cassandra.list
 
 apt-key fingerprint 0EBFCD88
 
