@@ -15,8 +15,6 @@ start_uwsgi() {
 
 	. venv/bin/activate > /dev/null
 
-	DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
-
 	uwsgi uwsgi.ini &
 
 	deactivate

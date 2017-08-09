@@ -147,11 +147,15 @@ EOF
 echo -e "\n\nCreate python virtualenv ..."
 (
     cd django-workload/django-workload || exit 4
+    cp cluster_settings_template.py cluster_settings.py
+
     python3 -m virtualenv -p python3 venv
     . venv/bin/activate
+
     su "$SUDO_USER" python -m pip install -r requirements.txt
+    DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
+
     deactivate
-    cp cluster_settings_template.py cluster_settings.py
 )
 
 echo -e "\n\nGenerate siege urls file ..."
