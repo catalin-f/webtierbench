@@ -121,7 +121,6 @@ own_ip=$(ifconfig "$default_if" | grep "inet addr" | awk '{print substr($2,6)}')
 echo "Own IP is $own_ip"
 
 sed -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = '$own_ip'/"       \
-    -e "s/PROFILING = False/PROFILING = True/"                      \
     -i django-workload/django-workload/cluster_settings_template.py
 
 # Config memcached
@@ -150,7 +149,7 @@ echo -e "\n\nCreate python virtualenv ..."
     cd django-workload/django-workload || exit 4
     python3 -m virtualenv -p python3 venv
     . venv/bin/activate
-    python -m pip install -r requirements.txt
+    su "$SUDO_USER" python -m pip install -r requirements.txt
     deactivate
     cp cluster_settings_template.py cluster_settings.py
 )
