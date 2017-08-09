@@ -16,7 +16,6 @@ else
         -e "s/CACHES\['default'\]\['LOCATION'\] = '127.0.0.1:11811'/CACHES\['default'\]\['LOCATION'\] = '$MEMCACHED_ENDPOINT'/g"                          \
         -e "s/ALLOWED_HOSTS = \[/ALLOWED_HOSTS = \['$CASSANDRA_ENDPOINT', '$MEMCACHED_ENDPOINT', '$SIEGE_ENDPOINT', '$GRAPHITE_ENDPOINT', '$IP_ADDR', /g" \
         -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = '$GRAPHITE_ENDPOINT'/g"                                                                             \
-        -e "s/PROFILING = False/PROFILING = True/g"                                                                                                       \
         -i cluster_settings.py
 
     sed -i "s/processes = 88/processes = $(grep -c processor /proc/cpuinfo)/g" uwsgi.ini

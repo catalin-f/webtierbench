@@ -5,6 +5,16 @@
 
 check_root_privilege
 
+if ! [ -f /etc/apt/sources.list.d/docker.list ]; then
+    echo "Install docker latest version for Ubuntu 16.04 ..."
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" \
+    > /etc/apt/sources.list.d/docker.list
+
+    apt-get update
+    apt-get install -y docker
+fi
+
 if ! which docker-compose > /dev/null; then
     echo "Docker-compose not found! Installing it ..."
     

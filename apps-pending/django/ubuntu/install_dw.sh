@@ -49,8 +49,8 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0xC2518248EEA14886
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
 > /etc/apt/sources.list.d/webupd8team-ubuntu-java-xenial.list
 
-echo "deb http://www.apache.org/dist/cassandra/debian 310x main" \
-> /etc/apt/sources.list.d/cassandra.sources.list
+echo "deb http://www.apache.org/dist/cassandra/debian 30x main" \
+> /etc/apt/sources.list.d/cassandra.list
 
 apt-key fingerprint 0EBFCD88
 
@@ -67,7 +67,7 @@ echo -e "\n\nInstall packages ..."
 apt-get install -y software-properties-common oracle-java8-installer    \
     cassandra memcached apt-transport-https ca-certificates docker-ce   \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
-    zlib1g-dev siege python3-numpy
+    zlib1g-dev siege python3-numpy python-pip
 
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
@@ -121,7 +121,6 @@ own_ip=$(ifconfig "$default_if" | grep "inet addr" | awk '{print substr($2,6)}')
 echo "Own IP is $own_ip"
 
 sed -e "s/STATSD_HOST = 'localhost'/STATSD_HOST = '$own_ip'/"       \
-    -e "s/PROFILING = False/PROFILING = True/"                      \
     -i django-workload/django-workload/cluster_settings_template.py
 
 # Config memcached
@@ -148,11 +147,21 @@ EOF
 echo -e "\n\nCreate python virtualenv ..."
 (
     cd django-workload/django-workload || exit 4
+    cp cluster_settings_template.py cluster_settings.py
+
+    start_service "cassandra"
+	check_service_started "cassandra"
+	#wait for cassandra a max of 3 minutes
+	wait_port 9042 1800 "cassandra"
+
     python3 -m virtualenv -p python3 venv
     . venv/bin/activate
-    python -m pip install -r requirements.txt
+
+    su "$SUDO_USER" -c "python -m pip install -r requirements.txt"
+
+    DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
+
     deactivate
-    cp cluster_settings_template.py cluster_settings.py
 )
 
 echo -e "\n\nGenerate siege urls file ..."

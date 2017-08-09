@@ -6,7 +6,9 @@
 WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
 WEBTIER_SIEGE_RUNMODE=${WEBTIER_SIEGE_RUNMODE}
 
-DJANGO_IP=${DJANGO_IP}
+#DJANGO_IP=${DJANGO_IP}
+
+DJANGO_IP=10.10.10.11
 
 ###############################################################################
 # Commands

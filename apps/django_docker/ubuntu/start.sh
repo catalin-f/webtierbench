@@ -3,9 +3,13 @@
 ###############################################################################
 # Environment data
 ###############################################################################
-CASSANDRA_IP=${CASSANDRA_IP}
-MEMCACHED_IP=${MEMCACHED_IP}
-GRAPHITE_IP=${GRAPHITE_IP}
+#CASSANDRA_IP=${CASSANDRA_IP}
+#MEMCACHED_IP=${MEMCACHED_IP}
+#GRAPHITE_IP=${GRAPHITE_IP}
+
+CASSANDRA_IP=10.10.10.10
+MEMCACHED_IP=10.10.10.9
+GRAPHITE_IP=10.10.10.13
 
 ###############################################################################
 # Commands
