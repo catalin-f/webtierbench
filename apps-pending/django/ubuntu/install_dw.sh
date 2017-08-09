@@ -152,7 +152,7 @@ echo -e "\n\nCreate python virtualenv ..."
     python3 -m virtualenv -p python3 venv
     . venv/bin/activate
 
-    su "$SUDO_USER" -c python -m pip install -r requirements.txt
+    su "$SUDO_USER" -c "python -m pip install -r requirements.txt"
     DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
 
     deactivate
