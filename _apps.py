@@ -271,6 +271,10 @@ class Siege(Application):
 
     def set_benchmark_config(self, benchmark_config):
         self.benchmark_config = benchmark_config
+        if "username_db" in self.benchmark_config['settings']:
+            set_env('WEBTIER_OSS_RUNNIG_MODE', self.benchmark_config['settings']['options'][0])
+            set_env('WEBTIER_DB_USER', self.benchmark_config['settings']['username_db'])
+            set_env('WEBTIER_DB_PWD', self.benchmark_config['settings']['password_db'])
 
     def deploy(self, async=False):
         set_env('WEBTIER_DJANGO_REVISION', '1109c7eecf23584fd3520bd7257f8b1268b78c3b')

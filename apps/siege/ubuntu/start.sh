@@ -4,6 +4,7 @@
 # Environment data
 WEBTIER_SIEGE_WORKERS=${WEBTIER_SIEGE_WORKERS}
 WEBTIER_SIEGE_RUNMODE=${WEBTIER_SIEGE_RUNMODE}
+WEBTIER_SIEGE_WORDPRESS=${WEBTIER_SIEGE_WORDPRESS}
 WEBTIER_PATH=${WEBTIER_PATH}
 
 ###############################################################################
@@ -26,6 +27,8 @@ run_siege() {
 	pip3 install numpy
 	cd django-workload/client || exit 1
 
+    ./gen-urls-file
+
 	if [ -n "${WEBTIER_SIEGE_RUNMODE}" ]; then
 
 	    for (( i=1; i<=$1; i++ ))
@@ -42,4 +45,6 @@ run_siege() {
 
 ### SET ENVIRONMENT ###
 set_cpu_performance
-(run_siege ${WEBTIER_SIEGE_WORKERS})
+if [ -z ${WEBTIER_SIEGE_WORDPRESS} ]; then
+    (run_siege ${WEBTIER_SIEGE_WORKERS})
+fi

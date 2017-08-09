@@ -5,6 +5,9 @@
 ###############################################################################
 WEBTIER_PATH=${WEBTIER_PATH}
 WEBTIER_WORDPRESS_WORKERS=${WEBTIER_WORDPRESS_WORKERS}
+WEBTIER_DB_USER=${WEBTIER_DB_USER}
+WEBTIER_DB_PWD=${WEBTIER_DB_PWD}
+WEBTIER_OSS_RUNNIG_MODE=${WEBTIER_OSS_RUNNIG_MODE}
 
 ###############################################################################
 # Commands
@@ -22,9 +25,8 @@ chmod -R 775 /var/log/nginx
 
 for (( i=1; i<=${WEBTIER_WORDPRESS_WORKERS}; i++ ))
 do
-	su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log \
-	cd $oss_dir; 									\
-	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm --db-username root --db-password '' > ~/siege1.log"
+	su $SUDO_USER -c "cd $oss_dir; 									\
+	/usr/bin/hhvm perf.php --wordpress --hhvm=/usr/bin/hhvm --db-username ${WEBTIER_DB_USER} --db-password $WEBTIER_DB_PWD ${WEBTIER_OSS_RUNNIG_MODE}"
 done
 
 systemctl stop nginx.service

@@ -2,5 +2,10 @@
   "scenario": "file",
   "workers": 1,
   "duration": 120,
-  "filename": ""
+  "settings":{
+    "username_db":"root",
+    "password_db":"''",
+    "options":["--i-am-not-benchmarking"],
+    "filename":""
+  }
 }

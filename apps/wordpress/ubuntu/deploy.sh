@@ -14,8 +14,9 @@ WEBTIER_PATH=${WEBTIER_PATH}
 
 oss_dir="${WEBTIER_PATH}/oss-performance"
 
-http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" \
-    add-apt-repository "deb http://dl.hhvm.com/ubuntu xenial main"
+echo "deb http://dl.hhvm.com/ubuntu xenial-lts-3.18 main" > /etc/apt/sources.list.d/hhvm.list
+
+http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}" apt-get update
 
 # Install packages for oss performance
 http_proxy="${WEBTIER_HTTP_PROXY}" https_proxy="${WEBTIER_HTTP_PROXY}"  apt-get install -y \
@@ -43,6 +44,8 @@ cd $oss_dir;							\
 wget https://getcomposer.org/installer -O composer-setup.php;	\
 hhvm composer-setup.php;					\
 hhvm composer.phar install"
+
+sed "s/'--log='.\$logfile/'--log=siege.log'/" -i $oss_dir/base/Siege.php
 
 start_service "mysql"
 systemctl stop nginx.service
