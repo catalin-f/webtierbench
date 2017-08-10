@@ -69,6 +69,15 @@ apt-get install -y software-properties-common oracle-java8-installer    \
     build-essential git libmemcached-dev python3-virtualenv python3-dev \
     zlib1g-dev siege python3-numpy python-pip
 
+echo -e "\n\nConfiguring cassandra ..."
+cp -f jvm.options.128_GB /etc/cassandra/jvm.options
+
+sed -e "s/concurrent_reads: 32/concurrent_reads: 64/g"                                         \
+    -e "s/concurrent_writes: 32/concurrent_writes: 128/g"                                      \
+    -e "s/concurrent_counter_writes: 32/concurrent_counter_writes: 128/g"                      \
+    -e "s/concurrent_materialized_view_writes: 32/# concurrent_materialized_view_writes: 32/g" \
+    -i /etc/cassandra/cassandra.yaml
+
 echo -e "\n\nDocker pull graphite image ..."
 docker pull hopsoft/graphite-statsd
 
