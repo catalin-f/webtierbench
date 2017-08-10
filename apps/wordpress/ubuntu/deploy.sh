@@ -46,7 +46,7 @@ hhvm composer-setup.php;					\
 hhvm composer.phar install"
 
 siege_output="${HOME}/siege.log"
-sed "s|'--log='.\$logfile|'--log=${siege_output}'|" -i $oss_dir/base/Siege.ph
+sed "s|'--log='.\$logfile|'--log=${siege_output}'|" -i $oss_dir/base/Siege.php
 
 start_service "mysql"
 systemctl stop nginx.service
