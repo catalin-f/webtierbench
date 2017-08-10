@@ -29,7 +29,7 @@ start_uwsgi() {
 #######################################
 check_graphite_status() {
 	 if docker inspect -f {{.State.Running}} graphite > /dev/null; then
-	 		echo "Graphite is up and running"
+	 	echo "Graphite is up and running"
 	 fi
 }
 
@@ -45,7 +45,7 @@ run_siege() {
 
 	printf "\n### SIEGE RUN ###\n\n"
 
-	su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege"
+	su "$SUDO_USER" -c "LOG=/tmp/siege.log ./run-siege"
 }
 
 #######################################
@@ -88,6 +88,7 @@ main() {
 	### RUN THE BENCHMARK ###
 	(run_siege)
 
+	trap 'mv -f /tmp/siege* ../../data_store/tmp; exit' 0 2 15
 }
 
 ### MAIN CALL ###
