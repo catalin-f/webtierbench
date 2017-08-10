@@ -62,6 +62,9 @@ main() {
 	### CHECKS ###
 	check_root_privilege
 
+	# Remove old logs
+	rm -rf /tmp/siege*
+
 	### SET ENVIRONMENT ###
 	set_cpu_performance
 
