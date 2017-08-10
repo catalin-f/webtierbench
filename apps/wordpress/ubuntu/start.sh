@@ -17,6 +17,10 @@ WEBTIER_OSS_RUNNIG_MODE=${WEBTIER_OSS_RUNNIG_MODE}
 
 oss_dir="${WEBTIER_PATH}/oss-performance"
 
+if [ -f ${HOME}/siege.log ]; then
+    rm ${HOME}/siege.log
+fi
+
 systemctl restart nginx.service
 set_cpu_performance
 

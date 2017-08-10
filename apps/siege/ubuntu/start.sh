@@ -25,6 +25,11 @@ WEBTIER_PATH=${WEBTIER_PATH}
 run_siege() {
 
 	pip3 install numpy
+
+	if [ -f ${HOME}/siege.log ]; then
+        rm ${HOME}/siege.log
+    fi
+
 	cd django-workload/client || exit 1
 
     ./gen-urls-file

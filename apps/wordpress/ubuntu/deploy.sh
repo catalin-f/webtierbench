@@ -45,8 +45,8 @@ wget https://getcomposer.org/installer -O composer-setup.php;	\
 hhvm composer-setup.php;					\
 hhvm composer.phar install"
 
-siege_output=${HOME}/siege.log
-sed "s|--log=Siege.log|--log=${siege}|" -i $oss_dir/base/Siege.ph
+siege_output="${HOME}/siege.log"
+sed "s|'--log='.\$logfile|'--log=${siege_output}/'|" -i $oss_dir/base/Siege.php
 
 start_service "mysql"
 systemctl stop nginx.service
