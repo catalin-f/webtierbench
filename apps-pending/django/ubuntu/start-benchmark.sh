@@ -15,8 +15,6 @@ start_uwsgi() {
 
 	. venv/bin/activate > /dev/null
 
-    DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
-
 	uwsgi uwsgi.ini &
 
 	deactivate
@@ -65,7 +63,7 @@ main() {
 	check_root_privilege
 
 	# Remove old logs
-	rm -rf /tmp/siege*
+	rm -f /tmp/siege* ../../data_store/tmp/siege*
 
 	### SET ENVIRONMENT ###
 	set_cpu_performance
