@@ -167,9 +167,11 @@ _deploySchema = {
             'type': 'object',
             'properties': {
                 'name': {'type': 'string', 'enum': _ALLOWED_WORKLOADS},
+                'ip': {'type': 'string'},
+                'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535},
                 'workers': {'type': 'integer', 'minimum': 1}
             },
-            'required': ['name']
+            'required': ['name', 'port']
         },
         'proxy': {'type': 'string'},
         'master': {'type': 'string'},
@@ -198,7 +200,7 @@ _deploySchema = {
                     'minrequiredMemory': {'type': 'integer'},
                     'user': {'type': 'string'}
                 },
-                'required': ['name']
+                'required': ['name', 'port']
             },
             "minItems": 0
         },
@@ -211,7 +213,7 @@ _deploySchema = {
                     'ip': {'type': 'string'},
                     'port': {'type': 'integer', 'minimum': 1, 'maximum': 65535}
                 },
-                'required': ['name']
+                'required': ['name', 'port']
             },
             "minItems": 0
         },
@@ -288,6 +290,13 @@ def load_deploy_configuration(config_filename):
         if 'workers' not in config_json['workload']:
             config_json['workload']['workers'] = get_cpu_count()
 
+        # workload > ip
+        if 'ip' in config_json['workload']:
+            _check_ipv4(config_json['workload']['ip'])
+        else:
+            config_json['workload']['ip'] = '127.0.0.1'
+            consoleLogger("IP value not set in the json file for "+ str(config_json['workload']['name']) + ", 127.0.0.1 is going to be used")
+
         # master
         if 'master' in config_json:
             _check_ipv4(config_json['master'])
@@ -318,7 +327,7 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
-                    consoleLogger("IP value not set in the json file for "+ str(obj['name']))
+                    consoleLogger("IP value not set in the json file for "+ str(obj['name']) + ", 127.0.0.1 is going to be used")
                 if 'minrequiredMemory' not in obj:
                     obj['minrequiredMemory'] = _5Gb
 
@@ -330,7 +339,7 @@ def load_deploy_configuration(config_filename):
                     _check_ipv4(obj['ip'])
                 else:
                     obj['ip'] = '127.0.0.1'
-                    consoleLogger("IP value not set in the json file for " + obj['name'])
+                    consoleLogger("IP value not set in the json file for " + str(obj['name']) + ", 127.0.0.1 is going to be used")
 
     except Exception as ex:
         debugLogger("Exception in load_deploy_configuration: %r" % ex)
@@ -384,7 +393,7 @@ class _Logger:
         return ""
 
     def log(self, text):
-        self.fd.write("%s%s\n" % (self._get_prefix(), text))
+        self.fd.write("%s%s" % (self._get_prefix(), text))
         self.fd.flush()
 
 

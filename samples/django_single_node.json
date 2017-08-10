@@ -1,6 +1,7 @@
 {
   "workload": {
-    "name": "django"
+    "name": "django",
+    "port": 8000
   },
   "proxy":"",
   "client": {
@@ -8,12 +9,14 @@
   },
   "cache": [
     {
-      "name": "memcached"
+      "name": "memcached",
+      "port": 11811
     }
   ],
   "db": [
     {
-      "name": "cassandra"
+      "name": "cassandra",
+      "port": 9042
     }
   ],
   "perf": [

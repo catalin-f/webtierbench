@@ -5,6 +5,8 @@ from _base import Application
 from _base import consoleLogger
 from _base import set_env
 from _base import del_env
+import socket
+import sys
 
 _MB = (1024*1024)
 port_increment = 0
@@ -17,10 +19,35 @@ DJANGO_CONTAINER_IP = '10.10.10.11' # Django IP = uWSGI IP
 SIEGE_CONTAINER_IP = '10.10.10.12'
 GRAPHITE_CONTAINER_IP = '10.10.10.13'
 
+# Timeout in seconds to wait for a service to start
+WAIT_FOR_SERVICE_TIMEOUT = 120
+
 #TODO: add all apps here
 def gen_perf_filename():
     return '%s.data' % time.strftime('%Y%m%d%H%M%S', time.localtime())
 
+def wait_net_service(server, port, timeout=1):
+    """ Wait for network service to appear
+        @param timeout: in seconds
+        @return: True of False
+    """
+    consoleLogger("Wait for " + server + ":" + str(port) + " timeout=" + str(timeout))
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.settimeout(timeout)
+        s.connect((server, port))
+    except socket.timeout, err:
+        consoleLogger("Got socket.timeout")
+        return False
+    except socket.error, err:
+        consoleLogger("Got socket.error: " + str(err[0]))
+        return False
+    except:
+        consoleLogger("Got general exception: " + str(sys.exc_info()[0]))
+        return False
+    else:
+        s.close()
+        return True
 
 ###############################################################################
 # Applications
@@ -62,6 +89,14 @@ class Django(Application):
         if "siege_docker" in os.environ:
             set_env('SIEGE_IP', SIEGE_CONTAINER_IP)
 
+        #Wait for databases to start
+        consoleLogger(self.name + ": Wait for databases to start")
+        if 'db' in self.deploy_config:
+            for i in xrange(len(self.deploy_config['db'])):
+                obj = self.deploy_config['db'][i]
+                wait_net_service(obj['ip'], obj['port'], WAIT_FOR_SERVICE_TIMEOUT)
+
+
         return super(Django, self).start(async)
 
     def undeploy(self, async=False):
@@ -90,6 +125,13 @@ class Django_docker(Application):
         if "siege_docker" in os.environ:
             set_env('SIEGE_IP', SIEGE_CONTAINER_IP)
 
+        #Wait for databases to start
+        consoleLogger(self.name + ": Wait for databases to start")
+        if 'db' in self.deploy_config:
+            for i in xrange(len(self.deploy_config['db'])):
+                obj = self.deploy_config['db'][i]
+                wait_net_service(obj['ip'], obj['port'], WAIT_FOR_SERVICE_TIMEOUT)
+
         return super(Django_docker, self).start(async)
 
     def undeploy(self, async=False):
@@ -105,6 +147,14 @@ class Wordpress(Application):
 
     def start(self, async=False):
         set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
+
+        #Wait for databases to start
+        consoleLogger(self.name + ": Wait for databases to start")
+        if 'db' in self.deploy_config:
+            for i in xrange(len(self.deploy_config['db'])):
+                obj = self.deploy_config['db'][i]
+                wait_net_service(obj['ip'], obj['port'], WAIT_FOR_SERVICE_TIMEOUT)
+
         return super(Wordpress, self).start(async)
 
     def stop(self, async=False):
@@ -127,17 +177,12 @@ class Memcached(Application):
         return super(Memcached, self).start(async)
 
     def deploy(self, async=False):
-        global port_increment
         usage = psutil.virtual_memory()
         if os.path.exists("/etc/memcached.conf"):
             os.rename("/etc/memcached.conf","/etc/memcached.conf.old")
         with open("/etc/memcached.conf", "w") as outfile:
             if 'user' not in self.deploy_config:
                 self.deploy_config['user'] = "memcache"
-            if 'port' not in self.deploy_config:
-                self.deploy_config['port'] = 11811 + port_increment
-                port_increment = port_increment + 1
-                consoleLogger("Port value not set in the json file for "+self.deploy_config['name'])
             outfile.writelines("MEMORY:" + str(self.deploy_config['minrequiredMemory']))
             outfile.write("LISTEN:" +  self.deploy_config['ip'])
             outfile.write("PORT:" + str(self.deploy_config['port']))
@@ -145,7 +190,7 @@ class Memcached(Application):
         if usage.free <= self.deploy_config['minrequiredMemory']:
             mem_size = usage.free/_MB
             consoleLogger(str(mem_size)+"Mb not enough free memmory space for memcached. Minimum required 5Gb")
-            exit();
+            exit()
         return super(Memcached, self).deploy(async)
 
     def undeploy(self, async=False):
@@ -182,13 +227,13 @@ class Cassandra_docker(Application):
         super(Cassandra_docker, self).__init__("cassandra_docker", deploy_config, deploy_platform)
 
     def deploy(self, async=False):
-	return super(Cassandra_docker, self).deploy(async)
+        return super(Cassandra_docker, self).deploy(async)
 
     def start(self, async=False):
         return super(Cassandra_docker, self).start(async)
 
     def stop(self, async=False):
-	return super(Cassandra_docker, self).stop(async)
+        return super(Cassandra_docker, self).stop(async)
 
     def undeploy(self, async=False):
         return super(Cassandra_docker, self).undeploy(async)
@@ -289,6 +334,12 @@ class Siege(Application):
 
         if os.path.isfile('siege-2.78.tar.gz'):
             set_env("WEBTIER_SIEGE_WORDPRESS", self.deploy_config['name'])
+        else:
+            # Wait for workload to start for django
+            consoleLogger(self.name + ": Wait for workload to start")
+            if 'workload' in self.deploy_config:
+                obj = self.deploy_config['workload']
+                wait_net_service(obj['ip'], obj['port'], WAIT_FOR_SERVICE_TIMEOUT)
 
         set_env('DJANGO_IP', LOCALHOST_DOCKER_IP)
 
@@ -311,7 +362,7 @@ class Siege_docker(Application):
         super(Siege_docker, self).__init__("siege_docker", deploy_config, deploy_platform)
 
     def set_benchmark_config(self, benchmark_config):
-	self.benchmark_config = benchmark_config
+        self.benchmark_config = benchmark_config
 
     def deploy(self, async=False):
         return super(Siege_docker, self).deploy(async)
@@ -325,7 +376,7 @@ class Siege_docker(Application):
         return super(Siege_docker, self).start(async)
 
     def stop(self, async=False):
-	return super(Siege_docker, self).stop(async)
+        return super(Siege_docker, self).stop(async)
 
     def undeploy(self, async=False ):
         return super(Siege_docker, self).undeploy(async)

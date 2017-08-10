@@ -95,7 +95,7 @@ def main():
             deployment.add_db(cassandra_docker)
             set_env("cassandra_docker", "true")
             debugLogger("Added db server: %s " % config['name'])
-    	if config['name'] == 'mariadb':
+        if config['name'] == 'mariadb':
             mariadb = MariaDb(config, myplatform)
             deployment.add_db(mariadb)
             debugLogger("Added db server: %s " % config['name'])
@@ -108,8 +108,8 @@ def main():
         deployment.add_application(django)
         debugLogger("Added application: %s" % config_json['workload']['name'])
     if config_json['workload']['name'] == 'django_docker':
-    	django_docker = Django_docker(config_json['workload'], myplatform)
-    	deployment.add_application(django_docker)
+        django_docker = Django_docker(config_json['workload'], myplatform)
+        deployment.add_application(django_docker)
         set_env("django_docker", "true")
         debugLogger("Added application: %s" % config_json['workload']['name'])
     if config_json['workload']['name'] == 'apache2':

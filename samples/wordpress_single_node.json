@@ -1,6 +1,7 @@
 {
   "workload": {
-    "name": "wordpress"
+    "name": "wordpress",
+    "port": 80
   },
   "proxy":"",
   "client": {
@@ -8,12 +9,14 @@
   },
   "cache": [
     {
-      "name": "memcached"
+      "name": "memcached",
+      "port": 11811
     }
   ],
   "db": [
     {
-      "name": "mariadb"
+      "name": "mariadb",
+      "port": 3306
     }
   ],
   "perf": [
