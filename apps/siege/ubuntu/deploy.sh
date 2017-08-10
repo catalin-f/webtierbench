@@ -33,11 +33,11 @@ else
 # Generate siege urls file
     su "$SUDO_USER" -c "cd django-workload/client; ./gen-urls-file"
 
-fi
-
 # Create siegerc
     su - "$SUDO_USER" -c "echo 'failures = 1000000' > ~/.siegerc"
     su - "$SUDO_USER" -c "echo 'protocol = HTTP/1.1' >> ~/.siegerc"
+fi
+
 
 
 # Append client settings to /etc/sysctl.conf

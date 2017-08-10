@@ -17,4 +17,9 @@ apt-get purge -y siege
 if [ -n ${WEBTIER_SIEGE_WORDPRESS} ]; then
     rm /usr/local/bin/siege
 fi
+
+if [ -f ${HOME}/.siegerc ]; then
+    rm ${HOME}/.siegerc
+fi
+
 remove_settings
