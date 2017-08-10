@@ -1,9 +1,14 @@
 #!/bin/bash
 
 oss_dir="$HOME/oss-performance"
+siege_log="$HOME/siege.log"
 
 service mysql start
 systemctl restart nginx.service
+
+if [ -f "$siege_log" ]; then
+	rm -rf $siege_log
+fi
 
 for CPUFREQ in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 do
