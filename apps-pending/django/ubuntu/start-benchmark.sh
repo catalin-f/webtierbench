@@ -15,6 +15,8 @@ start_uwsgi() {
 
 	. venv/bin/activate > /dev/null
 
+    DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup > /dev/null
+
 	uwsgi uwsgi.ini &
 
 	deactivate
@@ -29,7 +31,7 @@ start_uwsgi() {
 #######################################
 check_graphite_status() {
 	 if docker inspect -f {{.State.Running}} graphite > /dev/null; then
-	 		echo "Graphite is up and running"
+	 	echo "Graphite is up and running"
 	 fi
 }
 
@@ -45,7 +47,7 @@ run_siege() {
 
 	printf "\n### SIEGE RUN ###\n\n"
 
-	su $SUDO_USER -c "LOG=/home/$SUDO_USER/siege.log ./run-siege"
+	su "$SUDO_USER" -c "LOG=/tmp/siege.log ./run-siege"
 }
 
 #######################################
@@ -61,6 +63,9 @@ main() {
 
 	### CHECKS ###
 	check_root_privilege
+
+	# Remove old logs
+	rm -rf /tmp/siege*
 
 	### SET ENVIRONMENT ###
 	set_cpu_performance
@@ -88,6 +93,7 @@ main() {
 	### RUN THE BENCHMARK ###
 	(run_siege)
 
+	trap 'mv -f /tmp/siege* ../../data_store/tmp; exit' 0 2 15
 }
 
 ### MAIN CALL ###

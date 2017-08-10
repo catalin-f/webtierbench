@@ -55,6 +55,7 @@ main() {
 	stop_service "docker"
 
 	stop_benchmark
+	mv -f /tmp/siege* ../../data_store/tmp
 }
 
 ### MAIN CALL ###
