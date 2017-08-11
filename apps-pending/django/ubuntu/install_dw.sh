@@ -162,9 +162,11 @@ su "$SUDO_USER" -c "(
 
     python -m pip install -r requirements.txt
 
-    deactivate
-
     cp cluster_settings_template.py cluster_settings.py
+
+    DJANGO_SETTINGS_MODULE=cluster_settings django-admin setup
+
+    deactivate
 )"
 
 echo -e "\n\nGenerate siege urls file ..."
