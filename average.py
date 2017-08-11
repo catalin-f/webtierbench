@@ -4,7 +4,6 @@ import glob
 import csv
 import pandas as pn
 import os
-from _base import consoleLogger
 
 
 def avg_compute(filename):
@@ -47,10 +46,11 @@ def avg_compute(filename):
                     tuple(avg)
                     averages.append(sum(float(x)for x in  avg) / len(avg))
                     del avg[:]
-            csv_output.writerow(["Average values:"]+averages)
+            csv_output.writerow(["Average values:"] + [""] + [""] + [""] + [""] + averages)
     path = os.path.realpath(".")
     remove_file = str(path + '/interm.csv')
     os.remove(remove_file)
+    from _base import consoleLogger
     consoleLogger("Results are stored in siege.log/result.html in user home.")
     g = pn.read_csv(file)
     g.to_html("~/Result.html")
