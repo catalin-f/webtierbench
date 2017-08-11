@@ -3,11 +3,14 @@
 import glob
 import csv
 import pandas as pn
+import os
+from _base import consoleLogger
 
 
-def avg_compute():
+def avg_compute(filename):
+    file = filename
     try:
-        f = pn.read_csv("siege.log")
+        f = pn.read_csv(filename)
         f.drop("      Date & Time", 1, inplace=True)
         f.drop("  Trans", 1, inplace=True)
         f.drop("  Elap Time", 1, inplace=True)
@@ -24,7 +27,7 @@ def avg_compute():
 
     flag = 1
 
-    with open('siege.log', 'a') as f_output:
+    with open(filename, 'a') as f_output:
         csv_output = csv.writer(f_output)
         for filename in glob.glob('interm.csv'):
             with open(filename) as f_input:
@@ -45,10 +48,11 @@ def avg_compute():
                     averages.append(sum(float(x)for x in  avg) / len(avg))
                     del avg[:]
             csv_output.writerow(["Average values:"]+averages)
-    import os
-    os.remove('interm.csv')
-    #print in html format
-    g = pn.read_csv("siege.log")
-    g.to_html("result.html")
+    path = os.path.realpath(".")
+    remove_file = str(path + '/interm.csv')
+    os.remove(remove_file)
+    consoleLogger("Results are stored in siege.log/result.html in user home.")
+    g = pn.read_csv(file)
+    g.to_html("~/Result.html")
 # we can pass the input file as a parameter
-avg_compute()
+

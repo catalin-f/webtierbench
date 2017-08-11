@@ -9,6 +9,7 @@ import errno
 import time
 import argparse
 import json
+from average import avg_compute
 from jsonschema import validate
 
 _WEBTIER_VERSION = "1.0"
@@ -563,6 +564,10 @@ class Deployment:
         if collect:
             for step in collect:
                 os.rename(step, '%s/%s' % (measurement_dirs, step))
+        path = os.path.expanduser("~")
+        home = str(path + "/siege.log")
+        if os.path.isfile(home):
+          avg_compute(home)
 
     #####
     def add_application(self, app):
