@@ -393,7 +393,7 @@ class _Logger:
         return ""
 
     def log(self, text):
-        self.fd.write("%s%s" % (self._get_prefix(), text))
+        self.fd.write("%s%s\n" % (self._get_prefix(), text))
         self.fd.flush()
 
 
