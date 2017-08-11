@@ -154,10 +154,10 @@ cat > /etc/memcached.conf <<- EOF
 EOF
 
 echo -e "\n\nCreate python virtualenv ..."
-(
+su "$SUDO_USER" -c "(
     cd django-workload/django-workload || exit 4
 
-    su "$SUDO_USER" -c "python3 -m virtualenv -p python3 venv"
+    python3 -m virtualenv -p python3 venv
     . venv/bin/activate
 
     python -m pip install -r requirements.txt
@@ -165,7 +165,7 @@ echo -e "\n\nCreate python virtualenv ..."
     deactivate
 
     cp cluster_settings_template.py cluster_settings.py
-)
+)"
 
 echo -e "\n\nGenerate siege urls file ..."
 (
