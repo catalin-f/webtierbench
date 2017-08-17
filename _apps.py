@@ -3,6 +3,7 @@ import time
 import psutil
 from _base import Application
 from _base import consoleLogger
+from _base import debugLogger
 from _base import set_env
 from _base import del_env
 import socket
@@ -31,19 +32,19 @@ def wait_net_service(server, port, timeout=1):
         @param timeout: in seconds
         @return: True of False
     """
-    consoleLogger("Wait for " + server + ":" + str(port) + " timeout=" + str(timeout))
+    debugLogger("Wait for " + server + ":" + str(port) + " timeout=" + str(timeout))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.settimeout(timeout)
         s.connect((server, port))
     except socket.timeout, err:
-        consoleLogger("Got socket.timeout")
+        consoleLogger("Got socket.timeout while waiting for " + server)
         return False
     except socket.error, err:
-        consoleLogger("Got socket.error: " + str(err[0]))
+        consoleLogger("Got socket.error: " + str(err[0]) + " while waiting for " + server)
         return False
     except:
-        consoleLogger("Got general exception: " + str(sys.exc_info()[0]))
+        consoleLogger("Got general exception: " + str(sys.exc_info()[0]) + " while waiting for " + server)
         return False
     else:
         s.close()
