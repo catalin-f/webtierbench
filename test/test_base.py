@@ -55,7 +55,9 @@ def _create_run_json_inputfile(createExtraFile=True):
         "scenario": "file",
         "workers": 4,
         "duration": 120,
-        "filename": empty_file
+         "settings":{
+            "filename": empty_file
+        }
     }
     name = "/tmp/inputfile.json"
     with open(name, "w") as temp:
@@ -222,13 +224,10 @@ def test_parse_run_args(capsys):
 def test_load_run_configuration_inputfile(capsys):
     file, extra_file = _create_run_json_inputfile(createExtraFile=True)
     config_json = load_run_configuration(file)
-    assert config_json["filename"] == extra_file
+    assert config_json["settings"]["filename"] == extra_file
 
     os.remove(file)
 
-    file, extra_file = _create_run_json_inputfile(createExtraFile=False)
-    with pytest.raises(SystemExit) as excinfo:
-        config_json = load_run_configuration(file)
     out, err = capsys.readouterr()
     assert out == ''
 
@@ -358,10 +357,6 @@ def test_deployment_advanced():
     assert out == "deploy app\n deploy cache\n deploy client\n deploy db\n deploy perf\n"
     assert err.strip() == ''
 
-    out, err = deployment.start_applications()
-    assert out == "start app\n start cache\n start client\n start db\n"
-    assert err.strip() == ''
-
     out, err = deployment.start_performance_measurements()
     assert out == ''
     assert err.strip() == ''
@@ -379,5 +374,5 @@ def test_deployment_advanced():
     assert err == ''
 
     out, err = deployment.stop_applications()
-    assert out == "stop app\n stop cache\n stop client\n stop db\n"
+    assert out == "stop app\n stop cache\n stop db\n"
     assert err.strip() == ''

@@ -248,7 +248,12 @@ _runSchema_file = {
         'customrun': {'type': 'boolean'},
         'workers': {'type': 'integer', 'minimum': 1},
         'duration': {'type': 'number', 'minimum': 1},
-        'filename': {'type': 'string'}
+        'settings':{
+            'username_db':{'type':'string'},
+            'password_db':{'type':'string'},
+            'options':{'type':'array'},
+            'filename': {'type': 'string'}
+            }
     },
     'required': ['duration']
 }
