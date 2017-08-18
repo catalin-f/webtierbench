@@ -91,7 +91,6 @@ class Django(Application):
             set_env('SIEGE_IP', SIEGE_CONTAINER_IP)
 
         #Wait for databases to start
-        consoleLogger(self.name + ": Wait for databases to start")
         if 'db' in self.deploy_config:
             for i in xrange(len(self.deploy_config['db'])):
                 obj = self.deploy_config['db'][i]
@@ -127,7 +126,6 @@ class Django_docker(Application):
             set_env('SIEGE_IP', SIEGE_CONTAINER_IP)
 
         #Wait for databases to start
-        consoleLogger(self.name + ": Wait for databases to start")
         if 'db' in self.deploy_config:
             for i in xrange(len(self.deploy_config['db'])):
                 obj = self.deploy_config['db'][i]
@@ -150,7 +148,6 @@ class Wordpress(Application):
         set_env('WEBTIER_WORDPRESS_WORKERS', self.deploy_config['workers'])
 
         #Wait for databases to start
-        consoleLogger(self.name + ": Wait for databases to start")
         if 'db' in self.deploy_config:
             for i in xrange(len(self.deploy_config['db'])):
                 obj = self.deploy_config['db'][i]
@@ -337,7 +334,6 @@ class Siege(Application):
             set_env("WEBTIER_SIEGE_WORDPRESS", self.deploy_config['name'])
         else:
             # Wait for workload to start for django
-            consoleLogger(self.name + ": Wait for workload to start")
             if 'workload' in self.deploy_config:
                 obj = self.deploy_config['workload']
                 wait_net_service(obj['ip'], obj['port'], WAIT_FOR_SERVICE_TIMEOUT)
