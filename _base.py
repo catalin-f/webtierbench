@@ -503,14 +503,6 @@ class Deployment:
         return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
 
     def start_applications(self):
-        for app in self._all_apps:
-            if app.name == self.client.name:
-                continue
-            consoleLogger("Start app %s" % app.name)
-            app.start(async=True)
-        return '', ''
-
-    def start_applications(self):
         outs = []
         errs = []
         for app in self._all_apps:
@@ -522,6 +514,10 @@ class Deployment:
             errs.append(err)
         return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
 
+    def start_performance_measurements(self):
+        for app in self.perfs:
+            app.start(async=True)
+        return '', ''
 
     def set_benchmark_config(self, benchmark_config):
         if self.client is not None:
