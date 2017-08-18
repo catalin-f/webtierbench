@@ -517,12 +517,11 @@ class Deployment:
             if app.name == self.client.name:
                 continue
             consoleLogger("Start app %s" % app.name)
-            #app.start
             out, err = app.start()
             outs.append(out)
             errs.append(err)
         return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
-        #return '', ''''
+
 
     def set_benchmark_config(self, benchmark_config):
         if self.client is not None:

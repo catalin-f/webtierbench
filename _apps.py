@@ -315,7 +315,7 @@ class Siege(Application):
     def set_benchmark_config(self, benchmark_config):
         self.benchmark_config = benchmark_config
         if "username_db" in self.benchmark_config['settings']:
-            set_env('WEBTIER_OSS_RUNNIG_MODE', self.benchmark_config['settings']['options'][0])
+            set_env('WEBTIER_OSS_RUNNIG_MODE', self.benchmark_config['settings']['options'])
             set_env('WEBTIER_DB_USER', self.benchmark_config['settings']['username_db'])
             set_env('WEBTIER_DB_PWD', self.benchmark_config['settings']['password_db'])
 
