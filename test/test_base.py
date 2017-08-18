@@ -357,6 +357,10 @@ def test_deployment_advanced():
     assert out == "deploy app\n deploy cache\n deploy client\n deploy db\n deploy perf\n"
     assert err.strip() == ''
 
+    out, err = deployment.start_applications()
+    assert out == "start app\n start cache\n start db\n"
+    assert err.strip() == ''
+
     out, err = deployment.start_performance_measurements()
     assert out == ''
     assert err.strip() == ''

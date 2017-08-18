@@ -33,18 +33,15 @@ WEBTIER_PUBLIC_INFO = "%s version %s" % (_WEBTIER_NAME, _WEBTIER_VERSION)
 ###############################################################################
 def _RUN_GENERIC_SCRIPT(name, async=False):
     proc = subprocess.Popen(name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    os.wait()
     if not async:
-        if not proc.poll():
-            out = proc.stdout.read()
-            err = proc.stderr.read()
-            return out, err
+       out = proc.stdout.read()
+       err = proc.stderr.read()
+       return out, err
     return '', ''
 
 
 
 def RUN_APP_SCRIPT(name, platform, script, async=False):
-    # cmd = "%s/apps/%s/%s/%s" % (os.getcwd(), name, platform.distribution, script)
     cmd = "apps/%s/%s/%s" % (name, platform.distribution, script)
     return _RUN_GENERIC_SCRIPT(cmd, async)
 
@@ -513,10 +510,19 @@ class Deployment:
             app.start(async=True)
         return '', ''
 
-    def start_performance_measurements(self):
-        for app in self.perfs:
-            app.start(async=True)
-        return '', ''
+    def start_applications(self):
+        outs = []
+        errs = []
+        for app in self._all_apps:
+            if app.name == self.client.name:
+                continue
+            consoleLogger("Start app %s" % app.name)
+            #app.start
+            out, err = app.start()
+            outs.append(out)
+            errs.append(err)
+        return _OUT_SEPARATOR.join(outs), _OUT_SEPARATOR.join(errs)
+        #return '', ''''
 
     def set_benchmark_config(self, benchmark_config):
         if self.client is not None:
