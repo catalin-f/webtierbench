@@ -248,7 +248,7 @@ _runSchema_file = {
         'settings':{
             'username_db':{'type':'string'},
             'password_db':{'type':'string'},
-            'options':{'type':'array'},
+            'options':{'type':'string'},
             'filename': {'type': 'string'}
             }
     },

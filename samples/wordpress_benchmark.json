@@ -5,8 +5,7 @@
   "settings":{
     "username_db":"root",
     "password_db":"''",
-    "options":["--i-am-not-benchmarking"],
+    "options":"--i-am-not-benchmarking",
     "filename":""
   }
 }
-{{}}
